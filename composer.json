@@ -1,0 +1,30 @@
+{
+    "name": "ttek/tk-mvc",
+    "type": "library",
+    "description": "Model-View-Controller library for the Tk lib",
+    "keywords": ["tk", "tropotek", "MVC"],
+    "time":  "2016-04-11",
+    "license": "MIT",
+    "version": "trunk",
+    "authors": [
+        {
+            "name": "Michael Mifsud",
+            "email": "info@tropotek.com.au",
+            "homepage": "http://www.tropotek.com/"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Tk\\": ""
+        }
+    },
+    
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}
