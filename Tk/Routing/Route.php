@@ -1,6 +1,5 @@
 <?php
 namespace Tk\Routing;
-use Dom\Modifier\Exception;
 
 /**
  * Class Route
@@ -12,27 +11,50 @@ use Dom\Modifier\Exception;
 class Route 
 {
 
+    /**
+     * @var string
+     */
     private $path = '';
     
+    /**
+     * @var string
+     */
     private $controllerClass = '';
-    
+
+    /**
+     * @var mixed|string
+     */
     private $controllerMethod = '';
-    
+
+    /**
+     * @var array
+     */
     protected $paramList = array();
 
     /**
      * @param string $path
-     * @param string $controllerClassMethod The controller class and method in the form of 'ClassName::methodName()' (brackets optional)
+     * @param string $controllerClassMethod The controller class and method in the form of '\Namespace\ClassName::methodName()' (brackets optional)
      * @param array $paramList
      * @throws Exception
      */
-    public function __constructor($path, $controllerClassMethod, $paramList = array())
+    public function __construct($path, $controllerClassMethod, $paramList = array())
     {
         $this->path = $path;
-        if (!preg_match('/^([a-z0-9_]+)::([a-z0-9_]+)(\(\))?$/i', $controllerClassMethod, $regs))
-            throw new Exception('Invalid Controller class format use `ClassName::methodName`: ' . $controllerClassMethod);
-        vd($controllerClassMethod);
         $this->paramList = $paramList;
+        
+        list($class, $method) = explode('::', $controllerClassMethod);
+        $method = str_replace('()', '', $method);
+        
+        if (!preg_match('|[a-z0-9_\\\]+|i', $class, $regs)) {
+            throw new Exception('Invalid Controller class: ' . $class);
+        }
+        if (!preg_match('|[a-z0-9_]+|i', $method, $regs)) {
+            throw new Exception('Invalid Controller method call: ' . $controllerClassMethod);
+        }
+        
+        $this->controllerClass = $class;
+        $this->controllerMethod = $method;
+        
     }
 
     /**
@@ -49,6 +71,14 @@ class Route
     public function getControllerClass()
     {
         return $this->controllerClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getControllerMethod()
+    {
+        return $this->controllerMethod;
     }
 
     

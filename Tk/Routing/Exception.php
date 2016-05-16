@@ -1,5 +1,5 @@
 <?php
-namespace Tk\Resolver;
+namespace Tk\Routing;
 
 /**
  * Class Exception
