@@ -98,7 +98,7 @@ class Route
      */
     public function getParam($name)
     {
-        if (isset($this->paramList[$name]))
+        if ($this->hasParam($name))
             return $this->paramList[$name];
     }
 
@@ -116,8 +116,17 @@ class Route
      */
     public function deleteParam($name)
     {
-        if (isset($this->paramList[$name]))
+        if ($this->hasParam($name))
             unset($this->paramList[$name]);
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function hasParam($name)
+    {
+        return isset($this->paramList[$name]);
     }
     
     
