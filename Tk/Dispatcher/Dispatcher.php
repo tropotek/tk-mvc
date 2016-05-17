@@ -3,6 +3,9 @@ namespace Tk\Dispatcher;
 
 /**
  * Class Dispatcher
+ * 
+ * Dispatcher Pattern adapted from the article http://www.chrisbrand.co.za/2013/06/22/design-pattern-event-dispatcher/
+ * Also with influence from the Symfony EventDispatcher objects.
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
@@ -152,10 +155,16 @@ class Dispatcher
      */
     public function addSubscriber(SubscriberInterface $subscriber)
     {
-        $listeners = $subscriber->getSubscribedEvents();
-        foreach ($listeners as $eventName => $listener) {
-            // Add the subscribed function as an event
-            $this->listen($eventName, array($subscriber, $listener));
+        foreach ($subscriber->getSubscribedEvents() as $eventName => $params) {
+            if (is_string($params)) { // array('eventName' => 'methodName')
+                $this->addListener($eventName, array($subscriber, $params));
+            } elseif (is_string($params[0])) {  // array('eventName' => array('methodName', $priority))
+                $this->addListener($eventName, array($subscriber, $params[0]), isset($params[1]) ? $params[1] : 0);
+            } else {
+                foreach ($params as $listener) {    // array('eventName' => array(array('methodName1', $priority), array('methodName2'))
+                    $this->addListener($eventName, array($subscriber, $listener[0]), isset($listener[1]) ? $listener[1] : 0);
+                }
+            }
         }
         return $this;
     }

@@ -12,6 +12,7 @@ interface SubscriberInterface
 {
     /**
      * Returns an array of event names this subscriber wants to listen to.
+     * NOTE: The higher priority number is run first.
      *
      * The array keys are event names and the value can be:
      *

@@ -33,9 +33,9 @@ Or add the following to your composer.json file:
 
 List of sub lib contents:
 
- - Dispatcher: Manage and trigger system wide events
+ - *Dispatcher: Manage and trigger system wide events
  - Kernel: Base system controller to manage the flow of the system
- - Routing: Url system to manage site wide url routing
+ - *Routing: Url system to manage site wide url routing
  - Response: Libs to handle the Controller response objects
  
 
