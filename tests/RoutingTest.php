@@ -31,17 +31,23 @@ class RoutingTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    
-    
-    public function testRoutCollection()
-    {
-        
-    }
 
 
     public function testRoute()
     {
-
+        $route = new \Tk\Routing\Route('/index.html', '\App\Controller\Index::doDefault', array());
+        $this->assertInstanceOf('\Tk\Routing\Route', $route);
+        
+        
+    }
+    
+    
+    public function testRoutCollection()
+    {
+        $collection = new \Tk\Routing\RouteCollection();
+        $this->assertInstanceOf('\Tk\Routing\RouteCollection', $collection);
+        
+        
     }
     
     
