@@ -21,7 +21,7 @@ class RouteCollection implements \IteratorAggregate, \Countable
     protected $routeList = array();
 
     /**
-     * 
+     * __construct
      */
     public function __construct()
     {
