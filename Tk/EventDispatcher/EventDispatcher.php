@@ -1,5 +1,5 @@
 <?php
-namespace Tk\Dispatcher;
+namespace Tk\EventDispatcher;
 
 /**
  * Class Dispatcher
@@ -11,7 +11,7 @@ namespace Tk\Dispatcher;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class Dispatcher
+class EventDispatcher
 {
     /**
      * @var array

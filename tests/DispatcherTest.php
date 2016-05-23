@@ -1,9 +1,9 @@
 <?php
 namespace tests;
 
-use Tk\Dispatcher\Dispatcher;
-use Tk\Dispatcher\Event;
-
+use Tk\EventDispatcher\EventDispatcher;
+use Tk\EventDispatcher\Event;
+use Tk\EventDispatcher\SubscriberInterface;
 
 /**
  * Class DispatcherTest
@@ -15,7 +15,7 @@ use Tk\Dispatcher\Event;
 class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Dispatcher
+     * @var EventDispatcher
      */
     protected $dispatcher = null;
 
@@ -24,6 +24,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
      */
     protected $event = null;
 
+    
+    
+    
 
     public function __construct()
     {
@@ -32,7 +35,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->dispatcher = new Dispatcher();
+        $this->dispatcher = new EventDispatcher();
 
     }
 
@@ -51,20 +54,20 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     
     public function testListener()
     {
-        $this->event = new \Tk\Dispatcher\Event(array('param1' => 'value1'));
+        $this->event = new Event(array('param1' => 'value1'));
         $evName = 'event.kernel.request';
         // Add a listener
-        $this->dispatcher->addListener($evName, function(\Tk\Dispatcher\Event $event) {
+        $this->dispatcher->addListener($evName, function(Event $event) {
             $str = 'Listener 1';
             $event->set('status', $str);
             $this->assertEquals('value1', $event->get('param1'));
         }, 2);
-        $this->dispatcher->addListener($evName, function(\Tk\Dispatcher\Event $event) {
+        $this->dispatcher->addListener($evName, function(Event $event) {
             $str = 'Listener 2';
             $event->set('status', $str);
             $this->assertEquals('value1', $event->get('param1'));
         }, 1);
-        $this->dispatcher->addListener($evName, function(\Tk\Dispatcher\Event $event) {
+        $this->dispatcher->addListener($evName, function(Event $event) {
             $str = 'Listener 3';
             $event->set('status', $str);
             $this->assertEquals('value1', $event->get('param1'));
@@ -91,7 +94,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     
     public function testSubscriber()
     {
-        $this->event = new \Tk\Dispatcher\Event(array('param2' => 'value2'));
+        $this->event = new Event(array('param2' => 'value2'));
         $this->dispatcher->addSubscriber(new DummyListener());
 
         $this->dispatcher->dispatch('event.kernel.request', $this->event);
@@ -102,7 +105,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class DummyListener implements \Tk\Dispatcher\SubscriberInterface
+class DummyListener implements SubscriberInterface
 {
     public function doOne(Event $event)
     {

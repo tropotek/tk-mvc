@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tk\Dispatcher;
+namespace Tk\EventDispatcher;
 
 /**
  * Class Event
