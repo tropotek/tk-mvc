@@ -14,6 +14,19 @@ namespace Tk\Routing;
 class RouteCollection extends \Tk\Collection
 {
 
+
+    /**
+     * Add item to collection
+     *
+     * @param $key
+     * @param $value
+     * @return $this
+     */
+    public function add($key, $value)
+    {
+        return $this->set($key, $value);
+    }
+
     
     // https://github.com/slimphp
 }

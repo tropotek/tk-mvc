@@ -8,7 +8,7 @@ namespace Tk\EventDispatcher;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-abstract class EventInterface
+abstract class EventInterface extends \Tk\Collection
 {
     
     /**

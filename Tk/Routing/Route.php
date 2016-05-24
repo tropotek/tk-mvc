@@ -22,25 +22,27 @@ class Route
     private $controllerClass = '';
 
     /**
-     * @var mixed|string
+     * @var string
      */
     private $controllerMethod = '';
 
     /**
-     * @var array
+     * @var \Tk\Collection
      */
-    protected $paramList = array();
+    protected $attributes = null;
 
+    
+    
     /**
      * @param string $path
      * @param string $controllerClassMethod The controller class and method in the form of '\Namespace\ClassName::methodName()' (brackets optional)
-     * @param array $paramList
+     * @param array $attributes
      * @throws Exception
      */
-    public function __construct($path, $controllerClassMethod, $paramList = array())
+    public function __construct($path, $controllerClassMethod, $attributes = array())
     {
         $this->path = $path;
-        $this->paramList = $paramList;
+        $this->attributes = new \Tk\Collection($attributes);
         
         list($class, $method) = explode('::', $controllerClassMethod);
         $method = str_replace('()', '', $method);
@@ -81,52 +83,23 @@ class Route
         return $this->controllerMethod;
     }
 
+    /**
+     * @return string
+     */
+    public function getControllerClassMethod()
+    {
+        return $this->controllerClass . '::' . $this->controllerMethod;
+    }
+
     
     
     
     /**
-     * @return array
+     * @return \Tk\Collection
      */
-    public function getParamList()
+    public function getAttributes()
     {
-        return $this->paramList;
-    }
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function getParam($name)
-    {
-        if ($this->hasParam($name))
-            return $this->paramList[$name];
-    }
-
-    /**
-     * @param $name
-     * @param $value
-     */
-    public function setParam($name, $value)
-    {
-        $this->paramList[$name] = $value;
-    }
-
-    /**
-     * @param $name
-     */
-    public function deleteParam($name)
-    {
-        if ($this->hasParam($name))
-            unset($this->paramList[$name]);
-    }
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function hasParam($name)
-    {
-        return isset($this->paramList[$name]);
+        return $this->attributes;
     }
     
     

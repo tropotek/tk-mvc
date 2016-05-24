@@ -48,7 +48,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     
     public function testDispatcher()
     {
-        $this->assertInstanceOf('Tk\Dispatcher\Dispatcher', $this->dispatcher);
+        $this->assertInstanceOf('Tk\EventDispatcher\EventDispatcher', $this->dispatcher);
     }
     
     
