@@ -19,9 +19,11 @@ class RequestEvent extends Event
      * 
      * 
      * @param \Tk\Request $request
+     * @param \Tk\Kernel\HttpKernel $kernel
      */
-    public function __construct(\Tk\Request $request)
+    public function __construct(\Tk\Request $request, $kernel = null)
     {
+        parent::__construct($kernel);
         $this->request = $request;
     }
 
