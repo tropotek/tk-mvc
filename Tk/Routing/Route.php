@@ -9,6 +9,7 @@ use Tk\Collection;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
+ * @notes Adapted from Symfony
  */
 class Route 
 {
@@ -36,19 +37,55 @@ class Route
      */
     protected $attributes = null;
 
+    /**
+     * @var array
+     */
+    protected $validMethods = array();
+
 
     /**
      * construct
-     * 
+     * Default valid methods are 'GET','POST','HEAD'
+     *
      * @param string $path
      * @param object|callable|string $controller A string, callable or object
      * @param array $attributes
+     * @param array $validMethods
      */
-    public function __construct($path, $controller, $attributes = array())
+    public function __construct($path, $controller, $attributes = [], $validMethods = ['GET','POST','HEAD'])
     {
         $this->path = $path;
         $this->controller = $controller;
-        $this->attributes = new Collection($attributes);
+        $this->attributes = new Collection();
+        $this->validMethods = $validMethods;
+    }
+
+    /**
+     * Set the valid methods for this route
+     * Valid Methods:
+     *  - 'CONNECT'
+     *  - 'DELETE'
+     *  - 'GET'
+     *  - 'HEAD'
+     *  - 'OPTIONS'
+     *  - 'PATCH'
+     *  - 'POST'
+     *  - 'PUT'
+     *  - 'TRACE'
+     * 
+     * @param array $methods
+     */
+    public function setValidMethods($methods)
+    {
+        $this->validMethods = is_array($methods) ? $methods : [$methods];
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidMethods()
+    {
+        return $this->validMethods;
     }
 
     /**

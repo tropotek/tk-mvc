@@ -40,14 +40,16 @@ class RouteListener implements SubscriberInterface
     {
         $request = $event->getRequest();
         
-        if ($request->hasAttribute('_route')) {
+        if ($request->hasAttribute('_controller')) {
             // Route found
             return;
         }
         
         $route = $this->matcher->match($request);
+        //vd('-----------------------', $route);
         if ($route) {
             $request->setAttribute('_route', $route);
+            $request->setAttribute('_controller', $route->getController());
         }
     }
 
@@ -58,7 +60,7 @@ class RouteListener implements SubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            'event.kernel.request' => 'onRequest'
+            \Tk\Kernel\KernelEvents::REQUEST => 'onRequest'
         );
     }
     

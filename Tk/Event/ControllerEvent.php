@@ -9,7 +9,7 @@ use \Tk\Response;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
- * @notes Adapted from Symfony by Bernhard Schussek <bschussek@gmail.com>
+ * @notes Adapted from Symfony
  */
 class ControllerEvent extends RequestEvent
 {

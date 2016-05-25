@@ -5,7 +5,7 @@ namespace Tk;
 /**
  * HttpException.
  *
- * @author Kris Wallsmith <kris@symfony.com>
+ * @notes Adapted from Symfony
  */
 class HttpException extends \RuntimeException
 {

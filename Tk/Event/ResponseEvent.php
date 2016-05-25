@@ -7,7 +7,7 @@ namespace Tk\Event;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
- * @notes Adapted from Symfony by Fabien Potencier <fabien@symfony.com>
+ * @notes Adapted from Symfony
  */
 class ResponseEvent extends RequestEvent
 {

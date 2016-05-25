@@ -10,7 +10,7 @@ use Tk\Request;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
- * @notes Adapted from Symfony by Fabien Potencier <fabien@symfony.com>
+ * @notes Adapted from Symfony
  */
 class ControllerResolver
 {
@@ -49,35 +49,32 @@ class ControllerResolver
      */
     public function getController(Request $request)
     {
-        /** @var \Tk\Routing\Route $route */
-        $route = $request->getAttribute('_route');
-        if (!$route) {
+        $controller = $request->getAttribute('_controller');
+        if (!$controller) {
             if (null !== $this->logger) {
-                $this->logger->warning('Unable to look for the controller as the "_route" parameter is missing');
+                $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing');
             }
             return false;
         }
         
-        $controller = $route->getController();
-        // Already a callback
-        if (is_array($controller)) {
+        if (is_array($controller)) {    // Already a callback
             return $controller;
         }
-        // Is an anon object with __invoke magic method
-        if (is_object($controller)) {
+        if (is_object($controller)) {   // Is an anon object with __invoke magic method
             if (method_exists($controller, '__invoke')) {
                 return $controller;
             }
             throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getPathInfo()));
         }
         
-        if (false === strpos($controller, ':')) {
+        if (false === strpos($controller, ':')) {       // Is an class name or a function name
             if (method_exists($controller, '__invoke')) {
                 return $this->instantiateController($controller);
             } elseif (function_exists($controller)) {
                 return $controller;
             }
         }
+        // is in the string form of class::method
         $callable = $this->createController($controller);
 
         if (!is_callable($callable)) {
@@ -92,19 +89,26 @@ class ControllerResolver
      * Always have the request as the first arg and then any attributes from the route
      * are then added to the args array.
      *
-     * @param Request  $request    A Request instance
+     * @param Request $request A Request instance
      * @param callable $controller A PHP callable
      * @return array An array of arguments to pass to the controller
-     * @todo This may need to be made a bit more clearer
      */
     public function getArguments(Request $request, $controller)
     {
         $args = ['request' => $request];
-        /** @var \Tk\Routing\Route $route */
-        $route = $request->getAttribute('_route');
-        if ($route) {
-            array_merge($args, $route->getAttributes()->all());
+        
+        // TODO: get other args for the called controller
+        
+        if (is_array($controller)) {
+            $r = new \ReflectionMethod($controller[0], $controller[1]);
+        } elseif (is_object($controller) && !$controller instanceof \Closure) {
+            $r = new \ReflectionObject($controller);
+            $r = $r->getMethod('__invoke');
+        } else {
+            $r = new \ReflectionFunction($controller);
         }
+        //vd($r->getParameters());
+        
         return $args;
     }
 

@@ -18,7 +18,7 @@ use Tk\Controller\ControllerResolver;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
- * @notes Adapted from Symfony by Bernhard Schussek <bschussek@gmail.com>
+ * @notes Adapted from Symfony
  */
 class HttpKernel
 {
@@ -130,7 +130,6 @@ class HttpKernel
     
     /**
      * Terminates a request/response cycle.
-     *
      * Should be called after sending the response and before shutting down the kernel.
      *
      * @param Request  $request  A Request instance

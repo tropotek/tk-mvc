@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
+ * @notes Adapted from Symfony
  */
 class EventDispatcher
 {
@@ -85,7 +86,7 @@ class EventDispatcher
     {
         foreach ($listeners as $listener) {
             if ($this->logger) {
-                $this->logger->debug('Dispatching: ' . get_class($listener));
+                $this->logger->debug('Dispatching: ' . get_class($listener[0]) . '::' . $listener[1] . '()');
             }
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
