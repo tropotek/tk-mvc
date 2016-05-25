@@ -1,5 +1,5 @@
 <?php
-namespace Tk\EventDispatcher;
+namespace Tk\Event;
 
 /**
  * Class ResponseEvent
@@ -7,6 +7,7 @@ namespace Tk\EventDispatcher;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
+ * @notes Adapted from Symfony by Fabien Potencier <fabien@symfony.com>
  */
 class ResponseEvent extends RequestEvent
 {

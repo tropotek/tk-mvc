@@ -1,6 +1,10 @@
 <?php
 namespace Tk\Listener;
 
+use Tk\Event\RequestEvent;
+use Tk\Routing\MatcherInterface;
+use Tk\EventDispatcher\SubscriberInterface;
+
 
 /**
  * Class RouteListener
@@ -9,15 +13,10 @@ namespace Tk\Listener;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class RouteListener
+class RouteListener implements SubscriberInterface
 {
     /**
-     * @var \Tk\Routing\RouteCollection
-     */
-    protected $routeCollection = null;
-
-    /**
-     * @var \Tk\Routing\MatcherInterface
+     * @var MatcherInterface
      */
     protected $matcher = null;
 
@@ -25,49 +24,31 @@ class RouteListener
     
     /**
      * 
-     * 
-     * @param \Tk\Routing\RouteCollection $routeCollection
-     * @param \Tk\Routing\MatcherInterface $matcher
+     * @param MatcherInterface $matcher
      */
-    public function __construct(\Tk\Routing\RouteCollection $routeCollection, \Tk\Routing\MatcherInterface $matcher)
+    public function __construct(MatcherInterface $matcher)
     {
-        $this->routeCollection = $routeCollection;
         $this->matcher = $matcher;
     }
 
 
     /**
      * 
-     * @param \Tk\EventDispatcher\RequestEvent $event
+     * @param RequestEvent $event
      */
-    public function onRequest(\Tk\EventDispatcher\RequestEvent $event)
+    public function onRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
         
-        if ($request->hasAttribute('_controller')) {
+        if ($request->hasAttribute('_route')) {
             // Route found
             return;
         }
         
         $route = $this->matcher->match($request);
         if ($route) {
-            $class = $route->getControllerClass();
-            $method = $route->getControllerMethod();
-            
-            if (!class_exists($class)) {
-                throw new \RuntimeException('Controller class does not exist. [', $route->getControllerClass().']');
-            }
-            if (!in_array($method, get_class_methods($class))) {
-                throw new \RuntimeException('Controller action method does not exist. [', $route->getControllerClassMethod().']');
-            }
-            
-            // TODO: Shoul we do this here?
-            $controller = new $class();
-            $request->setAttribute('_controller', $controller);
-            $request->setAttribute('_controllerRoute', $route);
+            $request->setAttribute('_route', $route);
         }
-        
-        
     }
 
 

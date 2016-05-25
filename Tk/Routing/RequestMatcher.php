@@ -26,7 +26,6 @@ class RequestMatcher implements MatcherInterface
         $this->routeCollection = $routeCollection;
     }
     
-    
     /**
      * Return true if a path matches a Route object
      *
@@ -36,19 +35,18 @@ class RequestMatcher implements MatcherInterface
     public function match($request)
     {
         /** @var Route $route */
-        foreach($this->routeCollection as $route) {
+        foreach($this->routeCollection as $name => $route) {
             // Match request path to the route path
             $uri = $request->getUri();
             $routePath = $route->getPath();
             
             // TODO: normalise the paths for slashes, urlencoding, etc....
             
-            
             if ($uri->getRelativePath() == $routePath) {
+                $route->getAttributes()->set('name', $name);
                 return $route;
             }
         }
-        
     }
     
 }

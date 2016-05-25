@@ -1,6 +1,8 @@
 <?php
 namespace Tk\Routing;
 
+use Tk\Collection;
+
 /**
  * Class Route
  *
@@ -17,46 +19,36 @@ class Route
     private $path = '';
     
     /**
-     * @var string
+     * Can be one of:
+     *  - callable: array
+     *  - callable: anon function
+     *  - object: implementing __invoke method
+     *  - string: class name implementing __invoke method
+     *  - string: function name
+     *  - string: class and method names in the format of `\Namespace\Classname::method`
+     * 
+     * @var callable|string
      */
-    private $controllerClass = '';
+    private $controller = null;
 
     /**
-     * @var string
-     */
-    private $controllerMethod = '';
-
-    /**
-     * @var \Tk\Collection
+     * @var Collection
      */
     protected $attributes = null;
 
-    
-    
+
     /**
+     * construct
+     * 
      * @param string $path
-     * @param string $controllerClassMethod The controller class and method in the form of '\Namespace\ClassName::methodName()' (brackets optional)
+     * @param object|callable|string $controller A string, callable or object
      * @param array $attributes
-     * @throws Exception
      */
-    public function __construct($path, $controllerClassMethod, $attributes = array())
+    public function __construct($path, $controller, $attributes = array())
     {
         $this->path = $path;
-        $this->attributes = new \Tk\Collection($attributes);
-        
-        list($class, $method) = explode('::', $controllerClassMethod);
-        $method = str_replace('()', '', $method);
-        
-        if (!preg_match('|[a-z0-9_\\\]+|i', $class, $regs)) {
-            throw new Exception('Invalid Controller class: ' . $class);
-        }
-        if (!preg_match('|[a-z0-9_]+|i', $method, $regs)) {
-            throw new Exception('Invalid Controller method call: ' . $controllerClassMethod);
-        }
-        
-        $this->controllerClass = $class;
-        $this->controllerMethod = $method;
-        
+        $this->controller = $controller;
+        $this->attributes = new Collection($attributes);
     }
 
     /**
@@ -66,42 +58,20 @@ class Route
     {
         return $this->path;
     }
-
     /**
-     * @return string
+     * @return string|callable
      */
-    public function getControllerClass()
+    public function getController()
     {
-        return $this->controllerClass;
+        return $this->controller;
     }
-
-    /**
-     * @return string
-     */
-    public function getControllerMethod()
-    {
-        return $this->controllerMethod;
-    }
-
-    /**
-     * @return string
-     */
-    public function getControllerClassMethod()
-    {
-        return $this->controllerClass . '::' . $this->controllerMethod;
-    }
-
-    
-    
     
     /**
-     * @return \Tk\Collection
+     * @return Collection
      */
     public function getAttributes()
     {
         return $this->attributes;
     }
-    
-    
     
 }

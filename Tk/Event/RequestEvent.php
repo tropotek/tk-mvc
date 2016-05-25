@@ -1,5 +1,7 @@
 <?php
-namespace Tk\EventDispatcher;
+namespace Tk\Event;
+
+use Tk\EventDispatcher\Event;
 
 /**
  * Class RequestEvent
@@ -8,7 +10,7 @@ namespace Tk\EventDispatcher;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class RequestEvent extends Event
+class RequestEvent extends KernelEvent
 {
     /**
      * @var \Tk\Request
@@ -16,7 +18,7 @@ class RequestEvent extends Event
     protected $request = null;
 
     /**
-     * 
+     * __construct
      * 
      * @param \Tk\Request $request
      * @param \Tk\Kernel\HttpKernel $kernel

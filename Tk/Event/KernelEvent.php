@@ -1,5 +1,7 @@
 <?php
-namespace Tk\EventDispatcher;
+namespace Tk\Event;
+
+use Tk\EventDispatcher\Event;
 
 /**
  * Class KernelEvent

@@ -4,8 +4,13 @@ namespace Tk\Kernel;
 use Tk\EventDispatcher\EventDispatcher;
 use Tk\Request;
 use Tk\Response;
-use Tk\EventDispatcher\RequestEvent;
-use Tk\EventDispatcher\ResponseEvent;
+use Tk\Event\RequestEvent;
+use Tk\Event\ResponseEvent;
+use Tk\Event\GetResponseEvent;
+use Tk\Event\ControllerEvent;
+use Tk\Event\ExceptionEvent;
+use Tk\Event\FilterResponseEvent;
+use Tk\Controller\ControllerResolver;
 
 /**
  * Class HttpKernel
@@ -13,19 +18,24 @@ use Tk\EventDispatcher\ResponseEvent;
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
- * @notes Adapted from the Symfony HttpKernal by Fabien Potencier <fabien@symfony.com>
+ * @notes Adapted from Symfony by Bernhard Schussek <bschussek@gmail.com>
  */
 class HttpKernel
 {
     /**
      * @var EventDispatcher
      */
-    protected $dispatcher;
+    protected $dispatcher = null;
+
+    /**
+     * @var ControllerResolver
+     */
+    protected $resolver = null;
 
     /**
      * @var Request
      */
-    protected $request;
+    protected $request = null;
 
     
     
@@ -33,15 +43,13 @@ class HttpKernel
      * Constructor.
      *
      * @param EventDispatcher  $dispatcher
-     * @param Request          $request
+     * @param ControllerResolver $resolver
      */
-    public function __construct(EventDispatcher $dispatcher, Request $request)
+    public function __construct(EventDispatcher $dispatcher, ControllerResolver $resolver)
     {
         $this->dispatcher = $dispatcher;
-        $this->request = $request;
+        $this->resolver = $resolver;
     }
-
-
 
     /**
      * Handles a Request to convert it to a Response.
@@ -56,10 +64,10 @@ class HttpKernel
     public function handle(Request $request)
     {
         try {
+            $this->request = $request;
             return $this->handleRaw($request);
         } catch (\Exception $e) {
-            $this->finishRequest($request);
-            throw $e;
+            return $this->handleException($e, $request);
         }
     }
 
@@ -72,26 +80,23 @@ class HttpKernel
      * @return Response A Response instance
      *
      * @throws \LogicException       If one of the listeners does not behave as expected
-     * @throws NotFoundHttpException When controller cannot be found
+     * @throws \Tk\NotFoundHttpException When controller cannot be found
      */
     private function handleRaw(Request $request)
     {
-        $this->requestStack->push($request);
-
         // request
-        $event = new GetResponseEvent($this, $request, $type);
+        $event = new GetResponseEvent($request, $this);
         $this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
-
         if ($event->hasResponse()) {
-            return $this->filterResponse($event->getResponse(), $request, $type);
+            return $this->filterResponse($event->getResponse(), $request);
         }
 
         // load controller
         if (false === $controller = $this->resolver->getController($request)) {
-            throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
+            throw new \Tk\NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getUri()->getRelativePath()));
         }
 
-        $event = new FilterControllerEvent($this, $controller, $request, $type);
+        $event = new ControllerEvent($controller, $request, $this);
         $this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);
         $controller = $event->getController();
 
@@ -103,15 +108,15 @@ class HttpKernel
 
         // view
         if (!$response instanceof Response) {
-            $event = new GetResponseForControllerResultEvent($this, $request, $type, $response);
+            $event = new GetResponseEvent($request, $this);
             $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
-
             if ($event->hasResponse()) {
                 $response = $event->getResponse();
             }
 
             if (!$response instanceof Response) {
-                $msg = sprintf('The controller must return a response (%s given).', $this->varToString($response));
+                //$msg = sprintf('The controller must return a response (%s given).', $this->varToString($response));
+                $msg = sprintf('The controller must return a response (%s given).', get_class($response));
 
                 // the user may have forgotten to return something
                 if (null === $response) {
@@ -120,13 +125,8 @@ class HttpKernel
                 throw new \LogicException($msg);
             }
         }
-
-        return $this->filterResponse($response, $request, $type);
+        return $this->filterResponse($response, $request);
     }
-    
-    
-    
-    
     
     /**
      * Terminates a request/response cycle.
@@ -149,15 +149,80 @@ class HttpKernel
     private function finishRequest(Request $request)
     {
         $this->dispatcher->dispatch(KernelEvents::FINISH_REQUEST, new RequestEvent($request));
-        
     }
     
+
+    /**
+     * @throws \LogicException If the request stack is empty
+     *
+     * @internal
+     */
+    public function terminateWithException(\Exception $exception)
+    {
+        $response = $this->handleException($exception, $this->request);
+
+        // TODO: make the response object write ro the output....
+        //$response->sendHeaders();
+        //$response->sendContent();
+
+        $this->terminate($this->request, $response);
+    }
     
-    
-    
-    
-    
-    
+
+    /**
+     * Filters a response object.
+     *
+     * @param Response $response
+     * @param Request  $request
+     * @return Response The filtered Response instance
+     * @throws \RuntimeException if the passed object is not a Response instance
+     */
+    private function filterResponse(Response $response, Request $request)
+    {
+        $event = new FilterResponseEvent($response, $request, $this);
+        $this->dispatcher->dispatch(KernelEvents::RESPONSE, $event);
+        $this->finishRequest($request);
+        return $event->getResponse();
+    }
+
+
+    /**
+     * Handles an exception by trying to convert it to a Response.
+     *
+     * @param \Exception $e
+     * @param Request $request
+     * @return Response
+     * @throws \Exception
+     */
+    private function handleException(\Exception $e, $request)
+    {
+        $event = new ExceptionEvent($e, $request, $this);
+        $this->dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+        // a listener might have replaced the exception
+        $e = $event->getException();
+        if (!$event->hasResponse()) {
+            $this->finishRequest($request);
+            throw $e;
+        }
+
+        $response = $event->getResponse();
+
+        // TODO: Check the exiting response is not clientError, serverError or a redirect...???
+        // ensure that we actually have an error response
+        if ($e instanceof \Tk\HttpException) {
+            // keep the HTTP status code and headers
+            $response->setStatusCode($e->getStatusCode());
+            $response->getHeaderCollection()->replace($e->getHeaders());
+        } else {
+            $response->setStatusCode(500);
+        }
+        
+        try {
+            return $this->filterResponse($response, $request);
+        } catch (\Exception $e) {
+            return $response;
+        }
+    }
     
     
 }

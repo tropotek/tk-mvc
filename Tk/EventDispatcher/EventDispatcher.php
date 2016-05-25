@@ -1,6 +1,9 @@
 <?php
 namespace Tk\EventDispatcher;
 
+
+use Psr\Log\LoggerInterface;
+
 /**
  * Class Dispatcher
  * 
@@ -23,7 +26,25 @@ class EventDispatcher
      */
     private $sorted = array();
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
+    
+    
+    /**
+     * Constructor.
+     *
+     * @param LoggerInterface $logger A LoggerInterface instance
+     */
+    public function __construct(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
+    
+    
+    
     /**
      * @param string $eventName
      * @param callable $callback
@@ -63,6 +84,9 @@ class EventDispatcher
     protected function doDispatch($listeners, $eventName, EventInterface $event)
     {
         foreach ($listeners as $listener) {
+            if ($this->logger) {
+                $this->logger->debug('Dispatching: ' . get_class($listener));
+            }
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
                 break;
