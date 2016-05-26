@@ -4,26 +4,31 @@ namespace Tk\Kernel;
 /**
  * Contains all events thrown in the HttpKernel component.
  *
- * @author Bernhard Schussek <bschussek@gmail.com>
- *
- * @api
+ * @notes Adapted from Symfony
  */
 final class KernelEvents
 {
+    
+    /**
+     * The INIT event occurs at the very beginning of kernel construction.
+     *
+     * This event allows you to create a response for a request before any
+     * other code in the framework is executed. 
+     *
+     * @event Tk\Event\KernelEvent
+     * @var string
+     */
+    const INIT = 'kernel.init';
+    
     /**
      * The REQUEST event occurs at the very beginning of request
      * dispatching.
      *
      * This event allows you to create a response for a request before any
-     * other code in the framework is executed. The event listener method
-     * receives a Symfony\Component\HttpKernel\Event\GetResponseEvent
-     * instance.
+     * other code in the framework is executed.
      *
-     * @Event
-     *
+     * @event Tk\Event\GetResponseEvent
      * @var string
-     *
-     * @api
      */
     const REQUEST = 'kernel.request';
 
@@ -31,15 +36,10 @@ final class KernelEvents
      * The EXCEPTION event occurs when an uncaught exception appears.
      *
      * This event allows you to create a response for a thrown exception or
-     * to modify the thrown exception. The event listener method receives
-     * a Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent
-     * instance.
+     * to modify the thrown exception.
      *
-     * @Event
-     *
+     * @event Tk\Event\ExceptionEvent
      * @var string
-     *
-     * @api
      */
     const EXCEPTION = 'kernel.exception';
 
@@ -48,15 +48,10 @@ final class KernelEvents
      * is not a Response instance.
      *
      * This event allows you to create a response for the return value of the
-     * controller. The event listener method receives a
-     * Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent
-     * instance.
+     * controller.
      *
-     * @Event
-     *
+     * @event Tk\Event\ControllerResultEvent
      * @var string
-     *
-     * @api
      */
     const VIEW = 'kernel.view';
 
@@ -65,14 +60,10 @@ final class KernelEvents
      * handling a request.
      *
      * This event allows you to change the controller that will handle the
-     * request. The event listener method receives a
-     * Symfony\Component\HttpKernel\Event\FilterControllerEvent instance.
+     * request.
      *
-     * @Event
-     *
+     * @event Tk\Event\ControllerEvent
      * @var string
-     *
-     * @api
      */
     const CONTROLLER = 'kernel.controller';
 
@@ -81,14 +72,10 @@ final class KernelEvents
      * replying to a request.
      *
      * This event allows you to modify or replace the response that will be
-     * replied. The event listener method receives a
-     * Symfony\Component\HttpKernel\Event\FilterResponseEvent instance.
+     * replied.
      *
-     * @Event
-     *
+     * @event Tk\Event\FilterResponseEvent
      * @var string
-     *
-     * @api
      */
     const RESPONSE = 'kernel.response';
 
@@ -96,11 +83,8 @@ final class KernelEvents
      * The TERMINATE event occurs once a response was sent.
      *
      * This event allows you to run expensive post-response jobs.
-     * The event listener method receives a
-     * Symfony\Component\HttpKernel\Event\PostResponseEvent instance.
      *
-     * @Event
-     *
+     * @event Tk\Event\ResponseEvent
      * @var string
      */
     const TERMINATE = 'kernel.terminate';
@@ -111,7 +95,10 @@ final class KernelEvents
      * This event allows you to reset the global and environmental state of
      * the application, when it was changed during the request.
      *
+     * @event Tk\Event\RequestEvent
      * @var string
      */
     const FINISH_REQUEST = 'kernel.finish_request';
+    
+    
 }

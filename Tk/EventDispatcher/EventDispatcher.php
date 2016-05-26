@@ -1,7 +1,6 @@
 <?php
 namespace Tk\EventDispatcher;
 
-
 use Psr\Log\LoggerInterface;
 
 /**
@@ -17,6 +16,7 @@ use Psr\Log\LoggerInterface;
  */
 class EventDispatcher
 {
+    
     /**
      * @var array
      */
@@ -43,8 +43,6 @@ class EventDispatcher
     {
         $this->logger = $logger;
     }
-    
-    
     
     /**
      * @param string $eventName
@@ -95,9 +93,6 @@ class EventDispatcher
         }
     }
 
-
-
-
     /**
      * Adds an event listener that listens on the specified events.
      *
@@ -112,7 +107,6 @@ class EventDispatcher
         $this->listeners[$eventName][$priority][] = $listener;
         unset($this->sorted[$eventName]);
     }
-
 
     /**
      * Gets the listeners of a specific eventName or all listeners sorted by descending priority.
@@ -135,7 +129,6 @@ class EventDispatcher
         }
         return array_filter($this->sorted);
     }
-
 
     /**
      * Checks whether an event has any registered listeners.
@@ -167,7 +160,6 @@ class EventDispatcher
         }
         return $this;
     }
-
     
     /**
      * Adds an event subscriber.
@@ -227,6 +219,5 @@ class EventDispatcher
         }
     }
     
-    
-    
+        
 }

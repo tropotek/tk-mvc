@@ -56,6 +56,12 @@ HTML;
         
         $response = new Response($html);
         $event->setResponse($response);
+        
+        if ($this->logger) {
+            $this->logger->warning($event->getException()->__toString());
+        }
+        
+        
     }
 
 

@@ -4,9 +4,11 @@ namespace Tk\Kernel;
 use Tk\EventDispatcher\EventDispatcher;
 use Tk\Request;
 use Tk\Response;
+use Tk\Event\KernelEvent;
 use Tk\Event\RequestEvent;
 use Tk\Event\ResponseEvent;
 use Tk\Event\GetResponseEvent;
+use Tk\Event\ControllerResultEvent;
 use Tk\Event\ControllerEvent;
 use Tk\Event\ExceptionEvent;
 use Tk\Event\FilterResponseEvent;
@@ -54,9 +56,6 @@ class HttpKernel
     /**
      * Handles a Request to convert it to a Response.
      *
-     * When $catch is true, the implementation must catch all exceptions
-     * and do its best to convert them to a Response instance.
-     *
      * @param Request $request A Request instance
      * @return Response A Response instance
      * @throws \Exception When an Exception occurs during processing
@@ -70,8 +69,7 @@ class HttpKernel
             return $this->handleException($e, $request);
         }
     }
-
-
+    
     /**
      * Handles a request to convert it to a response.
      * Exceptions are not caught.
@@ -84,36 +82,40 @@ class HttpKernel
      */
     private function handleRaw(Request $request)
     {
+        // Trigger a kernel init event
+        // Here for the future updates to the kernel
+        $this->dispatcher->dispatch(KernelEvents::INIT, new KernelEvent($this));
+        
         // request
         $event = new GetResponseEvent($request, $this);
         $this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
         if ($event->hasResponse()) {
             return $this->filterResponse($event->getResponse(), $request);
         }
-
+        
         // load controller
         if (false === $controller = $this->resolver->getController($request)) {
             throw new \Tk\NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getUri()->getRelativePath()));
         }
-
+        
         $event = new ControllerEvent($controller, $request, $this);
         $this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);
         $controller = $event->getController();
-
+        
         // controller arguments
         $arguments = $this->resolver->getArguments($request, $controller);
-
+        
         // call controller
         $response = call_user_func_array($controller, $arguments);
-
+        
         // view
         if (!$response instanceof Response) {
-            $event = new GetResponseEvent($request, $this);
+            $event = new ControllerResultEvent($response, $request, $this);
             $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
             if ($event->hasResponse()) {
                 $response = $event->getResponse();
             }
-
+            
             if (!$response instanceof Response) {
                 //$msg = sprintf('The controller must return a response (%s given).', $this->varToString($response));
                 $msg = sprintf('The controller must return a response (%s given).', get_class($response));
@@ -149,24 +151,20 @@ class HttpKernel
     {
         $this->dispatcher->dispatch(KernelEvents::FINISH_REQUEST, new RequestEvent($request));
     }
-    
 
     /**
-     * @throws \LogicException If the request stack is empty
+     * Call this if you want to stop the kernel execution
+     * and manually send an exception.
      *
-     * @internal
+     * @param \Exception $exception
+     * @throws \Exception
      */
     public function terminateWithException(\Exception $exception)
     {
         $response = $this->handleException($exception, $this->request);
-
-        // TODO: make the response object write ro the output....
-        //$response->sendHeaders();
-        //$response->sendContent();
-
+        $response->send();
         $this->terminate($this->request, $response);
     }
-    
 
     /**
      * Filters a response object.
@@ -183,8 +181,7 @@ class HttpKernel
         $this->finishRequest($request);
         return $event->getResponse();
     }
-
-
+    
     /**
      * Handles an exception by trying to convert it to a Response.
      *
