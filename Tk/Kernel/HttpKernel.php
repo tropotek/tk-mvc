@@ -24,6 +24,7 @@ use Tk\Controller\ControllerResolver;
  */
 class HttpKernel
 {
+    
     /**
      * @var EventDispatcher
      */
@@ -202,7 +203,6 @@ class HttpKernel
         }
 
         $response = $event->getResponse();
-
         // TODO: Check the exiting response is not clientError, serverError or a redirect...???
         // ensure that we actually have an error response
         if ($e instanceof \Tk\HttpException) {
@@ -219,6 +219,5 @@ class HttpKernel
             return $response;
         }
     }
-    
     
 }
