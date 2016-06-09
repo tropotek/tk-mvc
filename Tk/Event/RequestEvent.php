@@ -1,7 +1,7 @@
 <?php
 namespace Tk\Event;
 
-use Tk\EventDispatcher\Event;
+use Tk\Request;
 
 /**
  * Class RequestEvent
@@ -21,10 +21,10 @@ class RequestEvent extends KernelEvent
     /**
      * __construct
      * 
-     * @param \Tk\Request $request
+     * @param Request $request
      * @param \Tk\Kernel\HttpKernel $kernel
      */
-    public function __construct(\Tk\Request $request, $kernel = null)
+    public function __construct(Request $request, $kernel = null)
     {
         parent::__construct($kernel);
         $this->request = $request;
@@ -33,7 +33,7 @@ class RequestEvent extends KernelEvent
     /**
      * Get the request object.
      * 
-     * @return \Tk\Request
+     * @return Request
      */
     public function getRequest()
     {
