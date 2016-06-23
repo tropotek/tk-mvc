@@ -98,10 +98,10 @@ class HttpKernel
         if (false === $controller = $this->resolver->getController($request)) {
             throw new \Tk\NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getUri()->getRelativePath()));
         }
-        
+        $request->setAttribute('controller', $controller);
         $event = new ControllerEvent($controller, $request, $this);
         $this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);
-        $controller = $event->getController();
+        //$controller = $event->getController();
         
         // controller arguments
         $arguments = $this->resolver->getArguments($request, $controller);
