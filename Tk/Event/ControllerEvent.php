@@ -31,18 +31,36 @@ class ControllerEvent extends RequestEvent
     {
         parent::__construct($request, $kernel);
         $this->controller = $controller;
+        
     }
     
     /**
      * Returns the current controller.
      *
-     * @return mixed|callable
+     * @return mixed|callable|array
      */
     public function getController()
     {
+        if (is_array($this->controller) && isset($this->controller[0])) {
+            return $this->controller[0];
+        }
         return $this->controller;
     }
 
+    /**
+     * getControllerMethod
+     * 
+     * @return string|array
+     */
+    public function getControllerMethod()
+    {
+        if (is_array($this->controller) && isset($this->controller[1])) {
+            return $this->controller[1];
+        }
+        return $this->controller;
+    }
+    
+    
     /**
      * Sets a new controller.
      *
@@ -53,42 +71,10 @@ class ControllerEvent extends RequestEvent
     {
         // controller must be a callable
         if (!is_callable($controller)) {
-            throw new \LogicException(sprintf('The controller must be a callable (%s given).', $this->varToString($controller)));
+            throw new \LogicException(sprintf('The controller must be a callable (%s given).', \Tk\Str::varToString($controller)));
         }
         $this->setController($controller);
     }
 
-    /**
-     * varToString
-     *  
-     * @param $var
-     * @return string
-     */
-    private function varToString($var)
-    {
-        if (is_object($var)) {
-            return sprintf('Object(%s)', get_class($var));
-        }
-        if (is_array($var)) {
-            $a = array();
-            foreach ($var as $k => $v) {
-                $a[] = sprintf('%s => %s', $k, $this->varToString($v));
-            }
-            return sprintf('Array(%s)', implode(', ', $a));
-        }
-        if (is_resource($var)) {
-            return sprintf('Resource(%s)', get_resource_type($var));
-        }
-        if (null === $var) {
-            return 'null';
-        }
-        if (false === $var) {
-            return 'false';
-        }
-        if (true === $var) {
-            return 'true';
-        }
-        return (string) $var;
-    }
     
 }
