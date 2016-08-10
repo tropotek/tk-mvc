@@ -39,7 +39,7 @@ class GetResponseEvent extends RequestEvent
     public function setResponse(Response $response)
     {
         $this->response = $response;
-        $this->stopPropagation();
+        //$this->stopPropagation();
     }
 
     /**

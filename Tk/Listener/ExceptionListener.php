@@ -41,7 +41,6 @@ class ExceptionListener implements SubscriberInterface
     public function onException(ExceptionEvent $event)
     {   
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
-        
         $html = <<<HTML
 <html>
 <head>
@@ -60,8 +59,7 @@ HTML;
         if ($this->logger) {
             $this->logger->warning($event->getException()->__toString());
         }
-        
-        
+
     }
 
 
