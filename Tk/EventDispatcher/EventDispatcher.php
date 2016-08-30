@@ -84,7 +84,7 @@ class EventDispatcher
     {
         foreach ($listeners as $listener) {
             if ($this->logger) {
-                $this->logger->debug('Dispatching: ' . get_class($listener[0]) . '::' . $listener[1] . '()');
+                $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '()');
             }
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
