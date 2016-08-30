@@ -290,7 +290,6 @@ class EventDispatcher
                 $classes[$className]['const'] = array();
             }
 
-
             if (is_array($tokens[$i])) {
                 if ($tokens[$i][0] != T_WHITESPACE) {
                     if ($tokens[$i][0] == T_CONST && $tokens[$i][1] == 'const') {
@@ -305,7 +304,7 @@ class EventDispatcher
                             preg_match('/(.?)(@event .+)/i', $doc, $reg);
                             if (isset($reg[2])) {
                                 $event = trim(trim(str_replace('@event', '', $reg[2])), '\\');
-                                $doc = trim(str_replace($reg[2], '', $doc));
+                                $doc = preg_replace('/\. ?/', "\n", preg_replace('/\s+/', ' ',trim(str_replace($reg[2], '', $doc))));
                             }
                         }
                     } else if ($tokens[$i][0] == T_STRING && $const) {
