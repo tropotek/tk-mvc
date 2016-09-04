@@ -305,6 +305,8 @@ class EventDispatcher
                             if (isset($reg[2])) {
                                 $event = trim(trim(str_replace('@event', '', $reg[2])), '\\');
                                 $doc = preg_replace('/\. ?/', "\n", preg_replace('/\s+/', ' ',trim(str_replace($reg[2], '', $doc))));
+                                // remove duplicate whitespace
+                                $doc = preg_replace("/\s\s([\s]+)?/", " ", $doc);
                             }
                         }
                     } else if ($tokens[$i][0] == T_STRING && $const) {
