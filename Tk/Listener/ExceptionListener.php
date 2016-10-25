@@ -41,14 +41,19 @@ class ExceptionListener implements SubscriberInterface
     public function onException(ExceptionEvent $event)
     {   
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
+        $class = get_class($event->getException());
+        $msg = $event->getException()->getMessage();
+        $str = htmlentities($event->getException()->__toString());
+
         $html = <<<HTML
 <html>
 <head>
-  <title>{$event->getException()->getMessage()}</title>
+  <title>$class</title>
 </head>
-<body>
-<h1>Exception: {$event->getException()->getMessage()}</h1>
-<pre>{$event->getException()->__toString()}</pre>
+<body style="padding: 10px;">
+<h1>$class</h1>
+<p>$msg</p>
+<pre style="margin: 10px 0px;padding: 10px 0px;">$str</pre>
 </body>
 </html>
 HTML;
