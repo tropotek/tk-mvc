@@ -43,17 +43,23 @@ class ExceptionListener implements SubscriberInterface
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
         $class = get_class($event->getException());
         $msg = $event->getException()->getMessage();
-        $str = htmlentities($event->getException()->__toString());
+        $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n".str_replace('Stack trace:', "\n--Stack Trace:-- \n", $event->getException()->__toString()), true));
 
         $html = <<<HTML
 <html>
 <head>
   <title>$class</title>
+<style>
+code, pre {
+  line-height: 1.4em;
+  padding: 0;margin: 0;
+}
+</style>
 </head>
 <body style="padding: 10px;">
 <h1>$class</h1>
 <p>$msg</p>
-<pre style="margin: 10px 0px;padding: 10px 0px;">$str</pre>
+<pre style="">$str</pre>
 </body>
 </html>
 HTML;
