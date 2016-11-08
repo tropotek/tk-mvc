@@ -41,6 +41,9 @@ class EventDispatcher
      */
     public function __construct(LoggerInterface $logger = null)
     {
+        if ($logger == null) {
+            $logger = new \Psr\Log\NullLogger();
+        }
         $this->logger = $logger;
     }
     
@@ -83,9 +86,9 @@ class EventDispatcher
     protected function doDispatch($listeners, $eventName, EventInterface $event)
     {
         foreach ($listeners as $listener) {
-            if ($this->logger) {
-                $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '()');
-            }
+
+            $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '()');
+
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
                 break;

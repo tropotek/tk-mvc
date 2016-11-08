@@ -42,7 +42,10 @@ class ExceptionListener implements SubscriberInterface
     {   
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
         $class = get_class($event->getException());
-        $msg = $event->getException()->getMessage();
+        $e = $event->getException();
+        $msg = $e->getMessage();
+
+        // Color the error for giggles
         $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n".str_replace('Stack trace:', "\n--Stack Trace:-- \n", $event->getException()->__toString()), true));
 
         $html = <<<HTML
@@ -68,9 +71,13 @@ HTML;
         $event->setResponse($response);
         
         if ($this->logger) {
-            $this->logger->warning($event->getException()->__toString());
+            // TODO: Set the logger level based on the exception thrown
+            if ($e instanceof \Tk\WarningException) {
+                $this->logger->warning($event->getException()->__toString());
+            } else {
+                $this->logger->error($event->getException()->__toString());
+            }
         }
-
     }
 
 
