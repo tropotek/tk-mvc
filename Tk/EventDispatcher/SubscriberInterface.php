@@ -10,9 +10,13 @@ namespace Tk\EventDispatcher;
  */
 interface SubscriberInterface
 {
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      * NOTE: The higher priority number is run first.
+     *
+     *                 [1    2    3    4   5]       - order of execution
+     * Priority Order: [100, 1,   0,  -1, -100]     - direction
      *
      * The array keys are event names and the value can be:
      *
@@ -30,4 +34,5 @@ interface SubscriberInterface
      * @return array The event names to listen to
      */
     public static function getSubscribedEvents();
+
 }
