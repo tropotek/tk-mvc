@@ -1,5 +1,13 @@
 #CHANGELOG#
 
+Ver 2.0.2 [2016-11-11]:
+-------------------------------
+ - That will do fine
+ - Deprecated debug lib in favor of the framework \Tk\Debug objects and new framework functions folder
+ - Fixed some url path issues, added PageBytes Dom Filter
+ - Finalising View Project page
+
+
 Ver 2.0.1 [2016-09-05]:
 -------------------------------
  - Fixed event position in app
