@@ -86,7 +86,8 @@ class EventDispatcher
     protected function doDispatch($listeners, $eventName, EventInterface $event)
     {
         foreach ($listeners as $listener) {
-            $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '()');
+            if (is_array($listener))
+                $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '()');
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
                 break;
