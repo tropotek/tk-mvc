@@ -64,7 +64,7 @@ class Resolver
             if (method_exists($controller, '__invoke')) {
                 return $controller;
             }
-            throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getPathInfo()));
+            throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getUri()->getRelativePath()));
         }
 
         if (false === strpos($controller, ':')) {       // Is it a class name or a function name
@@ -78,7 +78,7 @@ class Resolver
         $callable = $this->createController($controller);
 
         if (!is_callable($callable)) {
-            throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', $controller, $request->getPathInfo()));
+            throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', $controller, $request->getUri()->getRelativePath()));
         }
 
         return $callable;
