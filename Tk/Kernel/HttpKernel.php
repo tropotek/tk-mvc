@@ -12,7 +12,7 @@ use Tk\Event\ControllerResultEvent;
 use Tk\Event\ControllerEvent;
 use Tk\Event\ExceptionEvent;
 use Tk\Event\FilterResponseEvent;
-use Tk\Controller\ControllerResolver;
+use Tk\Controller\Resolver;
 
 /**
  * Class HttpKernel
@@ -31,7 +31,7 @@ class HttpKernel
     protected $dispatcher = null;
 
     /**
-     * @var ControllerResolver
+     * @var Resolver
      */
     protected $resolver = null;
 
@@ -46,9 +46,9 @@ class HttpKernel
      * Constructor.
      *
      * @param EventDispatcher  $dispatcher
-     * @param ControllerResolver $resolver
+     * @param Resolver $resolver
      */
-    public function __construct(EventDispatcher $dispatcher, ControllerResolver $resolver)
+    public function __construct(EventDispatcher $dispatcher, Resolver $resolver)
     {
         $this->dispatcher = $dispatcher;
         $this->resolver = $resolver;
@@ -108,7 +108,7 @@ class HttpKernel
         
         // call controller
         $response = call_user_func_array($controller, $arguments);
-        
+
         // view
         if (!$response instanceof Response) {
             $event = new ControllerResultEvent($response, $request, $this);

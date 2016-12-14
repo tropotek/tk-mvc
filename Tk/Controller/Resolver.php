@@ -12,7 +12,7 @@ use Tk\Request;
  * @license Copyright 2016 Michael Mifsud
  * @notes Adapted from Symfony
  */
-class ControllerResolver
+class Resolver
 {
     /**
      * @var LoggerInterface
@@ -43,7 +43,7 @@ class ControllerResolver
      * the controller name (a string like ClassName::MethodName).
      *
      * @param Request $request A Request instance
-     * @return callable|false A PHP callable representing the Controller,
+     * @return object|callable|false A PHP callable representing the Controller,
      *                        or false if this resolver is not able to determine the controller
      * @throws \LogicException If the controller can't be found
      */
@@ -66,8 +66,8 @@ class ControllerResolver
             }
             throw new \InvalidArgumentException(sprintf('Controller "%s" for URI "%s" is not callable.', get_class($controller), $request->getPathInfo()));
         }
-        
-        if (false === strpos($controller, ':')) {       // Is an class name or a function name
+
+        if (false === strpos($controller, ':')) {       // Is it a class name or a function name
             if (method_exists($controller, '__invoke')) {
                 return $this->instantiateController($controller);
             } elseif (function_exists($controller)) {
@@ -90,12 +90,11 @@ class ControllerResolver
      * are then added to the args array.
      *
      * @param Request $request A Request instance
-     * @param callable $controller A PHP callable
+     * @param callable|object $controller A PHP callable
      * @return array An array of arguments to pass to the controller
      */
     public function getArguments(Request $request, $controller)
-    {   
-        // TODO: get other args for the called controller
+    {
         if (is_array($controller)) {
             $r = new \ReflectionMethod($controller[0], $controller[1]);
         } elseif (is_object($controller) && !$controller instanceof \Closure) {
