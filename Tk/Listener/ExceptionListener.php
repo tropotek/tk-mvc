@@ -22,6 +22,8 @@ class ExceptionListener implements SubscriberInterface
      * @var LoggerInterface
      */
     private $logger;
+    
+    private $isDebug = false;
 
     /**
      * Constructor.
@@ -31,6 +33,8 @@ class ExceptionListener implements SubscriberInterface
     public function __construct(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
+        // TODO: This param should be passed into the constructor.
+        $this->isDebug = \Tk\Config::getInstance()->isDebug();
     }
 
 
@@ -46,8 +50,13 @@ class ExceptionListener implements SubscriberInterface
         $msg = $e->getMessage();
 
         // Color the error for giggles
-        $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n".str_replace('Stack trace:', "\n--Stack Trace:-- \n", $event->getException()->__toString()), true));
-
+        // Do not show in debug mode
+        $str = '';
+        if ($this->isDebug) {
+            $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . str_replace('Stack trace:', "\n--Stack Trace:-- \n", $event->getException()->__toString()), true));
+        }
+        
+        
         $html = <<<HTML
 <html>
 <head>
