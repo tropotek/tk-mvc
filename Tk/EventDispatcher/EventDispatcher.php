@@ -232,7 +232,7 @@ class EventDispatcher
      * @return array
      * @throws \Tk\Exception
      */
-    public function getAvailableEvents($searchPath, $fileReg = '/.+SystemEvents.php$/')
+    public function getAvailableEvents($searchPath, $fileReg = '/.+Events.php$/')
     {
         if (!is_dir($searchPath)) {
             throw new \Tk\Exception('Cannot open file path: ' . $searchPath);
