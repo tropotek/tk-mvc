@@ -1,5 +1,12 @@
 #CHANGELOG#
 
+Ver 2.0.5 [2017-02-23]:
+-------------------------------
+ - Minor Code Updates
+ - Fixed up the code with new lib updates
+ - 252s-dev.vet.unimelb.edu.au
+
+
 Ver 2.0.4 [2017-01-06]:
 -------------------------------
  - Fixed page not found error for public view
