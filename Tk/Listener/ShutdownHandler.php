@@ -64,6 +64,12 @@ class ShutdownHandler implements SubscriberInterface
                 }
             }
 
+            //$this->out('------------------------------------------------');
+            $this->out('Response Headers:');
+            $this->out('  HTTP Code: ' . http_response_code() . ' ');
+            foreach (headers_list() as $line) {
+                $this->out('  ' . $line);
+            }
             //$this->log->debug($this->toString());
             $this->out('------------------------------------------------' . \PHP_EOL);
         }

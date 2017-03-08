@@ -49,8 +49,13 @@ class StartupHandler implements SubscriberInterface
     {
         if ($this->logger) {
             $this->out('------------------------------------------------');
-            $this->out('- ' . \TK\Config::getInstance()->getSiteTitle() . ' [' . \TK\Config::getInstance()->getSystemProject() . ']');
-            $this->out('- ' . date('Y-m-d H:i:s'));
+            $prj = '';
+
+            if (\TK\Config::getInstance()->getSystemProject()) {
+                $prj = ' ['.\TK\Config::getInstance()->getSystemProject().']';
+            }
+            $this->out('- Project: ' . \TK\Config::getInstance()->getSiteTitle() . $prj);
+            $this->out('- Date: ' . date('Y-m-d H:i:s'));
             if ($this->request) {
                 $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri());
                 $this->out('- ' . $this->request->getIp());
