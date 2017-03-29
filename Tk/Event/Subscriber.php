@@ -1,5 +1,5 @@
 <?php
-namespace Tk\EventDispatcher;
+namespace Tk\Event;
 
 /**
  * Interface SubscriberInterface
@@ -8,7 +8,7 @@ namespace Tk\EventDispatcher;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-interface SubscriberInterface
+interface Subscriber
 {
 
     /**

@@ -2,7 +2,7 @@
 namespace Tk\Listener;
 
 use Psr\Log\LoggerInterface;
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Subscriber;
 use Tk\Request;
 use Tk\Session;
 
@@ -14,7 +14,7 @@ use Tk\Session;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class StartupHandler implements SubscriberInterface
+class StartupHandler implements Subscriber
 {
 
     /**

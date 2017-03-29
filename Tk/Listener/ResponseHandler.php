@@ -2,7 +2,7 @@
 namespace Tk\Listener;
 
 
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Subscriber;
 use Tk\Kernel\KernelEvents;
 use Tk\Response;
 
@@ -14,7 +14,7 @@ use Tk\Response;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class ResponseHandler implements SubscriberInterface
+class ResponseHandler implements Subscriber
 {
 
     /**

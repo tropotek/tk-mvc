@@ -1,7 +1,7 @@
 <?php
 namespace Tk\Kernel;
 
-use Tk\EventDispatcher\EventDispatcher;
+use Tk\Event\Dispatcher;
 use Tk\Request;
 use Tk\Response;
 use Tk\Event\KernelEvent;
@@ -26,7 +26,7 @@ class HttpKernel
 {
     
     /**
-     * @var EventDispatcher
+     * @var Dispatcher
      */
     protected $dispatcher = null;
 
@@ -45,13 +45,29 @@ class HttpKernel
     /**
      * Constructor.
      *
-     * @param EventDispatcher  $dispatcher
+     * @param Dispatcher  $dispatcher
      * @param Resolver $resolver
      */
-    public function __construct(EventDispatcher $dispatcher, Resolver $resolver)
+    public function __construct(Dispatcher $dispatcher, Resolver $resolver)
     {
         $this->dispatcher = $dispatcher;
         $this->resolver = $resolver;
+    }
+
+    /**
+     * @return Dispatcher
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
+    }
+
+    /**
+     * @return Resolver
+     */
+    public function getResolver()
+    {
+        return $this->resolver;
     }
 
     /**
@@ -85,26 +101,26 @@ class HttpKernel
     {
         // Trigger a kernel init event
         // Here for the future updates to the kernel
-        $this->dispatcher->dispatch(KernelEvents::INIT, new KernelEvent($this));
+        $this->getDispatcher()->dispatch(KernelEvents::INIT, new KernelEvent($this));
         
         // request
         $event = new GetResponseEvent($request, $this);
-        $this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
+        $this->getDispatcher()->dispatch(KernelEvents::REQUEST, $event);
         if ($event->hasResponse()) {
             return $this->filterResponse($event->getResponse(), $request);
         }
         
         // load controller
-        if (false === $controller = $this->resolver->getController($request)) {
+        if (false === $controller = $this->getResolver()->getController($request)) {
             throw new \Tk\NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getUri()->getRelativePath()));
         }
         $request->setAttribute('controller', $controller);
         $event = new ControllerEvent($controller, $request, $this);
-        $this->dispatcher->dispatch(KernelEvents::CONTROLLER, $event);
+        $this->getDispatcher()->dispatch(KernelEvents::CONTROLLER, $event);
         //$controller = $event->getController();
         
         // controller arguments
-        $arguments = $this->resolver->getArguments($request, $controller);
+        $arguments = $this->getResolver()->getArguments($request, $controller);
         
         // call controller
         $response = call_user_func_array($controller, $arguments);
@@ -112,7 +128,7 @@ class HttpKernel
         // view
         if (!$response instanceof Response) {
             $event = new ControllerResultEvent($response, $request, $this);
-            $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
+            $this->getDispatcher()->dispatch(KernelEvents::VIEW, $event);
             if ($event->hasResponse()) {
                 $response = $event->getResponse();
             }
@@ -140,7 +156,7 @@ class HttpKernel
      */
     public function terminate(Request $request, Response $response)
     {
-        $this->dispatcher->dispatch(KernelEvents::TERMINATE, new ResponseEvent($response, $request, $this));
+        $this->getDispatcher()->dispatch(KernelEvents::TERMINATE, new ResponseEvent($response, $request, $this));
     }
     
     /**
@@ -150,21 +166,25 @@ class HttpKernel
      */
     private function finishRequest(Request $request)
     {
-        $this->dispatcher->dispatch(KernelEvents::FINISH_REQUEST, new RequestEvent($request));
+        $this->getDispatcher()->dispatch(KernelEvents::FINISH_REQUEST, new RequestEvent($request));
     }
 
     /**
      * Call this if you want to stop the kernel execution
      * and manually send an exception.
+     * TODO: see how this goes using a new request instance instead
      *
      * @param \Exception $exception
      * @throws \Exception
      */
     public function terminateWithException(\Exception $exception)
     {
-        $response = $this->handleException($exception, $this->request);
+        $request = \Tk\Request::create();
+        //$response = $this->handleException($exception, $this->request);
+        $response = $this->handleException($exception, $request);
         $response->send();
-        $this->terminate($this->request, $response);
+        //$this->terminate($this->request, $response);
+        $this->terminate($request, $response);
     }
 
     /**
@@ -178,7 +198,7 @@ class HttpKernel
     private function filterResponse(Response $response, Request $request)
     {
         $event = new FilterResponseEvent($response, $request, $this);
-        $this->dispatcher->dispatch(KernelEvents::RESPONSE, $event);
+        $this->getDispatcher()->dispatch(KernelEvents::RESPONSE, $event);
         $this->finishRequest($request);
         return $event->getResponse();
     }
@@ -194,7 +214,7 @@ class HttpKernel
     private function handleException(\Exception $e, $request)
     {
         $event = new ExceptionEvent($e, $request, $this);
-        $this->dispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+        $this->getDispatcher()->dispatch(KernelEvents::EXCEPTION, $event);
         // a listener might have replaced the exception
         $e = $event->getException();
         if (!$event->hasResponse()) {

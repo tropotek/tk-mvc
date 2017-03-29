@@ -1,9 +1,9 @@
 <?php
 namespace tests;
 
-use Tk\EventDispatcher\EventDispatcher;
-use Tk\EventDispatcher\Event;
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Dispatcher;
+use Tk\Event\Event;
+use Tk\Event\Subscriber;
 
 /**
  * Class DispatcherTest
@@ -15,7 +15,7 @@ use Tk\EventDispatcher\SubscriberInterface;
 class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var EventDispatcher
+     * @var Dispatcher
      */
     protected $dispatcher = null;
 
@@ -35,7 +35,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->dispatcher = new EventDispatcher();
+        $this->dispatcher = new Dispatcher();
 
     }
 
@@ -48,7 +48,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     
     public function testDispatcher()
     {
-        $this->assertInstanceOf('Tk\EventDispatcher\EventDispatcher', $this->dispatcher);
+        $this->assertInstanceOf('Tk\Event\Dispatcher', $this->dispatcher);
     }
     
     
@@ -105,7 +105,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     }
 }
 
-class DummyListener implements SubscriberInterface
+class DummyListener implements Subscriber
 {
     public function doOne(Event $event)
     {

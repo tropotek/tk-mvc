@@ -1,7 +1,6 @@
 <?php
 namespace Tk\Event;
 
-use Tk\EventDispatcher\Event;
 
 /**
  * Class KernelEvent
@@ -11,7 +10,7 @@ use Tk\EventDispatcher\Event;
  * @license Copyright 2016 Michael Mifsud
  * @notes Adapted from Symfony
  */
-class KernelEvent extends Event
+class KernelEvent extends Iface
 {
     /**
      * @var \Tk\Kernel\HttpKernel

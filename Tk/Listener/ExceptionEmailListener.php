@@ -1,7 +1,7 @@
 <?php
 namespace Tk\Listener;
 
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Subscriber;
 use Psr\Log\LoggerInterface;
 
 
@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class ExceptionEmailListener implements SubscriberInterface
+class ExceptionEmailListener implements Subscriber
 {
     /**
      * @var LoggerInterface

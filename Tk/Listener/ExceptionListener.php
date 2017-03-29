@@ -2,7 +2,7 @@
 namespace Tk\Listener;
 
 use Tk\Event\ExceptionEvent;
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Subscriber;
 use Psr\Log\LoggerInterface;
 use Tk\Response;
 
@@ -14,7 +14,7 @@ use Tk\Response;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class ExceptionListener implements SubscriberInterface
+class ExceptionListener implements Subscriber
 {
     
 

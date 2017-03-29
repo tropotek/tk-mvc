@@ -1,5 +1,5 @@
 <?php
-namespace Tk\EventDispatcher;
+namespace Tk\Event;
 
 /**
  * Class Event
@@ -8,7 +8,7 @@ namespace Tk\EventDispatcher;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-abstract class EventInterface extends \Tk\Collection
+abstract class Iface extends \Tk\Collection
 {
     
     /**

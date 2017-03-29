@@ -3,7 +3,7 @@
 namespace Tk\Listener;
 
 use Psr\Log\LoggerInterface;
-use Tk\EventDispatcher\SubscriberInterface;
+use Tk\Event\Subscriber;
 
 /**
  * Class ShutdownHandler
@@ -12,7 +12,7 @@ use Tk\EventDispatcher\SubscriberInterface;
  * @link http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class ShutdownHandler implements SubscriberInterface
+class ShutdownHandler implements Subscriber
 {
     /**
      * @var LoggerInterface

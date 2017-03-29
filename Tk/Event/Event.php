@@ -1,19 +1,17 @@
 <?php
+namespace Tk\Event;
 
-
-namespace Tk\EventDispatcher;
 
 /**
- * Class Event
+ * Class KernelEvent
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
+ * @notes Adapted from Symfony
  */
-class Event extends EventInterface
+class Event extends Iface
 {
-    
-    
-    
-    
+
+
 }

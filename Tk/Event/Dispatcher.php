@@ -1,5 +1,5 @@
 <?php
-namespace Tk\EventDispatcher;
+namespace Tk\Event;
 
 use Psr\Log\LoggerInterface;
 
@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
  * @license Copyright 2016 Michael Mifsud
  * @notes Adapted from Symfony
  */
-class EventDispatcher
+class Dispatcher
 {
     
     /**
@@ -58,10 +58,10 @@ class EventDispatcher
 
     /**
      * @param $eventName
-     * @param EventInterface $event
-     * @return Event|EventInterface
+     * @param Iface $event
+     * @return Iface
      */
-    public function dispatch($eventName, EventInterface $event = null)
+    public function dispatch($eventName, Iface $event = null)
     {
         if (null === $event) {
             $event = new Event();
@@ -81,13 +81,13 @@ class EventDispatcher
      *
      * @param callable[]        $listeners The event listeners.
      * @param string            $eventName The name of the event to dispatch.
-     * @param EventInterface    $event     The event object to pass to the event handlers/listeners.
+     * @param Iface    $event     The event object to pass to the event handlers/listeners.
      */
-    protected function doDispatch($listeners, $eventName, EventInterface $event)
+    protected function doDispatch($listeners, $eventName, Iface $event)
     {
         foreach ($listeners as $listener) {
             if (is_array($listener))
-                $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '()');
+                $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '('.get_class($event).')');
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
                 break;
@@ -169,10 +169,10 @@ class EventDispatcher
      * The subscriber is asked for all the events he is
      * interested in and added as a listener for these events.
      *
-     * @param SubscriberInterface $subscriber The subscriber.
+     * @param Subscriber $subscriber The subscriber.
      * @return $this
      */
-    public function addSubscriber(SubscriberInterface $subscriber)
+    public function addSubscriber(Subscriber $subscriber)
     {
         foreach ($subscriber->getSubscribedEvents() as $eventName => $params) {
             if (is_string($params)) { // array('eventName' => 'methodName')
@@ -191,9 +191,9 @@ class EventDispatcher
     /**
      * Removes an event subscriber.
      *
-     * @param SubscriberInterface $subscriber The subscriber
+     * @param Subscriber $subscriber The subscriber
      */
-    public function removeSubscriber(SubscriberInterface $subscriber)
+    public function removeSubscriber(Subscriber $subscriber)
     {
         foreach ($subscriber->getSubscribedEvents() as $eventName => $params) {
             if (is_array($params) && is_array($params[0])) {
@@ -306,7 +306,9 @@ class EventDispatcher
                             preg_match('/(.?)(@event .+)/i', $doc, $reg);
                             if (isset($reg[2])) {
                                 $event = trim(trim(str_replace('@event', '', $reg[2])), '\\');
-                                $doc = preg_replace('/\. ?/', "\n", preg_replace('/\s+/', ' ',trim(str_replace($reg[2], '', $doc))));
+                                $doc = trim(str_replace($reg[2], '', $doc));
+                                $doc = preg_replace('/\s+/', ' ', $doc);
+                                $doc = preg_replace('/([\.:]) /', "$1\n", $doc);
                                 // remove duplicate whitespace
                                 $doc = preg_replace("/\s\s([\s]+)?/", " ", $doc);
                             }
