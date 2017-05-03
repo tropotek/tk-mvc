@@ -29,6 +29,7 @@ class ShutdownHandler implements Subscriber
      */
     protected $pageBytes = null;
 
+
     /**
      * @param LoggerInterface $logger
      * @param int $scriptStartTime
@@ -52,27 +53,23 @@ class ShutdownHandler implements Subscriber
      */
     public function onTerminate(\Tk\Event\ResponseEvent $event)
     {
-        if ($this->logger) {
-            $this->out('------------------------------------------------');
-            if ($this->scriptStartTime > 0)
-                $this->out('Load Time: ' . round($this->scriptDuration(), 4) . ' sec');
-            $this->out('Peek Mem:  ' . \Tk\File::bytes2String(memory_get_peak_usage(), 4));
+        if (!$this->logger) return;
 
-            if ($this->pageBytes) {
-                foreach (explode("\n", $this->pageBytesToString()) as $line) {
-                    $this->out($line);
-                }
+        $this->out('------------------------------------------------');
+        if ($this->scriptStartTime > 0)
+            $this->out('Load Time: ' . round($this->scriptDuration(), 4) . ' sec');
+        $this->out('Peek Mem:  ' . \Tk\File::bytes2String(memory_get_peak_usage(), 4));
+
+        if ($this->pageBytes) {
+            foreach (explode("\n", $this->pageBytesToString()) as $line) {
+                $this->out($line);
             }
-
-            //$this->out('------------------------------------------------');
-            $this->out('Response Headers:');
-            $this->out('  HTTP Code: ' . http_response_code() . ' ');
-//            foreach (headers_list() as $line) {
-//                $this->out('  ' . $line);
-//            }
-            //$this->log->debug($this->toString());
-            $this->out('------------------------------------------------' . \PHP_EOL);
         }
+
+        $this->out('Response Headers:');
+        $this->out('  HTTP Code: ' . http_response_code() . ' ');
+        $this->out('------------------------------------------------' . \PHP_EOL);
+
     }
 
     private function out($str)
@@ -83,6 +80,7 @@ class ShutdownHandler implements Subscriber
 
     /**
      * @return string
+     * TODO fix this.
      */
     private function pageBytesToString()
     {

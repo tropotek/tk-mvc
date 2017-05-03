@@ -47,27 +47,28 @@ class StartupHandler implements Subscriber
 
     public function onInit(\Tk\Event\KernelEvent $event)
     {
-        if ($this->logger) {
-            $this->out('------------------------------------------------');
-            $prj = '';
+        if (!$this->logger) return;
 
-            if (\TK\Config::getInstance()->getSystemProject()) {
-                $prj = ' ['.\TK\Config::getInstance()->getSystemProject().']';
-            }
-            $this->out('- Project: ' . \TK\Config::getInstance()->getSiteTitle() . $prj);
-            $this->out('- Date: ' . date('Y-m-d H:i:s'));
-            if ($this->request) {
-                $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri());
-                $this->out('- ' . $this->request->getIp());
-                $this->out('- ' . $this->request->getUserAgent());
-            }
-            if ($this->session) {
-                $this->out('- Session ID: ' . $this->session->getId());
-                $this->out('- Session Name: ' . $this->session->getName());
-            }
-            $this->out('- PHP: ' . \PHP_VERSION);
-            $this->out('------------------------------------------------');
+        $this->out('------------------------------------------------');
+        $prj = '';
+
+        if (\TK\Config::getInstance()->getSystemProject()) {
+            $prj = ' ['.\TK\Config::getInstance()->getSystemProject().']';
         }
+        $this->out('- Project: ' . \TK\Config::getInstance()->getSiteTitle() . $prj);
+        $this->out('- Date: ' . date('Y-m-d H:i:s'));
+        if ($this->request) {
+            $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri());
+            $this->out('- ' . $this->request->getIp());
+            $this->out('- ' . $this->request->getUserAgent());
+        }
+        if ($this->session) {
+            $this->out('- Session ID: ' . $this->session->getId());
+            $this->out('- Session Name: ' . $this->session->getName());
+        }
+        $this->out('- PHP: ' . \PHP_VERSION);
+        $this->out('------------------------------------------------');
+
     }
 
     private function out($str)
