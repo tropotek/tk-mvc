@@ -15,7 +15,7 @@ use Tk\Event\Subscriber;
 class ShutdownHandler implements Subscriber
 {
 
-    public static $SCRIPT_END =  "\t\0";
+    public static $SCRIPT_END =  "- Shutdown -\0";
 
 
     /**
