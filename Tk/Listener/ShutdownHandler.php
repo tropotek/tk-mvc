@@ -14,6 +14,10 @@ use Tk\Event\Subscriber;
  */
 class ShutdownHandler implements Subscriber
 {
+
+    public static $SCRIPT_END =  "\t\0";
+
+
     /**
      * @var LoggerInterface
      */
@@ -38,6 +42,19 @@ class ShutdownHandler implements Subscriber
     {
         $this->logger = $logger;
         $this->scriptStartTime = $scriptStartTime;
+
+        register_shutdown_function(array($this, 'onShutdown'));
+
+    }
+
+    /**
+     *
+     */
+    public function onShutdown()
+    {
+        if (!$this->logger) return;
+
+        $this->out(self::$SCRIPT_END . \PHP_EOL);
     }
 
     /**
@@ -68,14 +85,16 @@ class ShutdownHandler implements Subscriber
 
         $this->out('Response Headers:');
         $this->out('  HTTP Code: ' . http_response_code() . ' ');
-        $this->out('------------------------------------------------' . \PHP_EOL);
+        $this->out('------------------------------------------------');
 
     }
 
     private function out($str)
     {
-        //$this->logger->info(\Tk\Color::getCliString($str, 'white'));
-        $this->logger->info($str);
+        if($this->logger) {
+            //$this->logger->info(\Tk\Color::getCliString($str, 'white'));
+            $this->logger->info($str);
+        }
     }
 
     /**
