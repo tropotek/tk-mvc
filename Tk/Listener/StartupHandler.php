@@ -58,9 +58,10 @@ class StartupHandler implements Subscriber
         $this->out('- Project: ' . \TK\Config::getInstance()->getSiteTitle() . $prj);
         $this->out('- Date: ' . date('Y-m-d H:i:s'));
         if ($this->request) {
-            $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri());
-            $this->out('- ' . $this->request->getIp());
-            $this->out('- ' . $this->request->getUserAgent());
+            $this->out('- Host: ' . $this->request->getUri()->getScheme() . '://' . $this->request->getUri()->getHost());
+            $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri()->toString(false, false));
+            $this->out('- Client IP: ' . $this->request->getIp());
+            $this->out('- User Agent: ' . $this->request->getUserAgent());
         }
         if ($this->session) {
             $this->out('- Session ID: ' . $this->session->getId());
