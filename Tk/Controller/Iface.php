@@ -85,6 +85,20 @@ abstract class Iface extends \Dom\Renderer\Renderer
     {
         return $this->getConfig()->getTemplatePath() . $this->getConfig()->get('template.xtpl.path');
     }
+    
+    
+
+    /**
+     * @param $title
+     * @return $this
+     */
+    public function setPageTitle($title)
+    {
+        if ($this->getPage()) {
+            $this->getPage()->setTitle($title);
+        }
+        return $this;
+    }
 
     /**
      * Get the global config object.
