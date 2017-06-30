@@ -117,11 +117,9 @@ class HttpKernel
         $request->setAttribute('controller', $controller);
         $event = new ControllerEvent($controller, $request, $this);
         $this->getDispatcher()->dispatch(KernelEvents::CONTROLLER, $event);
-        //$controller = $event->getController();
         
         // controller arguments
         $arguments = $this->getResolver()->getArguments($request, $controller);
-        
         // call controller
         $response = call_user_func_array($controller, $arguments);
 

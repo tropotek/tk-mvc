@@ -1,7 +1,6 @@
 <?php
 namespace Tk\Listener;
 
-
 use Tk\Event\Subscriber;
 use Tk\Kernel\KernelEvents;
 use Tk\Response;
@@ -32,7 +31,9 @@ class ResponseHandler implements Subscriber
         $this->domModifier = $domModifier;
     }
 
+    
     /**
+     * kernel.view
      * domModify 
      *
      * @param \Tk\Event\ControllerResultEvent $event
@@ -55,6 +56,7 @@ class ResponseHandler implements Subscriber
     }
 
     /**
+     * kernel.view
      * NOTE: if you want to modify the template using its API
      * you must add the listeners before this one its priority is set to -100
      * make sure your handlers have a priority > -100 so this is run last
@@ -79,6 +81,7 @@ class ResponseHandler implements Subscriber
     }
 
     /**
+     * kernel.response
      * Add any headers to the final response.
      * 
      * @param \Tk\Event\FilterResponseEvent $event
