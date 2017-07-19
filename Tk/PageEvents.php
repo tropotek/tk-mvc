@@ -22,6 +22,20 @@ class PageEvents
      *
      * @event \Tk\Event\Event
      */
+    const CONTROLLER_INIT = 'controller.init';
+
+    /**
+     * Called after the controller Controller/Iface::show() method has been called
+     * Use this to modify the controller content.
+     *
+     * You will need to check what the controller class is to know where you are.
+     *
+     * <code>
+     *     if ($event->get('controller') instanceof \App\Controller\Index) { ... }
+     * </code>
+     *
+     * @event \Tk\Event\Event
+     */
     const CONTROLLER_SHOW = 'controller.show';
 
     /**

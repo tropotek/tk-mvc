@@ -14,6 +14,7 @@ use \Tk\Response;
 class ControllerResultEvent extends GetResponseEvent
 {
 
+
     /**
      * @var mixed
      */

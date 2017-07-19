@@ -85,6 +85,13 @@ class PageHandler implements Subscriber
         // View called
         $result = $event->getControllerResult();
         if(!$result && $this->getController()) {
+
+            if ($this->getDispatcher()) {
+                $e = new \Tk\Event\Event();
+                $e->set('controller', $this->getController());
+                $this->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_INIT, $e);
+            }
+
             // Controller::show()
             preg_match('/::do([A-Z][a-zA-Z0-9_]+)$/', $event->getRequest()->getAttribute('_controller'), $regs);
             $show = 'show'; 
@@ -202,7 +209,7 @@ class PageHandler implements Subscriber
         return array(
             KernelEvents::REQUEST =>  array('onRequest', 0),
             KernelEvents::CONTROLLER =>  array('onController', 10),
-            \App\AppEvents::SHOW =>  array('onShow', 0),
+            \Tk\PageEvents::CONTROLLER_SHOW =>  array('onShow', 0),
             KernelEvents::VIEW =>  array('onView', 0)
         );
     }

@@ -1,7 +1,6 @@
 <?php
 namespace Tk\Event;
 
-use \Tk\Response;
 
 /**
  * Class ControllerEvent
