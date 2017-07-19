@@ -1,8 +1,6 @@
 <?php
 namespace Tk\Controller;
 
-
-
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
@@ -10,12 +8,12 @@ namespace Tk\Controller;
  */
 class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
+
     /**
      * The page template var name to place the controller content into
      * @var string
      */
     protected $contentVar = 'content';
-    
 
     /**
      * @var \App\Controller\Iface
@@ -28,7 +26,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     protected $title = '';
 
     /**
-     * @todo: refactor the template path into a class
+     * @todo: refactor the template path into a class or remove...
      * @var string
      */
     protected $templatePath = '';
@@ -43,10 +41,6 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     public function __construct(\Tk\Controller\Iface $controller)
     {
         $this->controller = $controller;
-//        if (!$this->templatePath)
-//            $this->templatePath = $this->getConfig()->getTemplatePath() . $this->getConfig()->get('template.public.path');
-
-        //$this->show();
     }
     
 
