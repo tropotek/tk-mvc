@@ -21,28 +21,13 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     protected $controller = null;
 
     /**
-     * @var string
-     */
-    protected $title = '';
-
-    /**
      * @todo: refactor the template path into a class or remove...
      * @var string
+     * @deprecated ??? still working out a better solution to template paths
      */
     protected $templatePath = '';
 
-    
-    
-    /**
-     * Iface constructor.
-     *
-     * @param \Tk\Controller\Iface $controller
-     */
-    public function __construct(\Tk\Controller\Iface $controller)
-    {
-        $this->controller = $controller;
-    }
-    
+
 
     /**
      * Set the page Content
@@ -72,13 +57,12 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
         }
         return $this;
     }
-    
-    
-    
-    public function init()
-    {
-        // ????
-    }
+
+
+    /**
+     * Init the page ????
+     */
+    public function init() { }
 
     /**
      * The default page show method
@@ -131,9 +115,9 @@ JS;
         }
        
         // Set page title
-        if ($this->getTitle()) {
-            $template->setTitleText(trim($this->getTitle() . ' - ' . $template->getTitleText(), '- '));
-            $template->insertText('pageHeading', $this->getTitle());
+        if ($this->getController() && $this->getController()->getPageTitle()) {
+            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
+            $template->insertText('pageHeading', $this->getController()->getPageTitle());
             $template->setChoice('pageHeading');
         }
         if ($this->getConfig()->isDebug()) {
@@ -158,39 +142,23 @@ JS;
     {
         $this->contentVar = $contentVar;
     }
-
-    /**
-     *
-     * @return string
-     * @todo refactor
-     */
-    public function getTemplatePath()
-    {
-        return $this->templatePath;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
     
     /**
-     * @return \App\Controller\Iface
+     * @return Iface
      */
     public function getController()
     {
         return $this->controller;
+    }
+
+    /**
+     * @param Iface $controller
+     * @return $this
+     */
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+        return $this;
     }
 
     /**
@@ -201,6 +169,17 @@ JS;
     public function getConfig()
     {
         return \Tk\Config::getInstance();
+    }
+
+    /**
+     *
+     * @return string
+     * @todo refactor
+     * @deprecated Thing of a better way to handle template/theme paths
+     */
+    public function getTemplatePath()
+    {
+        return $this->templatePath;
     }
 
     /**

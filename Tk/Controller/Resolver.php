@@ -5,7 +5,6 @@ use Psr\Log\LoggerInterface;
 use Tk\Request;
 
 /**
- * Class ControllerResolver
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
@@ -17,7 +16,7 @@ class Resolver
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     /**
      * Constructor.

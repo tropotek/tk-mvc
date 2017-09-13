@@ -14,7 +14,11 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     protected $page = null;
 
-    
+    /**
+     * @var string
+     */
+    protected $pageTitle = '';
+
     // - Controller::__construct()      -- kernel.request
     // - Controller::doDefault()        -- after kernel.controller
     // - Page::init()                   -- 
@@ -22,12 +26,24 @@ abstract class Iface extends \Dom\Renderer\Renderer
     // - Page::show()                   -- 
     // - insert controller into page    -- kernel.view
     // - parse page template            -- kernel.view
-    
-    
+
+    /**
+     * @return string
+     */
+    public function getDefaultTitle()
+    {
+        /** @var \Tk\Request $request */
+        $request = $this->getConfig()->getRequest();
+        if ($request) {
+            $routeName = $request->getAttribute('_route');
+            return ucwords(trim(str_replace('-', ' ', $routeName)));
+        }
+        return '';
+    }
 
     /**
      * Get a new instance of the page to display the content in.
-     * 
+     *
      * NOTE: This is the default, override to load your own page objects
      *
      * @return \Tk\Controller\Page
@@ -35,11 +51,22 @@ abstract class Iface extends \Dom\Renderer\Renderer
     public function getPage()
     {
         if (!$this->page) {
-            $this->page = new \Tk\Controller\Page($this);
+            $this->page = new \Tk\Controller\Page();
+            $this->page->setController($this);
         }
         return $this->page;
     }
-    
+
+    /**
+     * @param $page
+     * @return $this
+     */
+    public function setPage($page)
+    {
+        $this->page = $page;
+        return $this;
+    }
+
     /**
      * For compatibility
      * @return \Dom\Template
@@ -50,54 +77,22 @@ abstract class Iface extends \Dom\Renderer\Renderer
         return $template;
     }
 
-    
-    
-    
-    /**
-     *
-     * @return string
-     * @todo Refactor
-     * @deprecated
-     */
-    public function getTemplateUrl()
-    {
-        return $this->getConfig()->getTemplateUrl() . $this->getConfig()->get('template.public.path');
-    }
-
-    /**
-     *
-     * @return string
-     * @todo Refactor
-     * @deprecated
-     */
-    public function getTemplatePath()
-    {
-        return $this->getPage()->getTemplatePath();
-    }
-
-    /**
-     *
-     * @return string
-     * @todo Refactor
-     * @deprecated
-     */
-    public function getXtplPath()
-    {
-        return $this->getConfig()->getTemplatePath() . $this->getConfig()->get('template.xtpl.path');
-    }
-    
-    
-
     /**
      * @param $title
      * @return $this
      */
     public function setPageTitle($title)
     {
-        if ($this->getPage()) {
-            $this->getPage()->setTitle($title);
-        }
+        $this->pageTitle = $title;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTitle()
+    {
+        return $this->pageTitle;
     }
 
     /**
@@ -109,7 +104,6 @@ abstract class Iface extends \Dom\Renderer\Renderer
     {
         return \Tk\Config::getInstance();
     }
-
 
 
     /**
@@ -126,5 +120,38 @@ abstract class Iface extends \Dom\Renderer\Renderer
 //        // OR FOR A FILE
 //        //return \Dom\Loader::loadFile($this->getTemplatePath().'/public.xtpl');
 //    }
-    
+
+
+
+    /**
+     * @return string
+     * @todo Refactor
+     * @deprecated
+     */
+    public function getTemplateUrl()
+    {
+        return $this->getConfig()->getTemplateUrl() . $this->getConfig()->get('template.public.path');
+    }
+
+    /**
+     * @return string
+     * @todo Refactor
+     * @deprecated
+     */
+    public function getTemplatePath()
+    {
+        if ($this->getPage()) {
+            return $this->getPage()->getTemplatePath();
+        }
+    }
+
+    /**
+     * @return string
+     * @todo Refactor
+     * @deprecated
+     */
+    public function getXtplPath()
+    {
+        return $this->getConfig()->getTemplatePath() . $this->getConfig()->get('template.xtpl.path');
+    }
 }

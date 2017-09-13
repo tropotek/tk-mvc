@@ -27,8 +27,7 @@ class PageHandler implements Subscriber
      * @var null|\Tk\Event\Dispatcher
      */
     private $dispatcher = null;
-    
-    
+
 
     /**
      * constructor.
@@ -37,17 +36,6 @@ class PageHandler implements Subscriber
     public function __construct($dispatcher = null)
     {
         $this->dispatcher = $dispatcher;
-    }
-
-
-    /**
-     * kernel.request
-     * @param \Tk\Event\GetResponseEvent $event
-     */
-    public function onRequest(\Tk\Event\GetResponseEvent $event)
-    {
-        // Controller not created yet
-        //vd($event->getRequest()->getAttributes());
     }
 
     /**
@@ -62,11 +50,10 @@ class PageHandler implements Subscriber
         $controller = $event->getController();
         if ($controller instanceof \Tk\Controller\Iface) {
             $this->controller = $controller;
-            // Page::__construct()
-            $this->createPage($this->getController());
-            
+
             // Page::init()
-            $this->getPage()->init();
+            $controller->getPage()->init();
+
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
@@ -74,7 +61,6 @@ class PageHandler implements Subscriber
             }
         }
     }
-    
 
     /**
      * kernel.view
@@ -102,7 +88,7 @@ class PageHandler implements Subscriber
             $this->setPageContent($this->getController());
             
             // Page::show()
-            $this->getPage()->show();
+            $this->getController()->getPage()->show();
             
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
@@ -150,44 +136,11 @@ class PageHandler implements Subscriber
 
 
     /**
-     * @param \Tk\Event\Event $event
-     */
-    public function onShow(\Tk\Event\Event $event)
-    {
-        // App only
-//        if ($this->controller instanceof \App\Controller\AdminIface && $this->controller->getActionPanel()) {
-//            $this->controller->getTemplate()->prependTemplate($this->controller->getTemplate()->getRootElement(), $this->controller->getActionPanel()->show());
-//        }
-    }
-
-
-    /**
-     *
-     * @param \Tk\Controller\Iface $controller
-     * @return \Tk\Controller\Page
-     * @throws \Tk\Exception
-     */
-    public function createPage($controller)
-    {
-        $this->page = $controller->getPage();     // TODO: should this be the way we handle this (How do we override it)
-        if (!$this->page) throw new \Tk\Exception('Page cannot be created.');
-        return $this->page;
-    }
-
-    /**
      * @return null|\Tk\Event\Dispatcher
      */
     public function getDispatcher()
     {
         return $this->dispatcher;
-    }
-    
-    /**
-     * @return null|\Tk\Controller\Page
-     */
-    public function getPage()
-    {
-        return $this->page;
     }
 
     /**
@@ -197,7 +150,6 @@ class PageHandler implements Subscriber
     {
         return $this->controller;
     }
-    
 
     /**
      * getSubscribedEvents
@@ -207,9 +159,9 @@ class PageHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::REQUEST =>  array('onRequest', 0),
+            //KernelEvents::REQUEST =>  array('onRequest', 0),
             KernelEvents::CONTROLLER =>  array('onController', 10),
-            \Tk\PageEvents::CONTROLLER_SHOW =>  array('onShow', 0),
+            //\Tk\PageEvents::CONTROLLER_SHOW =>  array('onShow', 0),
             KernelEvents::VIEW =>  array('onView', 0)
         );
     }
