@@ -14,23 +14,29 @@ use Tk\Response;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class ExceptionListener implements Subscriber
+class LogExceptionListener implements Subscriber
 {
+
     /**
-     * @var bool
+     * @var LoggerInterface
      */
+    protected $logger;
+    
     protected $isDebug = false;
 
     /**
-     * ExceptionListener constructor.
-     * 
-     * @param null $isDebug
+     * Constructor.
+     *
+     * @param LoggerInterface $logger A LoggerInterface instance
      */
-    public function __construct($isDebug = null)
+    public function __construct(LoggerInterface $logger = null, $isDebug = null)
     {
+        $this->logger = $logger;
+        
         if ($isDebug === null && class_exists('\Tk\Config'))
             $this->isDebug = \Tk\Config::getInstance()->isDebug();
     }
+
 
     /**
      * 
@@ -42,36 +48,15 @@ class ExceptionListener implements Subscriber
         $class = get_class($event->getException());
         $e = $event->getException();
         $msg = $e->getMessage();
-
-        // Color the error for giggles
-        // Do not show in debug mode
-        $str = '';
-        if ($this->isDebug) {
-            $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . str_replace('Stack trace:', "\n--Stack Trace:-- \n", $event->getException()->__toString()), true));
+        
+        if ($this->logger) {
+            // TODO: Set the logger level based on the exception thrown
+            if ($e instanceof \Tk\WarningException) {
+                $this->logger->warning($event->getException()->__toString());
+            } else {
+                $this->logger->error($event->getException()->__toString());
+            }
         }
-        
-        $html = <<<HTML
-<html>
-<head>
-  <title>$class</title>
-<style>
-code, pre {
-  line-height: 1.4em;
-  padding: 0;margin: 0;
-}
-</style>
-</head>
-<body style="padding: 10px;">
-<h1>$class</h1>
-<p>$msg</p>
-<pre style="">$str</pre>
-</body>
-</html>
-HTML;
-        
-        $response = Response::create($html);
-        $event->setResponse($response);
-        
     }
 
 

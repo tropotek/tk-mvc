@@ -5,6 +5,7 @@ use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Psr\Log\LoggerInterface;
 use Tk\Response;
+use Tk\ResponseJson;
 
 
 /**
@@ -14,7 +15,7 @@ use Tk\Response;
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class ExceptionListener implements Subscriber
+class JsonExceptionListener implements Subscriber
 {
     /**
      * @var bool
@@ -22,8 +23,7 @@ class ExceptionListener implements Subscriber
     protected $isDebug = false;
 
     /**
-     * ExceptionListener constructor.
-     * 
+     * JsonExceptionListener constructor.
      * @param null $isDebug
      */
     public function __construct($isDebug = null)
@@ -31,6 +31,7 @@ class ExceptionListener implements Subscriber
         if ($isDebug === null && class_exists('\Tk\Config'))
             $this->isDebug = \Tk\Config::getInstance()->isDebug();
     }
+
 
     /**
      * 
@@ -42,34 +43,17 @@ class ExceptionListener implements Subscriber
         $class = get_class($event->getException());
         $e = $event->getException();
         $msg = $e->getMessage();
-
-        // Color the error for giggles
-        // Do not show in debug mode
-        $str = '';
+        
+        $err = array(
+            'status' => 'err',
+            'message' => $e->getMessage(),
+            'code' => $e->getCode()
+        ); 
         if ($this->isDebug) {
-            $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . str_replace('Stack trace:', "\n--Stack Trace:-- \n", $event->getException()->__toString()), true));
+            $err['debug'] = $e->__toString();
         }
         
-        $html = <<<HTML
-<html>
-<head>
-  <title>$class</title>
-<style>
-code, pre {
-  line-height: 1.4em;
-  padding: 0;margin: 0;
-}
-</style>
-</head>
-<body style="padding: 10px;">
-<h1>$class</h1>
-<p>$msg</p>
-<pre style="">$str</pre>
-</body>
-</html>
-HTML;
-        
-        $response = Response::create($html);
+        $response = \Tk\ResponseJson::createJson($err, 500);
         $event->setResponse($response);
         
     }
