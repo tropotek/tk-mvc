@@ -19,13 +19,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     protected $pageTitle = '';
 
-    // - Controller::__construct()      -- kernel.request
-    // - Controller::doDefault()        -- after kernel.controller
-    // - Page::init()                   -- 
-    // - Controller::show()             -- 
-    // - Page::show()                   -- 
-    // - insert controller into page    -- kernel.view
-    // - parse page template            -- kernel.view
+
 
     /**
      * @return string
