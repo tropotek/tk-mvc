@@ -26,10 +26,9 @@ class JsonExceptionListener implements Subscriber
      * JsonExceptionListener constructor.
      * @param null $isDebug
      */
-    public function __construct($isDebug = null)
+    public function __construct($isDebug = false)
     {
-        if ($isDebug === null && class_exists('\Tk\Config'))
-            $this->isDebug = \Tk\Config::getInstance()->isDebug();
+        $this->isDebug = $isDebug;
     }
 
 

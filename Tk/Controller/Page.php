@@ -81,6 +81,13 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
             $template->appendMetaTag('description', $this->getConfig()->get('site.meta.description'));
         }
 
+        if ($this->getConfig()->get('site.global.js')) {
+            $template->appendJs($this->getConfig()->get('site.global.js'));
+        }
+        if ($this->getConfig()->get('site.global.css')) {
+            $template->appendCss($this->getConfig()->get('site.global.css'));
+        }
+
         $template->appendMetaTag('tk-author', 'http://www.tropotek.com/, http://www.phpdomtemplate.com/', $template->getTitleElement());
         $template->appendMetaTag('tk-project', 'tk2uni', $template->getTitleElement());
         $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
@@ -92,6 +99,9 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
             $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
         }
 
+
+
+
         // TODO: create a listener for this????
         $siteUrl = $this->getConfig()->getSiteUrl();
         $dataUrl = $this->getConfig()->getDataUrl();
@@ -102,17 +112,15 @@ var config = {
   siteUrl : '$siteUrl',
   dataUrl : '$dataUrl',
   templateUrl: '$templateUrl',
-  datepickerFormat: 'dd/mm/yyyy'
+  jquery: {
+    dateFormat: 'dd/mm/yy'    
+  },
+  bootstrap: {
+    dateFormat: 'dd/mm/yyyy'    
+  }
 };
 JS;
         $template->appendJs($js, array('data-jsl-priority' => -1000));
-
-        if ($this->getConfig()->get('site.global.js')) {
-            $template->appendJs($this->getConfig()->get('site.global.js'));
-        }
-        if ($this->getConfig()->get('site.global.css')) {
-            $template->appendCss($this->getConfig()->get('site.global.css'));
-        }
        
         // Set page title
         if ($this->getController() && $this->getController()->getPageTitle()) {

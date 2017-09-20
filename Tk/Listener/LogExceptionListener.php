@@ -21,20 +21,22 @@ class LogExceptionListener implements Subscriber
      * @var LoggerInterface
      */
     protected $logger;
-    
+
+    /**
+     * @var bool
+     */
     protected $isDebug = false;
 
     /**
      * Constructor.
      *
      * @param LoggerInterface $logger A LoggerInterface instance
+     * @param bool $isDebug
      */
-    public function __construct(LoggerInterface $logger = null, $isDebug = null)
+    public function __construct(LoggerInterface $logger = null, $isDebug = false)
     {
         $this->logger = $logger;
-        
-        if ($isDebug === null && class_exists('\Tk\Config'))
-            $this->isDebug = \Tk\Config::getInstance()->isDebug();
+        $this->isDebug = $isDebug;
     }
 
 
@@ -43,20 +45,25 @@ class LogExceptionListener implements Subscriber
      * @param ExceptionEvent $event
      */
     public function onException(ExceptionEvent $event)
-    {   
-        // TODO: If in debug mode show trace if in Live/Test mode only show message...
-        $class = get_class($event->getException());
+    {
+        if (!$this->logger) return;
+
         $e = $event->getException();
-        $msg = $e->getMessage();
-        
-        if ($this->logger) {
-            // TODO: Set the logger level based on the exception thrown
+
+        if ($this->isDebug) {
             if ($e instanceof \Tk\WarningException) {
                 $this->logger->warning($event->getException()->__toString());
             } else {
                 $this->logger->error($event->getException()->__toString());
             }
+        } else {
+            if ($e instanceof \Tk\WarningException) {
+                $this->logger->warning($event->getException()->getMessage());
+            } else {
+                $this->logger->error($event->getException()->getMessage());
+            }
         }
+
     }
 
 

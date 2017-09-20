@@ -3,7 +3,6 @@ namespace Tk\Listener;
 
 use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
-use Psr\Log\LoggerInterface;
 use Tk\Response;
 
 
@@ -24,12 +23,11 @@ class ExceptionListener implements Subscriber
     /**
      * ExceptionListener constructor.
      * 
-     * @param null $isDebug
+     * @param bool $isDebug
      */
-    public function __construct($isDebug = null)
+    public function __construct($isDebug = false)
     {
-        if ($isDebug === null && class_exists('\Tk\Config'))
-            $this->isDebug = \Tk\Config::getInstance()->isDebug();
+        $this->isDebug = $isDebug;
     }
 
     /**
@@ -42,12 +40,15 @@ class ExceptionListener implements Subscriber
         $class = get_class($event->getException());
         $e = $event->getException();
         $msg = $e->getMessage();
-
         // Color the error for giggles
         // Do not show in debug mode
         $str = '';
+        $extra = '';
         if ($this->isDebug) {
-            $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . str_replace('Stack trace:', "\n--Stack Trace:-- \n", $event->getException()->__toString()), true));
+            $toString = $event->getException()->__toString();
+            $toString = trim(substr($toString, strpos($toString, 'Stack')));
+            $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . $toString, true));
+            $extra = sprintf('in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
         }
         
         $html = <<<HTML
@@ -63,12 +64,13 @@ code, pre {
 </head>
 <body style="padding: 10px;">
 <h1>$class</h1>
-<p>$msg</p>
+<p><strong>$msg $extra</strong></p>
 <pre style="">$str</pre>
 </body>
 </html>
 HTML;
-        
+
+        $html = str_replace(\Tk\Config::getInstance()->getSitePath(), '', $html);
         $response = Response::create($html);
         $event->setResponse($response);
         
