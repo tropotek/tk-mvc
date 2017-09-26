@@ -109,11 +109,13 @@ class ShutdownHandler implements Subscriber
         $h = $this->pageBytes->getHtmlBytes();
         $t = $j + $c +$h;
 
-        $str .= 'Page Sizes:' . \PHP_EOL;
-        $str .= sprintf('  JS:      %6s', \Tk\File::bytes2String($j)) . \PHP_EOL;
-        $str .= sprintf('  CSS:     %6s', \Tk\File::bytes2String($c)) . \PHP_EOL;
-        $str .= sprintf('  HTML:    %6s', \Tk\File::bytes2String($h)) . \PHP_EOL;
-        $str .= sprintf('  TOTAL:   %6s', \Tk\File::bytes2String($t));
+        if ($t > 0) {
+            $str .= 'Page Sizes:' . \PHP_EOL;
+            $str .= sprintf('  JS:      %6s', \Tk\File::bytes2String($j)) . \PHP_EOL;
+            $str .= sprintf('  CSS:     %6s', \Tk\File::bytes2String($c)) . \PHP_EOL;
+            $str .= sprintf('  HTML:    %6s', \Tk\File::bytes2String($h)) . \PHP_EOL;
+            $str .= sprintf('  TOTAL:   %6s', \Tk\File::bytes2String($t));
+        }
         return $str;
     }
 
