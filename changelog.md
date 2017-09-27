@@ -1,5 +1,14 @@
 #CHANGELOG#
 
+Ver 2.0.8 [2017-09-27]:
+-------------------------------
+ - Minor Code Updates
+ - Added student create and confirm placement pages
+ - 252s-dev.vet.unimelb.edu.au
+ - Updated Controllers to use new tk-ui
+ - Updated controller and page system
+
+
 Ver 2.0.7 [2017-05-26]:
 -------------------------------
  - Minor Code Updates
