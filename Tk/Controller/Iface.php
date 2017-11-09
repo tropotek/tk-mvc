@@ -99,6 +99,22 @@ abstract class Iface extends \Dom\Renderer\Renderer
         return \Tk\Config::getInstance();
     }
 
+    /**
+     * @return \Tk\Request
+     */
+    public function getRequest()
+    {
+        return $this->getConfig()->getRequest();
+    }
+
+    /**
+     * @return \Tk\Session
+     */
+    public function getSession()
+    {
+        return $this->getConfig()->getSession();
+    }
+
 
     /**
      * DomTemplate magic method example
