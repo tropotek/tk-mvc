@@ -14,7 +14,7 @@ class ControllerEvent extends RequestEvent
 {
 
     /**
-     * @var mixed|callable
+     * @var mixed|callable|\Tk\Controller\Iface
      */
     private $controller = null;
 
@@ -22,7 +22,7 @@ class ControllerEvent extends RequestEvent
     /**
      * ControllerEvent constructor.
      *
-     * @param mixed|callable $controller
+     * @param mixed|callable|\Tk\Controller\Iface $controller
      * @param \Tk\Request $request
      * @param mixed $kernel
      */
@@ -53,10 +53,15 @@ class ControllerEvent extends RequestEvent
      */
     public function getControllerMethod()
     {
-        if (is_array($this->controller) && isset($this->controller[1])) {
-            return $this->controller[1];
+        $controller = $this->controller;
+        
+        if ($controller instanceof \Tk\Controller\Iface && $this->getRequest()->getAttribute('_controller') && !is_callable($this->controller)) {
+            $controller = explode('::', $this->getRequest()->getAttribute('_controller'));
         }
-        return $this->controller;
+        if (is_array($controller) && isset($controller[1])) {
+            return $controller[1];
+        }
+        return $controller;
     }
     
     
@@ -69,10 +74,10 @@ class ControllerEvent extends RequestEvent
     public function setController($controller)
     {
         // controller must be a callable
-        if (!is_callable($controller)) {
+        if (!is_callable($controller) && $controller instanceof \Tk\Controller\Iface) {
             throw new \LogicException(sprintf('The controller must be a callable (%s given).', \Tk\Str::varToString($controller)));
         }
-        $this->setController($controller);
+        $this->controller = $controller;
     }
 
     
