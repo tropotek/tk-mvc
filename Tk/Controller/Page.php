@@ -100,8 +100,6 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
         }
 
 
-
-
         // TODO: create a listener for this????
         $siteUrl = $this->getConfig()->getSiteUrl();
         $dataUrl = $this->getConfig()->getDataUrl();
