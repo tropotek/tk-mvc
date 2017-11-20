@@ -102,7 +102,6 @@ class Dispatcher
      * @param callable $listener  The listener
      * @param int      $priority  The higher this value, the earlier an event
      *                            listener will be triggered in the chain (defaults to 0)
-     * 
      */
     public function addListener($eventName, $listener, $priority = 0)
     {
