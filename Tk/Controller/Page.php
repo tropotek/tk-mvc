@@ -128,6 +128,7 @@ JS;
         }
         if ($this->getConfig()->isDebug()) {
             $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
+            $template->setChoice('debug');
         }
         
         return $template;
