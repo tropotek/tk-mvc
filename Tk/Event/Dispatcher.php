@@ -90,7 +90,6 @@ class Dispatcher
                 $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '('.get_class($event).')');
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
-                vd('-------------------');
                 break;
             }
         }
