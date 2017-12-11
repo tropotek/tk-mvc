@@ -140,7 +140,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function getTemplateUrl()
     {
-        return $this->getConfig()->getTemplateUrl() . $this->getConfig()->get('template.public.path');
+        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public');
     }
 
     /**
@@ -157,11 +157,10 @@ abstract class Iface extends \Dom\Renderer\Renderer
 
     /**
      * @return string
-     * @todo Refactor
      * @deprecated
      */
     public function getXtplPath()
     {
-        return $this->getConfig()->getTemplatePath() . $this->getConfig()->get('template.xtpl.path');
+        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.xtpl.path');
     }
 }
