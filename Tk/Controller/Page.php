@@ -21,9 +21,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     protected $controller = null;
 
     /**
-     * @todo: refactor the template path into a class or remove...
      * @var string
-     * @deprecated ??? still working out a better solution to template paths
      */
     protected $templatePath = '';
 
@@ -179,14 +177,29 @@ JS;
     }
 
     /**
+     * Get the page theme template path
      *
      * @return string
-     * @todo refactor
-     * @deprecated Thing of a better way to handle template/theme paths
      */
     public function getTemplatePath()
     {
         return $this->templatePath;
+    }
+
+    /**
+     * Set the page theme template path
+     *
+     * @param $path
+     * @return $this
+     */
+    public function setTemplatePath($path)
+    {
+        if (!is_file($path)) {
+            \Tk\Log::warning('Page template not found: ' . $path);
+        } else {
+            $this->templatePath = $path;
+        }
+        return $this;
     }
 
     /**
@@ -196,7 +209,9 @@ JS;
      */
     public function __makeTemplate()
     {
-        $html = <<<HTML
+        if (!$this->getTemplatePath()) {
+            // Default template if no template path set
+            $html = <<<HTML
 <html>
 <head>
   <title></title>
@@ -206,9 +221,10 @@ JS;
 </body>
 </html>
 HTML;
-        return \Dom\Loader::load($html);
-        // OR FOR A FILE
-        //return \Dom\Loader::loadFile($this->getTemplatePath().'/public.xtpl');
+            return \Dom\Loader::load($html);
+        } else {
+            return \Dom\Loader::loadFile($this->getTemplatePath());
+        }
     }
 
 }

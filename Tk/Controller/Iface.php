@@ -68,6 +68,8 @@ abstract class Iface extends \Dom\Renderer\Renderer
     public function show()
     {
         $template = $this->getTemplate();
+
+
         return $template;
     }
 
@@ -138,29 +140,30 @@ abstract class Iface extends \Dom\Renderer\Renderer
      * @todo Refactor
      * @deprecated
      */
-    public function getTemplateUrl()
-    {
-        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public');
-    }
+//    public function getTemplateUrl()
+//    {
+//        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public');
+//    }
 
     /**
      * @return string
      * @todo Refactor
      * @deprecated
      */
-    public function getTemplatePath()
-    {
-        if ($this->getPage()) {
-            return $this->getPage()->getTemplatePath();
-        }
-    }
+//    public function getTemplatePath()
+//    {
+//        if ($this->getPage()) {
+//            return $this->getPage()->getTemplatePath();
+//        }
+//    }
 
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getXtplPath()
-    {
-        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.xtpl.path');
-    }
+//    /**
+//     * @return string
+//     * @deprecated
+//     */
+//    public function getXtplPath()
+//    {
+//        vd($this->getPage()->getTemplate()->getTemplatePath());
+//        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.xtpl.path');
+//    }
 }
