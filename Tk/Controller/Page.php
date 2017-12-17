@@ -223,6 +223,7 @@ JS;
 HTML;
             return \Dom\Loader::load($html);
         } else {
+            vd($this->getTemplatePath());
             return \Dom\Loader::loadFile($this->getTemplatePath());
         }
     }
