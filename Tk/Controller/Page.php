@@ -119,17 +119,16 @@ JS;
         $template->appendJs($js, array('data-jsl-priority' => -1000));
        
         // Set page title
-        $template->hide('page-heading');
         if ($this->getController() && $this->getController()->getPageTitle()) {
             $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
-            $template->insertText('page-heading', $this->getController()->getPageTitle());
-            $template->show('page-heading');
+            $template->insertText('pageHeading', $this->getController()->getPageTitle());
+            $template->setChoice('pageHeading');
         }
 
-        $template->hide('debug');
+
         if ($this->getConfig()->isDebug()) {
             $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
-            $template->show('debug');
+            $template->setChoice('debug');
         }
         
         return $template;
