@@ -86,9 +86,9 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
             $template->appendCss($this->getConfig()->get('site.global.css'));
         }
 
-        $template->appendMetaTag('tk-author', 'http://www.tropotek.com/, http://www.phpdomtemplate.com/', $template->getTitleElement());
-        $template->appendMetaTag('tk-project', 'tk2uni', $template->getTitleElement());
-        $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
+//        $template->appendMetaTag('tk-author', 'http://www.tropotek.com/', $template->getTitleElement());
+//        $template->appendMetaTag('tk-project', 'tk2uni', $template->getTitleElement());
+//        $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
         
         if ($this->getConfig()->get('site.title')) {
             $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
@@ -119,14 +119,17 @@ JS;
         $template->appendJs($js, array('data-jsl-priority' => -1000));
        
         // Set page title
+        $template->hide('page-heading');
         if ($this->getController() && $this->getController()->getPageTitle()) {
             $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
-            $template->insertText('pageHeading', $this->getController()->getPageTitle());
-            $template->setChoice('pageHeading');
+            $template->insertText('page-heading', $this->getController()->getPageTitle());
+            $template->show('page-heading');
         }
+
+        $template->hide('debug');
         if ($this->getConfig()->isDebug()) {
             $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
-            $template->setChoice('debug');
+            $template->show('debug');
         }
         
         return $template;
