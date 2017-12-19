@@ -45,8 +45,13 @@ class ExceptionListener implements Subscriber
         $str = '';
         $extra = '';
         if ($this->isDebug) {
-            $toString = $event->getException()->__toString();
-            $toString = trim(substr($toString, strpos($toString, 'Stack')));
+            $toString = trim($event->getException()->__toString());
+
+// Commented out due to issues with dump strings before the trace, see \Dom\Exception
+//            $pos = strpos($toString, "Stack trace:");
+//            $preStr = substr($toString, 0, $pos-1);
+//            $toString = substr($toString, $pos);
+
             $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . $toString, true));
             $extra = sprintf('in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
         }
