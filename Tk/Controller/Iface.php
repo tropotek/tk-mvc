@@ -10,7 +10,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
 {
     
     /**
-     * @var \App\Page\Iface
+     * @var \Tk\Controller\Page
      */
     protected $page = null;
 
@@ -44,10 +44,10 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function getPage()
     {
-        if (!$this->page) {
-            $this->page = new \Tk\Controller\Page();
-            $this->page->setController($this);
-        }
+//        if (!$this->page) {
+//            $this->page = new \Tk\Controller\Page();
+//            $this->page->setController($this);
+//        }
         return $this->page;
     }
 
@@ -91,6 +91,7 @@ abstract class Iface extends \Dom\Renderer\Renderer
         return $this->pageTitle;
     }
 
+
     /**
      * Get the global config object.
      *
@@ -117,53 +118,4 @@ abstract class Iface extends \Dom\Renderer\Renderer
         return $this->getConfig()->getSession();
     }
 
-
-    /**
-     * DomTemplate magic method example
-     *
-     * @return \Dom\Template
-     */
-//    public function __makeTemplate()
-//    {
-//        $html = <<<HTML
-//<div></div>
-//HTML;
-//        return \Dom\Loader::load($html);
-//        // OR FOR A FILE
-//        //return \Dom\Loader::loadFile($this->getTemplatePath().'/public.xtpl');
-//    }
-
-
-
-    /**
-     * @return string
-     * @todo Refactor
-     * @deprecated
-     */
-//    public function getTemplateUrl()
-//    {
-//        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public');
-//    }
-
-    /**
-     * @return string
-     * @todo Refactor
-     * @deprecated
-     */
-//    public function getTemplatePath()
-//    {
-//        if ($this->getPage()) {
-//            return $this->getPage()->getTemplatePath();
-//        }
-//    }
-
-//    /**
-//     * @return string
-//     * @deprecated
-//     */
-//    public function getXtplPath()
-//    {
-//        vd($this->getPage()->getTemplate()->getTemplatePath());
-//        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.xtpl.path');
-//    }
 }

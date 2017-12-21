@@ -16,9 +16,14 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     protected $contentVar = 'content';
 
     /**
-     * @var \App\Controller\Iface
+     * @var \Tk\Controller\Iface
      */
     protected $controller = null;
+
+    /**
+     * @var string
+     */
+    protected $pageRole = 'public';
 
     /**
      * @var string
@@ -41,7 +46,9 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
         $event = new \Tk\Event\Event();
         $event->set('content', $content);
         $event->set('controller', $this->getController());
-        \App\Factory::getEventDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $event);
+
+        // TODO: this should not be here, we need to pass it in....
+        \Tk\Config::getInstance()->getEventDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $event);
 
         if (!$content) return $this;
         if ($content instanceof \Dom\Template) {
@@ -91,8 +98,8 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
 //        $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
         
         if ($this->getConfig()->get('site.title')) {
-            $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
             $template->setAttr('siteTitle', 'title', $this->getConfig()->get('site.title'));
+            $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
             $template->insertText('siteTitle', $this->getConfig()->get('site.title'));
             $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
         }
@@ -166,6 +173,25 @@ JS;
     {
         $this->controller = $controller;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageRole()
+    {
+        return $this->pageRole;
+    }
+
+    /**
+     * This is used to determin what page template could be loaded.
+     * Negates the need for multiple page objects IE: AdminPage, StudentPage, etc...
+     *
+     * @param string $pageRole
+     */
+    public function setPageRole($pageRole)
+    {
+        $this->pageRole = $pageRole;
     }
 
     /**
