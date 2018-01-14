@@ -44,10 +44,6 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function getPage()
     {
-//        if (!$this->page) {
-//            $this->page = new \Tk\Controller\Page();
-//            $this->page->setController($this);
-//        }
         return $this->page;
     }
 
