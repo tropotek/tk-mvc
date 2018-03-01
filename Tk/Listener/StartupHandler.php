@@ -64,8 +64,8 @@ class StartupHandler implements Subscriber
             $this->out('- User Agent: ' . $this->request->getUserAgent());
         }
         if ($this->session) {
-            $this->out('- Session ID: ' . $this->session->getId());
             $this->out('- Session Name: ' . $this->session->getName());
+            $this->out('- Session ID: ' . $this->session->getId());
         }
         $this->out('- PHP: ' . \PHP_VERSION);
         $this->out('------------------------------------------------');
