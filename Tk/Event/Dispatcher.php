@@ -186,7 +186,6 @@ class Dispatcher
                     $this->addListener($eventName, array($subscriber, $listener[0]), isset($listener[1]) ? $listener[1] : 0);
                 }
             }
-            vdd($eventName);
         }
         return $this;
     }
