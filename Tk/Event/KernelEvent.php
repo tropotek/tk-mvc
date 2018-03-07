@@ -10,7 +10,7 @@ namespace Tk\Event;
  * @license Copyright 2016 Michael Mifsud
  * @notes Adapted from Symfony
  */
-class KernelEvent extends Iface
+class KernelEvent extends Event
 {
     /**
      * @var \Tk\Kernel\HttpKernel
@@ -24,7 +24,6 @@ class KernelEvent extends Iface
      */
     public function __construct($kernel = null)
     {
-        parent::__construct();
         $this->kernel = $kernel;
     }
 

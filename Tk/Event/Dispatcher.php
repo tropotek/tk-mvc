@@ -20,17 +20,17 @@ class Dispatcher
     /**
      * @var array
      */
-    private $listeners = array();
+    protected $listeners = array();
     
     /**
      * @var array
      */
-    private $sorted = array();
+    protected $sorted = array();
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     
     
@@ -58,10 +58,10 @@ class Dispatcher
 
     /**
      * @param $eventName
-     * @param Iface $event
-     * @return Iface
+     * @param Event $event
+     * @return Event
      */
-    public function dispatch($eventName, Iface $event = null)
+    public function dispatch($eventName, Event $event = null)
     {
         if (null === $event) {
             $event = new Event();
@@ -81,9 +81,9 @@ class Dispatcher
      *
      * @param callable[]        $listeners The event listeners.
      * @param string            $eventName The name of the event to dispatch.
-     * @param Iface    $event     The event object to pass to the event handlers/listeners.
+     * @param Event             $event     The event object to pass to the event handlers/listeners.
      */
-    protected function doDispatch($listeners, $eventName, Iface $event)
+    protected function doDispatch($listeners, $eventName, Event $event)
     {
         foreach ($listeners as $listener) {
             if (is_array($listener))

@@ -10,8 +10,9 @@ namespace Tk\Event;
  * @license Copyright 2016 Michael Mifsud
  * @notes Adapted from Symfony
  */
-class Event extends Iface
+class Event extends \Symfony\Component\EventDispatcher\Event
 {
+    use \Tk\CollectionTrait;
 
 
 }
