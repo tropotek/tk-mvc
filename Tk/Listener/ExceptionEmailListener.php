@@ -47,9 +47,9 @@ class ExceptionEmailListener implements Subscriber
         $this->emailGateway = $emailGateway;
         $this->logger = $logger;
         if ($siteEmail)
-            $siteEmail = 'noreply@'.$_SERVER['HTTP_HOST'];
+            $siteEmail = 'noreply@'.\Tk\Config::getInstance()->getSiteHost();
         if (!$siteTitle)
-            $siteTitle = $_SERVER['HTTP_HOST'];
+            $siteTitle = \Tk\Config::getInstance()->getSiteHost();
         $this->siteEmail = $siteEmail;
         $this->siteTitle = $siteTitle;
     }

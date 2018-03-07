@@ -7,7 +7,7 @@ namespace Tk\Sym;
  * @link http://www.tropotek.com/
  * @license Copyright 2018 Michael Mifsud
  */
-class Dispatcher extends \Tk\Event\Dispatcher implements \Symfony\Component\EventDispatcher\EventDispatcherInterface
+class EventDispatcher extends \Tk\Event\Dispatcher implements \Symfony\Component\EventDispatcher\EventDispatcherInterface
 {
 
     /**

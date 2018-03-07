@@ -2,6 +2,8 @@
 namespace Tk\Event;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Class Dispatcher
@@ -57,7 +59,7 @@ class Dispatcher
     }
 
     /**
-     * @param $eventName
+     * @param string $eventName
      * @param Event $event
      * @return Event
      */
@@ -86,8 +88,9 @@ class Dispatcher
     protected function doDispatch($listeners, $eventName, Event $event)
     {
         foreach ($listeners as $listener) {
-            if (is_array($listener))
-                $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '('.get_class($event).')');
+            if (is_array($listener)) {
+                $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '(' . get_class($event) . ')');
+            }
             call_user_func($listener, $event, $eventName, $this);
             if ($event->isPropagationStopped()) {
                 break;
@@ -168,10 +171,10 @@ class Dispatcher
      * The subscriber is asked for all the events he is
      * interested in and added as a listener for these events.
      *
-     * @param Subscriber $subscriber The subscriber.
+     * @param EventSubscriberInterface $subscriber The subscriber.
      * @return $this
      */
-    public function addSubscriber(Subscriber $subscriber)
+    public function addSubscriber(EventSubscriberInterface $subscriber)
     {
         foreach ($subscriber->getSubscribedEvents() as $eventName => $params) {
             if (is_string($params)) { // array('eventName' => 'methodName')
@@ -190,9 +193,9 @@ class Dispatcher
     /**
      * Removes an event subscriber.
      *
-     * @param Subscriber $subscriber The subscriber
+     * @param EventSubscriberInterface $subscriber The subscriber
      */
-    public function removeSubscriber(Subscriber $subscriber)
+    public function removeSubscriber(EventSubscriberInterface $subscriber)
     {
         foreach ($subscriber->getSubscribedEvents() as $eventName => $params) {
             if (is_array($params) && is_array($params[0])) {

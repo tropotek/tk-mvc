@@ -47,15 +47,25 @@ class StartupHandler implements Subscriber
 
     public function onInit(\Tk\Event\KernelEvent $event)
     {
+        $this->init();
+    }
+
+    public function onCommand(\Symfony\Component\Console\Event\ConsoleCommandEvent $event)
+    {
+        $this->init();
+    }
+
+    private function init()
+    {
         if (!$this->logger) return;
 
         $this->out('------------------------------------------------');
         $prj = '';
 
-        if (\TK\Config::getInstance()->getSystemProject()) {
-            $prj = ' ['.\TK\Config::getInstance()->getSystemProject().']';
+        if (\Tk\Config::getInstance()->getSystemProject()) {
+            $prj = ' ['.\Tk\Config::getInstance()->getSystemProject().']';
         }
-        $this->out('- Project: ' . \TK\Config::getInstance()->getSiteTitle() . $prj);
+        $this->out('- Project: ' . \Tk\Config::getInstance()->getSiteTitle() . $prj);
         $this->out('- Date: ' . date('Y-m-d H:i:s'));
         if ($this->request) {
             $this->out('- Host: ' . $this->request->getUri()->getScheme() . '://' . $this->request->getUri()->getHost());
@@ -72,6 +82,9 @@ class StartupHandler implements Subscriber
 
     }
 
+
+
+
     private function out($str)
     {
         //$this->logger->info(\Tk\Color::getCliString($str, 'white'));
@@ -83,6 +96,9 @@ class StartupHandler implements Subscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(\Tk\Kernel\KernelEvents::INIT  => 'onInit');
+        return array(
+            \Tk\Kernel\KernelEvents::INIT  => 'onInit',
+            \Symfony\Component\Console\ConsoleEvents::COMMAND  => 'onCommand'
+        );
     }
 }
