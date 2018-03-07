@@ -7,8 +7,6 @@ use Tk\Response;
 
 
 /**
- * Class RouteListener
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @link http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
@@ -31,7 +29,6 @@ class ExceptionListener implements Subscriber
     }
 
     /**
-     * 
      * @param ExceptionEvent $event
      */
     public function onException(ExceptionEvent $event)
