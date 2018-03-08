@@ -27,7 +27,7 @@
         "psr/log": "^1.0",
         "symfony/event-dispatcher": "~3.4",
         "symfony/console": "~3.4",
-        "symfony/translation": "~3.4",
+        "symfony/translation": "~3.4"
     },
     "extra":  {
         "branch-alias":  {
