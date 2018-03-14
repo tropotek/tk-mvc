@@ -23,8 +23,7 @@
         }
     },
     "require":  {
-        "php": ">=5.0.0",
-        "psr/log": "^1.0",
+        "ttek/tk-framework": "~2.0",
         "symfony/event-dispatcher": "~3.4",
         "symfony/console": "~3.4",
         "symfony/translation": "~3.4"
