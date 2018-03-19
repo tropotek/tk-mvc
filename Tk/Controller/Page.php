@@ -31,14 +31,14 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     protected $templatePath = '';
 
 
-
     /**
      * Set the page Content
      *
      * @param string|\Dom\Template|\Dom\Renderer\RendererInterface|\DOMDocument $content
      * @return Page
+     * @throws \Dom\Exception
      * @see \App\Listener\ActionPanelHandler
-     * @deprecated 
+     * @deprecated
      */
     public function setPageContent($content)
     {

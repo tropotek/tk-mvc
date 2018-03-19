@@ -24,7 +24,7 @@ class JsonExceptionListener implements Subscriber
 
     /**
      * JsonExceptionListener constructor.
-     * @param null $isDebug
+     * @param bool $isDebug
      */
     public function __construct($isDebug = false)
     {

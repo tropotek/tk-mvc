@@ -38,6 +38,7 @@ class ExceptionEmailListener implements Subscriber
     /**
      * Constructor.
      *
+     * @param $emailGateway
      * @param LoggerInterface $logger A LoggerInterface instance
      * @param string $siteEmail
      * @param string $siteTitle

@@ -91,6 +91,7 @@ class Resolver
      * @param Request $request A Request instance
      * @param callable|object $controller A PHP callable
      * @return array An array of arguments to pass to the controller
+     * @throws \ReflectionException
      */
     public function getArguments(Request $request, $controller)
     {

@@ -86,7 +86,7 @@ class HttpKernel
             return $this->handleException($e, $request);
         }
     }
-    
+
     /**
      * Handles a request to convert it to a response.
      * Exceptions are not caught.
@@ -94,8 +94,7 @@ class HttpKernel
      * @param Request $request A Request instance
      * @return Response A Response instance
      *
-     * @throws \LogicException       If one of the listeners does not behave as expected
-     * @throws \Tk\NotFoundHttpException When controller cannot be found
+     * @throws \ReflectionException
      */
     private function handleRaw(Request $request)
     {

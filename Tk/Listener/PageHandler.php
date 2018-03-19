@@ -65,6 +65,7 @@ class PageHandler implements Subscriber
     /**
      * kernel.view
      * @param \Tk\Event\ControllerResultEvent $event
+     * @throws \Dom\Exception
      */
     public function onView(\Tk\Event\ControllerResultEvent $event)
     {
@@ -105,6 +106,7 @@ class PageHandler implements Subscriber
      * Set the page Content
      *
      * @param \Tk\Controller\Iface $controller
+     * @throws \Dom\Exception
      * @see \App\Listener\ActionPanelHandler
      */
     public function setPageContent($controller)
