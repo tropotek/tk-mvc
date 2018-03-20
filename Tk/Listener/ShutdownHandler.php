@@ -9,7 +9,7 @@ use Tk\Event\Subscriber;
  * Class ShutdownHandler
  *
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
+ * @see http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
 class ShutdownHandler implements Subscriber

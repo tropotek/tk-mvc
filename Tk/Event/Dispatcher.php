@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Also with influence from the Symfony EventDispatcher objects.
  *
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
+ * @see http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  * @notes Adapted from Symfony
  */

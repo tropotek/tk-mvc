@@ -8,7 +8,7 @@ use Tk\Kernel\KernelEvents;
  * This object helps cleanup the structure of the controller code
  *
  * @author Michael Mifsud <info@tropotek.com>
- * @link http://www.tropotek.com/
+ * @see http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
 class PageHandler implements Subscriber
