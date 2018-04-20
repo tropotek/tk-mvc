@@ -58,20 +58,25 @@ class StartupHandler implements Subscriber
     private function init()
     {
         if (!$this->logger) return;
+        $config = \Tk\Config::getInstance();
 
         $this->out('------------------------------------------------');
         $prj = '';
 
-        if (\Tk\Config::getInstance()->getSystemProject()) {
-            $prj = ' ['.\Tk\Config::getInstance()->getSystemProject().']';
+        if ($config->getSystemProject()) {
+            $prj = ' ['.$config->getSystemProject().']';
         }
-        $this->out('- Project: ' . \Tk\Config::getInstance()->getSiteTitle() . $prj);
+        $this->out('- Project: ' . $config->getSiteTitle() . $prj);
         $this->out('- Date: ' . date('Y-m-d H:i:s'));
         if ($this->request) {
-            $this->out('- Host: ' . $this->request->getUri()->getScheme() . '://' . $this->request->getUri()->getHost());
-            $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri()->toString(false, false));
-            $this->out('- Client IP: ' . $this->request->getIp());
-            $this->out('- User Agent: ' . $this->request->getUserAgent());
+            if (!$config->isCli()) {
+                $this->out('- Host: ' . $this->request->getUri()->getScheme() . '://' . $this->request->getUri()->getHost());
+                $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri()->toString(false, false));
+                $this->out('- Client IP: ' . $this->request->getIp());
+                $this->out('- User Agent: ' . $this->request->getUserAgent());
+            } else {
+                $this->out('- CLI: ' . implode(' ', $this->request->getServerParam('argv')));
+            }
         }
         if ($this->session) {
             $this->out('- Session Name: ' . $this->session->getName());
