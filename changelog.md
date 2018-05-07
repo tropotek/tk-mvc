@@ -1,5 +1,12 @@
 #CHANGELOG#
 
+Ver 2.0.10 [2018-05-08]:
+-------------------------------
+ - Dev.ttek.org
+ - Minor Code Updates
+ - Finished Animals Plugin... NEXT!!!!
+
+
 Ver 2.0.9 [2017-09-27]:
 -------------------------------
  - Minor Code Updates
