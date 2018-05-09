@@ -73,7 +73,7 @@ class ExceptionEmailListener implements Subscriber
                     $this->emailGateway->send($message);
                 }
             }
-        } catch (\Exception $ee) { $this->logger->warning($ee->getMessage()); }
+        } catch (\Exception $ee) { $this->logger->warning($ee->__toString()); }
 
     }
 

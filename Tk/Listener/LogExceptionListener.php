@@ -52,18 +52,34 @@ class LogExceptionListener implements Subscriber
 
         if ($this->isDebug) {
             if ($e instanceof \Tk\WarningException) {
-                $this->logger->warning($event->getException()->__toString());
+                $this->logger->warning(self::getCallerLine($e) . $event->getException()->__toString());
             } else {
-                $this->logger->error($event->getException()->__toString());
+                $this->logger->error(self::getCallerLine($e) . $event->getException()->__toString());
             }
         } else {
             if ($e instanceof \Tk\WarningException) {
-                $this->logger->warning($event->getException()->getMessage());
+                $this->logger->warning(self::getCallerLine($e) . $event->getException()->getMessage());
             } else {
-                $this->logger->error($event->getException()->getMessage());
+                $this->logger->error(self::getCallerLine($e) . $event->getException()->getMessage());
             }
         }
 
+    }
+
+    /**
+     * @param \Exception $e
+     * @return string
+     */
+    private static function getCallerLine($e)
+    {
+        $str = '';
+        if ($e) {
+            $config = \Tk\Config::getInstance();
+            $line = $e->getLine();
+            $file = str_replace($config->getSitePath(), '', $e->getFile());
+            $str = sprintf('[%s:%s] ', $file, $line);
+        }
+        return $str;
     }
 
 
