@@ -68,7 +68,7 @@ class ExceptionEmailListener implements Subscriber
             if (count($this->emailList)) {
                 foreach ($this->emailList as $email) {
                     //$body = $this->createMailTemplate($event->getResponse()->getBody());
-                    $body = $this->createMailTemplate(ExceptionListener::getExceptionHtml($event->getException()));
+                    $body = $this->createMailTemplate(ExceptionListener::getExceptionHtml($event->getException(), true, true));
                     $subject = $this->siteTitle . ' Error `' . $event->getException()->getMessage() . '`';
                     $message = new \Tk\Mail\Message($body, $subject, $email, $email);
                     $this->emailGateway->send($message);
