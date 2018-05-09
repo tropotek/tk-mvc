@@ -34,15 +34,31 @@ class ExceptionListener implements Subscriber
     public function onException(ExceptionEvent $event)
     {   
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
-        $class = get_class($event->getException());
-        $e = $event->getException();
+        $html = self::getExceptionHtml($event->getException(), $this->isDebug);
+
+        $response = Response::create($html);
+        $event->setResponse($response);
+        
+    }
+
+    /**
+     * @param \Exception $e
+     * @param bool $isDebug
+     * @param bool $fullTrace
+     * @return mixed|string
+     */
+    public static function getExceptionHtml($e, $isDebug = false, $fullTrace = false)
+    {
+
+        $class = get_class($e);
         $msg = $e->getMessage();
         // Color the error for giggles
         // Do not show in debug mode
         $str = '';
         $extra = '';
-        if ($this->isDebug) {
-            $toString = trim($event->getException()->__toString());
+
+        if ($isDebug || $fullTrace) {
+            $toString = trim($e->__toString());
 
 // Commented out due to issues with dump strings before the trace, see \Dom\Exception
 //            $pos = strpos($toString, "Stack trace:");
@@ -52,7 +68,7 @@ class ExceptionListener implements Subscriber
             $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . $toString, true));
             $extra = sprintf('in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
         }
-        
+
         $html = <<<HTML
 <html>
 <head>
@@ -73,9 +89,8 @@ code, pre {
 HTML;
 
         $html = str_replace(\Tk\Config::getInstance()->getSitePath(), '', $html);
-        $response = Response::create($html);
-        $event->setResponse($response);
-        
+
+        return $html;
     }
 
 
