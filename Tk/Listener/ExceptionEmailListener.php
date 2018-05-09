@@ -20,9 +20,9 @@ class ExceptionEmailListener implements Subscriber
     private $logger;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $siteEmail = '';
+    protected $emailList = '';
 
     /**
      * @var string
@@ -39,19 +39,18 @@ class ExceptionEmailListener implements Subscriber
      * Constructor.
      *
      * @param $emailGateway
+     * @param string|array $email
      * @param LoggerInterface $logger A LoggerInterface instance
-     * @param string $siteEmail
      * @param string $siteTitle
      */
-    public function __construct($emailGateway, LoggerInterface $logger = null, $siteEmail = '', $siteTitle = '')
+    public function __construct($emailGateway, LoggerInterface $logger = null, $email, $siteTitle = '')
     {
         $this->emailGateway = $emailGateway;
         $this->logger = $logger;
-        if ($siteEmail)
-            $siteEmail = 'noreply@'.\Tk\Config::getInstance()->getSiteHost();
         if (!$siteTitle)
             $siteTitle = \Tk\Config::getInstance()->getSiteHost();
-        $this->siteEmail = $siteEmail;
+        if (!is_array($email)) $email = array($email);
+        $this->emailList = $email;
         $this->siteTitle = $siteTitle;
     }
 
@@ -66,13 +65,13 @@ class ExceptionEmailListener implements Subscriber
         // This would stop mass emails on major system failures and DOS attacks...
 
         try {
-            if ($this->siteEmail) {
-                $body = $this->createMailTemplate($event->getResponse()->getBody());
-
-                $subject = $this->siteTitle . ' Error `' . $event->getException()->getMessage() . '`';
-                $from = $to = $this->siteEmail;
-                $message = new \Tk\Mail\Message($body, $subject, $to, $from);
-                $this->emailGateway->send($message);
+            if (count($this->emailList)) {
+                foreach ($this->emailList as $email) {
+                    $body = $this->createMailTemplate($event->getResponse()->getBody());
+                    $subject = $this->siteTitle . ' Error `' . $event->getException()->getMessage() . '`';
+                    $message = new \Tk\Mail\Message($body, $subject, $email, $email);
+                    $this->emailGateway->send($message);
+                }
             }
         } catch (\Exception $ee) { $this->logger->warning($ee->getMessage()); }
 
