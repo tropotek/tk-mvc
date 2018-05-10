@@ -50,6 +50,7 @@ class ExceptionListener implements Subscriber
     public static function getExceptionHtml($e, $isDebug = false, $fullTrace = false)
     {
 
+        $config = \Tk\Config::getInstance();
         $class = get_class($e);
         $msg = $e->getMessage();
         // Color the error for giggles
@@ -61,6 +62,12 @@ class ExceptionListener implements Subscriber
             $toString = trim($e->__toString());
 
 // Commented out due to issues with dump strings before the trace, see \Dom\Exception
+            $logHtml = '';
+            // TODO: See if we can get a dump of the log..... ;-);-)
+            if (is_readable($config->get('log.session'))) {
+                $sessionLog = file_get_contents($config->get('log.session'));
+                $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p> <pre>%s</pre> <p>&#160;</p></div>', $sessionLog);
+            }
 //            $pos = strpos($toString, "Stack trace:");
 //            $preStr = substr($toString, 0, $pos-1);
 //            $toString = substr($toString, $pos);
@@ -84,6 +91,7 @@ code, pre {
 <h1>$class</h1>
 <p><strong>$msg $extra</strong></p>
 <pre style="">$str</pre>
+$logHtml
 </body>
 </html>
 HTML;

@@ -114,11 +114,6 @@ class ExceptionEmailListener implements Subscriber
             $foot .= sprintf('<i>IP Address:</i> <span>%s</span><br/>', $request->getIp());
             $foot .= sprintf('<i>User Agent:</i> <span>%s</span>', $request->getUserAgent());
         }
-        $logHtml = '';
-        if (is_readable($config->get('log.session'))) {
-            $sessionLog = file_get_contents($config->get('log.session'));
-            $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p> <pre>%s</pre> <p>&#160;</p></div>', $sessionLog);
-        }
 
 
 
@@ -163,7 +158,6 @@ p {
   %s
   <p>&#160;</p>
   </div>
-  %s  
   <hr />
   <div class="footer">
     <p>
@@ -171,7 +165,7 @@ p {
     </p>
   </div>
 </body>
-</html>', $body, $logHtml, $foot);
+</html>', $body, $foot);
 
         return $defaultHtml;
     }
