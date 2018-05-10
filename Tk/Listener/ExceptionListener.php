@@ -5,7 +5,6 @@ use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Tk\Response;
 
-
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
@@ -20,7 +19,7 @@ class ExceptionListener implements Subscriber
 
     /**
      * ExceptionListener constructor.
-     * 
+     *
      * @param bool $isDebug
      */
     public function __construct($isDebug = false)
@@ -32,13 +31,13 @@ class ExceptionListener implements Subscriber
      * @param ExceptionEvent $event
      */
     public function onException(ExceptionEvent $event)
-    {   
+    {
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
         $html = self::getExceptionHtml($event->getException(), $this->isDebug);
 
         $response = Response::create($html);
         $event->setResponse($response);
-        
+
     }
 
     /**
@@ -61,16 +60,11 @@ class ExceptionListener implements Subscriber
         if ($isDebug || $fullTrace) {
             $toString = trim($e->__toString());
 
-// Commented out due to issues with dump strings before the trace, see \Dom\Exception
             $logHtml = '';
-            // TODO: See if we can get a dump of the log..... ;-);-)
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p> <pre>%s</pre> <p>&#160;</p></div>', $sessionLog);
             }
-//            $pos = strpos($toString, "Stack trace:");
-//            $preStr = substr($toString, 0, $pos-1);
-//            $toString = substr($toString, $pos);
 
             $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . $toString, true));
             $extra = sprintf('in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
