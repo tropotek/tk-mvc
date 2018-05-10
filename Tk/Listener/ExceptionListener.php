@@ -4,7 +4,7 @@ namespace Tk\Listener;
 use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Tk\Response;
-
+use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -61,16 +61,14 @@ class ExceptionListener implements Subscriber
         if ($isDebug || $fullTrace) {
             $toString = trim($e->__toString());
 
-// Commented out due to issues with dump strings before the trace, see \Dom\Exception
             $logHtml = '';
-            // TODO: See if we can get a dump of the log..... ;-);-)
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
+                // ANSI to html here
+                $converter = new AnsiToHtmlConverter();
+                $sessionLog = $converter->convert($sessionLog);
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p> <pre>%s</pre> <p>&#160;</p></div>', $sessionLog);
             }
-//            $pos = strpos($toString, "Stack trace:");
-//            $preStr = substr($toString, 0, $pos-1);
-//            $toString = substr($toString, $pos);
 
             $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . $toString, true));
             $extra = sprintf('in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
