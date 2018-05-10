@@ -4,6 +4,10 @@ namespace Tk\Listener;
 use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Tk\Response;
+<<<<<<< HEAD
+=======
+use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
+>>>>>>> 9ae7734515a2eccd3a798491bd239a164441acd3
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
@@ -63,6 +67,9 @@ class ExceptionListener implements Subscriber
             $logHtml = '';
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
+                // ANSI to html here
+                $converter = new AnsiToHtmlConverter();
+                $sessionLog = $converter->convert($sessionLog);
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p> <pre>%s</pre> <p>&#160;</p></div>', $sessionLog);
             }
 
