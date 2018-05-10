@@ -15,7 +15,6 @@ use Tk\Event\Subscriber;
 class ShutdownHandler implements Subscriber
 {
 
-    public static $SCRIPT_END =  "- Shutdown -\0";
 
 
     /**
@@ -54,7 +53,7 @@ class ShutdownHandler implements Subscriber
     {
         if (!$this->logger) return;
 
-        $this->out(self::$SCRIPT_END . \PHP_EOL);
+        $this->out(StartupHandler::$SCRIPT_END . \PHP_EOL);
     }
 
     /**
@@ -72,7 +71,7 @@ class ShutdownHandler implements Subscriber
     {
         if (!$this->logger) return;
 
-        $this->out('------------------------------------------------');
+        $this->out(StartupHandler::$SCRIPT_LINE);
         if ($this->scriptStartTime > 0)
             $this->out('Load Time: ' . round($this->scriptDuration(), 4) . ' sec');
         $this->out('Peek Mem:  ' . \Tk\File::bytes2String(memory_get_peak_usage(), 4));
@@ -85,7 +84,7 @@ class ShutdownHandler implements Subscriber
 
         $this->out('Response Headers:');
         $this->out('  HTTP Code: ' . http_response_code() . ' ');
-        $this->out('------------------------------------------------');
+        //$this->out(StartupHandler::$SCRIPT_LINE);
 
     }
 

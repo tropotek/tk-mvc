@@ -16,7 +16,15 @@ use Tk\Session;
  */
 class StartupHandler implements Subscriber
 {
-
+    public static $SCRIPT_START_CHAR = '¤';
+    public static $SCRIPT_END_CHAR = '×';
+    public static $SCRIPT_START =  '¤--------------------- Start ----------------------';
+    public static $SCRIPT_END   =  '--------------------- Shutdown -------------------×';
+    public static $SCRIPT_LINE  =  '---------------------------------------------------';
+//    public static $SCRIPT_START =  '┌──────────────────   Start  ────────────────┐';
+//    public static $SCRIPT_END   =  '└────────────────── Shutdown ────────────────┘';
+//    public static $SCRIPT_LINE  =  '├────────────────────────────────────────────┤';
+    
     /**
      * @var LoggerInterface
      */
@@ -55,12 +63,15 @@ class StartupHandler implements Subscriber
         $this->init();
     }
 
+    /**
+     * @throws \Tk\Exception
+     */
     private function init()
     {
         if (!$this->logger) return;
         $config = \Tk\Config::getInstance();
 
-        $this->out('------------------------------------------------');
+        $this->out(self::$SCRIPT_START);
         $prj = '';
 
         if ($config->getSystemProject()) {
@@ -83,7 +94,7 @@ class StartupHandler implements Subscriber
             $this->out('- Session ID: ' . $this->session->getId());
         }
         $this->out('- PHP: ' . \PHP_VERSION);
-        $this->out('------------------------------------------------');
+        $this->out(self::$SCRIPT_LINE);
 
     }
 
