@@ -64,9 +64,6 @@ class ExceptionListener implements Subscriber
             $logHtml = '';
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
-                // ANSI to html here
-                $converter = new AnsiToHtmlConverter();
-                $sessionLog = $converter->convert($sessionLog);
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p> <pre>%s</pre> <p>&#160;</p></div>', $sessionLog);
             }
 
