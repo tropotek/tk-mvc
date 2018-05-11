@@ -5,6 +5,7 @@ use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Tk\Response;
 
+
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
@@ -19,7 +20,7 @@ class ExceptionListener implements Subscriber
 
     /**
      * ExceptionListener constructor.
-     * 
+     *
      * @param bool $isDebug
      */
     public function __construct($isDebug = false)
@@ -31,13 +32,13 @@ class ExceptionListener implements Subscriber
      * @param ExceptionEvent $event
      */
     public function onException(ExceptionEvent $event)
-    {   
+    {
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
         $html = self::getExceptionHtml($event->getException(), $this->isDebug);
 
         $response = Response::create($html);
         $event->setResponse($response);
-        
+
     }
 
     /**
