@@ -66,6 +66,7 @@ class ExceptionEmailListener implements Subscriber
                     $body = $this->createMailTemplate(ExceptionListener::getExceptionHtml($event->getException(), true));
                     $subject = $this->siteTitle . ' Error `' . $event->getException()->getMessage() . '`';
                     $message = new \Tk\Mail\Message($body, $subject, $email, $email);
+                    $message->addHeader('X-Exception', get_class($event->getException()));
                     $this->emailGateway->send($message);
                 }
             }
