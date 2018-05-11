@@ -25,18 +25,18 @@ class LogExceptionListener implements Subscriber
     /**
      * @var bool
      */
-    protected $isDebug = false;
+    protected $fullDump = false;
 
     /**
      * Constructor.
      *
      * @param LoggerInterface $logger A LoggerInterface instance
-     * @param bool $isDebug
+     * @param bool $fullDump
      */
-    public function __construct(LoggerInterface $logger = null, $isDebug = false)
+    public function __construct(LoggerInterface $logger = null, $fullDump = false)
     {
         $this->logger = $logger;
-        $this->isDebug = $isDebug;
+        $this->fullDump = $fullDump;
     }
 
 
@@ -50,7 +50,7 @@ class LogExceptionListener implements Subscriber
 
         $e = $event->getException();
 
-        if ($this->isDebug) {
+        if ($this->fullDump) {
             if ($e instanceof \Tk\WarningException) {
                 $this->logger->warning(self::getCallerLine($e) . $event->getException()->__toString());
             } else {
