@@ -1,5 +1,12 @@
 #CHANGELOG#
 
+Ver 2.0.14 [2018-05-11]:
+-------------------------------
+ - Merge branch 'master' of https://github.com/tropotek/tk-mvc
+ - Dev.ttek.org
+ - This is a fix
+
+
 Ver 2.0.13 [2018-05-10]:
 -------------------------------
  - Updated config.php.in file
