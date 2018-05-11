@@ -14,10 +14,6 @@ use Psr\Log\LoggerInterface;
  */
 class ExceptionEmailListener implements Subscriber
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
 
     /**
      * @var array
@@ -43,10 +39,9 @@ class ExceptionEmailListener implements Subscriber
      * @param LoggerInterface $logger A LoggerInterface instance
      * @param string $siteTitle
      */
-    public function __construct($emailGateway, LoggerInterface $logger = null, $email, $siteTitle = '')
+    public function __construct($emailGateway, $email, $siteTitle = '')
     {
         $this->emailGateway = $emailGateway;
-        $this->logger = $logger;
         if (!$siteTitle)
             $siteTitle = \Tk\Config::getInstance()->getSiteHost();
         if (!is_array($email)) $email = array($email);
@@ -68,13 +63,13 @@ class ExceptionEmailListener implements Subscriber
             if (count($this->emailList)) {
                 foreach ($this->emailList as $email) {
                     //$body = $this->createMailTemplate($event->getResponse()->getBody());
-                    $body = $this->createMailTemplate(ExceptionListener::getExceptionHtml($event->getException(), true, true));
+                    $body = $this->createMailTemplate(ExceptionListener::getExceptionHtml($event->getException(), true));
                     $subject = $this->siteTitle . ' Error `' . $event->getException()->getMessage() . '`';
                     $message = new \Tk\Mail\Message($body, $subject, $email, $email);
                     $this->emailGateway->send($message);
                 }
             }
-        } catch (\Exception $ee) { $this->logger->warning($ee->__toString()); }
+        } catch (\Exception $ee) { \Tk\Log::warning($ee->__toString()); }
 
     }
 

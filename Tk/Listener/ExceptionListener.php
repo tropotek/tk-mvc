@@ -16,16 +16,16 @@ class ExceptionListener implements Subscriber
     /**
      * @var bool
      */
-    protected $isDebug = false;
+    protected $withTrace = false;
 
     /**
      * ExceptionListener constructor.
      *
-     * @param bool $isDebug
+     * @param bool $withTrace
      */
-    public function __construct($isDebug = false)
+    public function __construct($withTrace = false)
     {
-        $this->isDebug = $isDebug;
+        $this->withTrace = $withTrace;
     }
 
     /**
@@ -34,7 +34,7 @@ class ExceptionListener implements Subscriber
     public function onException(ExceptionEvent $event)
     {
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
-        $html = self::getExceptionHtml($event->getException(), $this->isDebug);
+        $html = self::getExceptionHtml($event->getException(), $this->withTrace);
 
         $response = Response::create($html);
         $event->setResponse($response);
@@ -43,11 +43,10 @@ class ExceptionListener implements Subscriber
 
     /**
      * @param \Exception $e
-     * @param bool $isDebug
      * @param bool $fullTrace
      * @return mixed|string
      */
-    public static function getExceptionHtml($e, $isDebug = false, $fullTrace = false)
+    public static function getExceptionHtml($e, $fullTrace = false)
     {
 
         $config = \Tk\Config::getInstance();
@@ -57,11 +56,11 @@ class ExceptionListener implements Subscriber
         // Do not show in debug mode
         $str = '';
         $extra = '';
+        $logHtml = '';
 
-        if ($isDebug || $fullTrace) {
+        if ($fullTrace) {
             $toString = trim($e->__toString());
 
-            $logHtml = '';
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p> <pre>%s</pre> <p>&#160;</p></div>', $sessionLog);

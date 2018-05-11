@@ -20,15 +20,15 @@ class JsonExceptionListener implements Subscriber
     /**
      * @var bool
      */
-    protected $isDebug = false;
+    protected $fullDump = false;
 
     /**
      * JsonExceptionListener constructor.
-     * @param bool $isDebug
+     * @param bool $fullDump
      */
-    public function __construct($isDebug = false)
+    public function __construct($fullDump = false)
     {
-        $this->isDebug = $isDebug;
+        $this->fullDump = $fullDump;
     }
 
 
@@ -39,16 +39,15 @@ class JsonExceptionListener implements Subscriber
     public function onException(ExceptionEvent $event)
     {   
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
-        $class = get_class($event->getException());
         $e = $event->getException();
-        $msg = $e->getMessage();
         
         $err = array(
             'status' => 'err',
+            'exception' => get_class($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode()
         ); 
-        if ($this->isDebug) {
+        if ($this->fullDump) {
             $err['debug'] = $e->__toString();
         }
         
