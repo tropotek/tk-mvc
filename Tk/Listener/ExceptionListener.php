@@ -4,10 +4,7 @@ namespace Tk\Listener;
 use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Tk\Response;
-<<<<<<< HEAD
-=======
-use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
->>>>>>> 9ae7734515a2eccd3a798491bd239a164441acd3
+
 
 /**
  * @author Michael Mifsud <info@tropotek.com>
