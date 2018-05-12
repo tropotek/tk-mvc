@@ -69,7 +69,7 @@ class ExceptionListener implements Subscriber
                 $sessionLog = $converter->convert($sessionLog);
 
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p>'.
-                    '<pre class="console" style="color: #666666; background-color: #000; overflow: auto; padding: 10px 15px; font-family: monospace;">%s</pre> <p>&#160;</p></div>', $sessionLog);
+                    '<pre class="console" style="color: #666666; background-color: #000; padding: 10px 15px; font-family: monospace;">%s</pre> <p>&#160;</p></div>', $sessionLog);
             }
 
             $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . $toString, true));
@@ -84,6 +84,7 @@ class ExceptionListener implements Subscriber
 code, pre {
   line-height: 1.4em;
   padding: 0;margin: 0;
+  overflow: auto;
 }
 .console {
   line-height: 1.2em;
