@@ -86,11 +86,6 @@ code, pre {
   padding: 0;margin: 0;
   overflow: auto;
 }
-.console {
-  line-height: 1.2em;
-  font-size: 0.8em;
-  padding: 0;margin: 0;
-}
 </style>
 </head>
 <body style="padding: 10px;">
