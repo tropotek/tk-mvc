@@ -37,6 +37,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
      * @param string|\Dom\Template|\Dom\Renderer\RendererInterface|\DOMDocument $content
      * @return Page
      * @throws \Dom\Exception
+     * @throws \Tk\Exception
      * @see \App\Listener\ActionPanelHandler
      * @deprecated
      */
