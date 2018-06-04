@@ -23,11 +23,6 @@ abstract class Console extends Command
      */
     protected $input = null;
 
-    /**
-     * @var array
-     */
-    protected $vendorPaths = array();
-
 
 
     /**
@@ -75,24 +70,6 @@ abstract class Console extends Command
     public function setInput($input)
     {
         $this->input = $input;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getVendorPaths()
-    {
-        return $this->vendorPaths;
-    }
-
-    /**
-     * @param array $vendorPaths
-     * @return static
-     */
-    public function setVendorPaths($vendorPaths)
-    {
-        $this->vendorPaths = $vendorPaths;
         return $this;
     }
 
