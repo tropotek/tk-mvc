@@ -37,7 +37,15 @@ abstract class Console extends Command
         $this->writeInfo(ucwords($this->getName()));
     }
 
-        /**
+    /**
+     * @return \App\Config
+     */
+    public function getConfig()
+    {
+        return \App\Config::getInstance();
+    }
+
+    /**
      * @return OutputInterface
      */
     public function getOutput()
