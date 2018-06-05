@@ -38,11 +38,11 @@ abstract class Console extends Command
     }
 
     /**
-     * @return \App\Config
+     * @return \Tk\Config
      */
     public function getConfig()
     {
-        return \App\Config::getInstance();
+        return \Tk\Config::getInstance();
     }
 
     /**
