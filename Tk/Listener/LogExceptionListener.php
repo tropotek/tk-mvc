@@ -41,33 +41,49 @@ class LogExceptionListener implements Subscriber
 
 
     /**
-     * 
+     *
      * @param ExceptionEvent $event
      */
     public function onException(ExceptionEvent $event)
     {
         if (!$this->logger) return;
+        $this->logException($event->getException());
+    }
 
-        $e = $event->getException();
 
-        if ($this->fullDump) {
-            if ($e instanceof \Tk\WarningException) {
-                $this->logger->warning(self::getCallerLine($e) . $event->getException()->__toString());
-            } else {
-                $this->logger->error(self::getCallerLine($e) . $event->getException()->__toString());
-            }
-        } else {
-            if ($e instanceof \Tk\WarningException) {
-                $this->logger->warning(self::getCallerLine($e) . $event->getException()->getMessage());
-            } else {
-                $this->logger->error(self::getCallerLine($e) . $event->getException()->getMessage());
-            }
-        }
-
+    /**
+     *
+     * @param \Symfony\Component\Console\Event\ConsoleErrorEvent $event
+     */
+    public function onConsoleError(\Symfony\Component\Console\Event\ConsoleErrorEvent $event)
+    {
+        if (!$this->logger) return;
+        $this->logException($event->getError());
     }
 
     /**
-     * @param \Exception $e
+     * @param \Throwable $e
+     */
+    protected function logException($e)
+    {
+        if ($this->fullDump) {
+            if ($e instanceof \Tk\WarningException) {
+                $this->logger->warning(self::getCallerLine($e) . $e->__toString());
+            } else {
+                $this->logger->error(self::getCallerLine($e) . $e->__toString());
+            }
+        } else {
+            if ($e instanceof \Tk\WarningException) {
+                $this->logger->warning(self::getCallerLine($e) . $e->getMessage());
+            } else {
+                $this->logger->error(self::getCallerLine($e) . $e->getMessage());
+            }
+        }
+    }
+
+
+    /**
+     * @param \Throwable $e
      * @return string
      */
     private static function getCallerLine($e)
@@ -89,6 +105,7 @@ class LogExceptionListener implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
+            'console.error' => 'onConsoleError',
             \Tk\Kernel\KernelEvents::EXCEPTION => 'onException'
         );
     }
