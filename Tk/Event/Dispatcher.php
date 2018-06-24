@@ -44,7 +44,7 @@ class Dispatcher
     public function __construct(LoggerInterface $logger = null)
     {
         if ($logger == null) {
-            $logger = new \Psr\Log\NullLogger();
+            $logger = new \Tk\Log\NullLogger();
         }
         $this->logger = $logger;
     }
