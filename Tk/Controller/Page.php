@@ -80,6 +80,8 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
         /* @var \Dom\Template $template */
         $template = $this->getTemplate();
 
+        $this->showControllerContent();
+
         if ($this->getConfig()->get('site.meta.keywords')) {
             $template->appendMetaTag('keywords', $this->getConfig()->get('site.meta.keywords'));
         }
@@ -141,6 +143,38 @@ JS;
         }
         
         return $template;
+    }
+
+    /**
+     * Set the page Content
+     *
+     * @param \Tk\Controller\Iface $controller
+     * @throws \Dom\Exception
+     * @see \App\Listener\ActionPanelHandler
+     */
+    protected function showControllerContent()
+    {
+        if (!$this->getController()) return;
+        $content = $this->getController()->getTemplate();
+        // Allow people to hook into the controller result.
+        if ($this->getConfig()->getDispatcher()) {
+            $e = new \Tk\Event\Event();
+            $e->set('content', $content);
+            $e->set('controller', $this->getController());
+            $this->getConfig()->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
+            $content = $e->get('content');
+        }
+        if (!$content) return;
+        $pageTemplate = $this->getTemplate();
+        if ($content instanceof \Dom\Template) {
+            $pageTemplate->appendTemplate($this->getContentVar(), $content);
+        } else if ($content instanceof \Dom\Renderer\RendererInterface) {
+            $pageTemplate->appendTemplate($this->getContentVar(), $content->getTemplate());
+        } else if ($content instanceof \DOMDocument) {
+            $pageTemplate->insertDoc($this->getContentVar(), $content);
+        } else if (is_string($content)) {
+            $pageTemplate->insertHtml($this->getContentVar(), $content);
+        }
     }
 
     /**

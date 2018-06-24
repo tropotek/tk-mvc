@@ -84,9 +84,8 @@ class PageHandler implements Subscriber
             $show = 'show'; 
             if (!empty($regs[1]) && method_exists($this->getController(), 'show'.$regs[1]))
                 $show = 'show'.$regs[1];
+
             $this->getController()->$show();
-            
-            $this->setPageContent($this->getController());
             
             // Page::show()
             $this->getController()->getPage()->show();
@@ -101,41 +100,6 @@ class PageHandler implements Subscriber
             $event->setControllerResult($this->getController()->getPage()->getTemplate());
         }
     }
-
-    /**
-     * Set the page Content
-     *
-     * @param \Tk\Controller\Iface $controller
-     * @throws \Dom\Exception
-     * @see \App\Listener\ActionPanelHandler
-     */
-    public function setPageContent($controller)
-    {
-        $page = $controller->getPage();
-        $content = $controller->getTemplate();
-        if (!$page) return;
-        // Allow people to hook into the controller result.
-        if ($this->getDispatcher()) {
-            $e = new \Tk\Event\Event();
-            $e->set('content', $content);
-            $e->set('controller', $page->getController());
-            $this->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
-            $content = $e->get('content');
-        }
-        if (!$content) return;
-        
-        $pageTemplate = $page->getTemplate();
-        if ($content instanceof \Dom\Template) {
-            $pageTemplate->appendTemplate($page->getContentVar(), $content);
-        } else if ($content instanceof \Dom\Renderer\RendererInterface) {
-            $pageTemplate->appendTemplate($page->getContentVar(), $content->getTemplate());
-        } else if ($content instanceof \DOMDocument) {
-            $pageTemplate->insertDoc($page->getContentVar(), $content);
-        } else if (is_string($content)) {
-            $pageTemplate->insertHtml($page->getContentVar(), $content);
-        }
-    }
-
 
     /**
      * @return null|\Tk\Event\Dispatcher

@@ -59,6 +59,10 @@ class ExceptionEmailListener implements Subscriber
         // TODO: log all errors and send a compiled message periodically (IE: daily, weekly, monthly)
         // This would stop mass emails on major system failures and DOS attacks...
 
+        // These errors are not required they can cause email loops
+        if ($event->getException() instanceof \Tk\NotFoundHttpException) return;
+
+
         try {
             if (count($this->emailList)) {
                 foreach ($this->emailList as $email) {

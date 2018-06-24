@@ -19,13 +19,23 @@ class ExceptionListener implements Subscriber
     protected $withTrace = false;
 
     /**
+     * The controller to instaniate on errors
+     * @var string
+     */
+    protected $controllerClass = '';
+
+
+
+
+    /**
      * ExceptionListener constructor.
      *
      * @param bool $withTrace
      */
-    public function __construct($withTrace = false)
+    public function __construct($withTrace = false, $controllerClass = '')
     {
         $this->withTrace = $withTrace;
+        $this->controllerClass = $controllerClass;
     }
 
     /**
@@ -33,46 +43,60 @@ class ExceptionListener implements Subscriber
      */
     public function onException(ExceptionEvent $event)
     {
-        // TODO: If in debug mode show trace if in Live/Test mode only show message...
-        $html = self::getExceptionHtml($event->getException(), $this->withTrace);
+        $response = null;
+        if ($this->controllerClass && class_exists($this->controllerClass)) {
+            /** @var \Tk\Controller\Iface $con */
+            $con = new $this->controllerClass();
+            $page = $con->getPage();
+            if (method_exists($con, 'doDefault')) {
+                $con->doDefault($event->getRequest(), $event->getException(), $this->withTrace);
+                $response = Response::create($con->show());
+            }
+        } else {
+            $html = self::getExceptionHtml($event->getException(), $this->withTrace);
+            $response = Response::create($html);
+        }
 
-        $response = Response::create($html);
-        $event->setResponse($response);
+        if ($response)
+            $event->setResponse($response);
 
     }
 
+
+
+
+
     /**
      * @param \Exception $e
-     * @param bool $fullTrace
+     * @param bool $withTrace
      * @return mixed|string
      */
-    public static function getExceptionHtml($e, $fullTrace = false)
+    public static function getExceptionHtml($e, $withTrace = false)
     {
 
         $config = \Tk\Config::getInstance();
         $class = get_class($e);
         $msg = $e->getMessage();
-        // Color the error for giggles
-        // Do not show in debug mode
         $str = '';
         $extra = '';
         $logHtml = '';
 
-        if ($fullTrace) {
+        if ($withTrace) {
             $toString = trim($e->__toString());
 
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
-
-                //$theme = new \App\Util\AnsiTheme();
-                $converter = new \SensioLabs\AnsiConverter\AnsiToHtmlConverter();
-                $sessionLog = $converter->convert($sessionLog);
-
+                if (class_exists('SensioLabs\AnsiConverter\AnsiToHtmlConverter')) {
+                    $converter = new \SensioLabs\AnsiConverter\AnsiToHtmlConverter();
+                    $sessionLog = $converter->convert($sessionLog);
+                }
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p>'.
-                    '<pre class="console" style="color: #666666; background-color: #000; padding: 10px 15px; font-family: monospace;">%s</pre> <p>&#160;</p></div>', $sessionLog);
+                    '<pre class="console" style="color: #666666; background-color: #000; padding: 10px 15px; font-family: monospace;">%s</pre> <p>&#160;</p></div>',
+                    $sessionLog);
             }
 
-            $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'), highlight_string("<?php \n" . $toString, true));
+            $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'),
+                highlight_string("<?php \n" . $toString, true));
             $extra = sprintf('in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
         }
 
