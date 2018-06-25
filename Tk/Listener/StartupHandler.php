@@ -71,6 +71,7 @@ class StartupHandler implements Subscriber
         if (!$this->logger) return;
         $config = \Tk\Config::getInstance();
 
+        $this->out('');
         $this->out(self::$SCRIPT_START);
         $prj = '';
 
