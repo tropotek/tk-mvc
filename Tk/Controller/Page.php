@@ -72,14 +72,15 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
 
     /**
      * The default page show method
-     * 
+     *
      * @return \Dom\Template
+     * @throws \Dom\Exception
+     * @throws \Tk\Exception
      */
     public function show()
     {
         /* @var \Dom\Template $template */
         $template = $this->getTemplate();
-
         $this->showControllerContent();
 
         if ($this->getConfig()->get('site.meta.keywords')) {
@@ -148,8 +149,8 @@ JS;
     /**
      * Set the page Content
      *
-     * @param \Tk\Controller\Iface $controller
      * @throws \Dom\Exception
+     * @throws \Tk\Exception
      * @see \App\Listener\ActionPanelHandler
      */
     protected function showControllerContent()
@@ -157,11 +158,12 @@ JS;
         if (!$this->getController()) return;
         $content = $this->getController()->getTemplate();
         // Allow people to hook into the controller result.
-        if ($this->getConfig()->getDispatcher()) {
+
+        if ($this->getConfig()->getEventDispatcher()) {
             $e = new \Tk\Event\Event();
             $e->set('content', $content);
             $e->set('controller', $this->getController());
-            $this->getConfig()->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
+            $this->getConfig()->getEventDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
             $content = $e->get('content');
         }
         if (!$content) return;
