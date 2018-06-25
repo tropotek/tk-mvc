@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 2.0.42 [2018-06-26]:
+-------------------------------
+Minor Code Updates
+
+
 Ver 2.0.40 [2018-06-26]:
 -------------------------------
 Added cleanEntities console cmd
