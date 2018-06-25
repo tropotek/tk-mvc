@@ -30,9 +30,9 @@ class Dispatcher
     protected $sorted = array();
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|null
      */
-    protected $logger;
+    protected $logger = null;
 
     
     
@@ -43,9 +43,6 @@ class Dispatcher
      */
     public function __construct(LoggerInterface $logger = null)
     {
-        if ($logger == null) {
-            $logger = new \Tk\Log\NullLogger();
-        }
         $this->logger = $logger;
     }
     
@@ -88,7 +85,7 @@ class Dispatcher
     protected function doDispatch($listeners, $eventName, Event $event)
     {
         foreach ($listeners as $listener) {
-            if (is_array($listener)) {
+            if (is_array($listener) && $this->logger) {
                 $this->logger->debug('Dispatch: ' . $eventName . ' - ' . get_class($listener[0]) . '::' . $listener[1] . '(' . get_class($event) . ')');
             }
             call_user_func($listener, $event, $eventName, $this);
