@@ -34,7 +34,7 @@ abstract class Console extends Command
     {
         $this->setInput($input);
         $this->setOutput($output);
-        $this->writeInfo(ucwords($this->getName()));
+        $this->writeInfo(ucwords(preg_replace('/-([A-Z])/i', ' $1', $this->getName())));
     }
 
     /**
