@@ -20,7 +20,7 @@ class PageResolver extends Resolver
         $controller = parent::getController($request);
 
         /** @var Iface $controller */
-        if ($controller[0] instanceof Iface) {
+        if (is_array($controller) && $controller[0] instanceof Iface) {
             $cObj = $controller[0];
             $page = $cObj->getPage();
             if (!$cObj->getPageTitle()) {     // Set a default page Title for the crumbs
