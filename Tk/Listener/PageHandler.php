@@ -66,6 +66,7 @@ class PageHandler implements Subscriber
      * kernel.view
      * @param \Tk\Event\ControllerResultEvent $event
      * @throws \Dom\Exception
+     * @throws \Tk\Exception
      */
     public function onView(\Tk\Event\ControllerResultEvent $event)
     {
