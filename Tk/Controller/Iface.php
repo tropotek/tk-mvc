@@ -44,6 +44,15 @@ abstract class Iface extends \Dom\Renderer\Renderer
      */
     public function getPage()
     {
+        if (!$this->page) {
+            if (method_exists($this->getConfig(), 'createPage')) {
+                // Check config for a create page function
+                $this->page = $this->getConfig()->createPage($this);
+            } else {
+                // Create a default page
+                $this->page = new Page();
+            }
+        }
         return $this->page;
     }
 
