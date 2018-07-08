@@ -6,7 +6,7 @@ namespace Tk\Controller;
  * @see http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-abstract class Iface extends \Dom\Renderer\Renderer
+abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
     
     /**
