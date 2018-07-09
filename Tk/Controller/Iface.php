@@ -19,7 +19,10 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
      */
     protected $pageTitle = '';
 
-
+    /**
+     * Iface constructor.
+     */
+    public function __construct() { }
 
     /**
      * @return string
