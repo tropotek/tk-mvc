@@ -1,5 +1,12 @@
 #CHANGELOG#
 
+Ver 2.0.46 [2018-07-09]:
+-------------------------------
+Minor Code Updates
+Merge branch 'master' of https://github.com/tropotek/tk-mvc
+Added Load events to DomLoader object
+
+
 Ver 2.0.44 [2018-06-27]:
 -------------------------------
 Fixed the rules not working on Create submit
