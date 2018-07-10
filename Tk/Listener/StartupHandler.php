@@ -5,10 +5,10 @@ use Psr\Log\LoggerInterface;
 use Tk\Event\Subscriber;
 use Tk\Request;
 use Tk\Session;
+use Tk\Event\GetResponseEvent;
 
 
 /**
- * Class StartupHandler
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
@@ -102,12 +102,35 @@ class StartupHandler implements Subscriber
 
     }
 
+    /**
+     * Set the global institution into the config as a central data access point
+     * If no institution is set then we know we are either an admin or public user...
+     *
+     * @param GetResponseEvent $event
+     * @throws \Tk\Exception
+     * @throws \Tk\Db\Exception
+     * @throws \Tk\Exception
+     * @throws \Tk\Db\Exception
+     */
+    public function onRequest(GetResponseEvent $event)
+    {
+        $config = \Tk\Config::getInstance();
+        if ($config->getRequest()->getAttribute('_route')) {
+            $routeCollection = $config->getRouteCollection();
+            if ($routeCollection) {
+                $route = $routeCollection->get($config->getRequest()->getAttribute('_route'));
+                if ($route)
+                    $this->out('- Controller: ' . $route->getController());
+            }
+        }
 
+    }
 
-
+    /**
+     * @param $str
+     */
     private function out($str)
     {
-        //$this->logger->info(\Tk\Color::getCliString($str, 'white'));
         $this->logger->info($str);
     }
 
@@ -118,6 +141,7 @@ class StartupHandler implements Subscriber
     {
         return array(
             \Tk\Kernel\KernelEvents::INIT  => 'onInit',
+            \Tk\Kernel\KernelEvents::REQUEST => array('onRequest', -1),
             \Symfony\Component\Console\ConsoleEvents::COMMAND  => 'onCommand'
         );
     }
