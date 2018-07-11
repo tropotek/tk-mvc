@@ -84,8 +84,9 @@ class StartupHandler implements Subscriber
             if (!$config->isCli()) {
                 $this->out('- Host: ' . $this->request->getUri()->getScheme() . '://' . $this->request->getUri()->getHost());
                 $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri()->toString(false, false));
-                if ($this->request->getMethod() == 'POST' && strlen($config->getRequest()->getRawPostData()) <= 255) {
-                    $this->out('- POST Data: ' . $config->getRequest()->getRawPostData());
+                // Doing this live is a security risk
+                if ($config->isDebug() && $this->request->getMethod() == 'POST' && strlen($config->getRequest()->getRawPostData()) <= 255) {
+                    $this->logger->debug('- POST Data: ' . $config->getRequest()->getRawPostData());
                 }
                 $this->out('- Client IP: ' . $this->request->getIp());
                 $this->out('- User Agent: ' . $this->request->getUserAgent());
@@ -101,6 +102,7 @@ class StartupHandler implements Subscriber
         $this->out(self::$SCRIPT_LINE);
 
     }
+
 
     /**
      * Set the global institution into the config as a central data access point
