@@ -23,7 +23,45 @@ abstract class Console extends Command
      */
     protected $input = null;
 
+    /**
+     * @var string
+     */
+    protected $locFile = '';
 
+
+    /**
+     * Console constructor.
+     * @param null|string $name
+     */
+    public function __construct($name = null)
+    {
+        parent::__construct($name);
+        $this->locFile = $this->getConfig()->getTempPath().'/'.$this->getName().'.lock';
+    }
+
+    /**
+     *
+     */
+    public function __destruct()
+    {
+        \Tk\FileLocker::unlockFile($this->locFile);
+    }
+
+    /**
+     * Initializes the command just after the input has been validated.
+     *
+     * This is mainly useful when a lot of commands extends one main command
+     * where some things need to be initialized based on the input arguments and options.
+     * @throws \Tk\Exception
+     * @throws \Exception
+     * @todo: Maybe we need an option for allowing more than one running instance???
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        if (!\Tk\FileLocker::lockFile($this->locFile)) {
+            throw new \Tk\Exception('Instance already executing. Aborting.');
+        }
+    }
 
     /**
      * @param InputInterface $input
@@ -32,10 +70,21 @@ abstract class Console extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $this->setInput($input);
         $this->setOutput($output);
         $this->writeInfo($this->getName());
         //$this->writeInfo(ucwords(preg_replace('/([-_]*[A-Z])/', ' $1', $this->getName())));
+
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getLocFile()
+    {
+        return $this->locFile;
     }
 
     /**
