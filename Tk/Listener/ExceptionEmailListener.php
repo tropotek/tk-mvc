@@ -62,7 +62,6 @@ class ExceptionEmailListener implements Subscriber
         // These errors are not required they can cause email loops
         if ($event->getException() instanceof \Tk\NotFoundHttpException) return;
 
-
         try {
             if (count($this->emailList)) {
                 foreach ($this->emailList as $email) {
