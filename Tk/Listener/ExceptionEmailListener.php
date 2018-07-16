@@ -62,13 +62,16 @@ class ExceptionEmailListener implements Subscriber
         // These errors are not required they can cause email loops
         if ($event->getException() instanceof \Tk\NotFoundHttpException) return;
 
+        $config = \Tk\Config::getInstance();
         try {
             if (count($this->emailList)) {
                 foreach ($this->emailList as $email) {
-                    //$body = $this->createMailTemplate($event->getResponse()->getBody());
-                    $body = $this->createMailTemplate(ExceptionListener::getExceptionHtml($event->getException(), true));
+                    $message = $config->createMessage();
+                    $message->setFrom($email);
+                    $message->addTo($email);
                     $subject = $this->siteTitle . ' Error `' . $event->getException()->getMessage() . '`';
-                    $message = new \Tk\Mail\Message($body, $subject, $email, $email);
+                    $message->setSubject($subject);
+                    $message->set('content', ExceptionListener::getExceptionHtml($event->getException(), true));
                     $message->addHeader('X-Exception', get_class($event->getException()));
                     $this->emailGateway->send($message);
                 }
@@ -86,87 +89,6 @@ class ExceptionEmailListener implements Subscriber
         return array(
             \Tk\Kernel\KernelEvents::EXCEPTION => 'onException'
         );
-    }
-
-
-    /**
-     * Helper Method
-     * Make a default HTML template to create HTML emails
-     * usage:
-     *  $message->setBody($message->createHtmlTemplate($bodyStr));
-     *
-     * @param string $body
-     * @param bool $showFooter
-     * @return string
-     * @todo: Probably not the best place for this..... Dependant on the App
-     */
-    protected function createMailTemplate($body, $showFooter = true)
-    {
-        $config = \Tk\Config::getInstance();
-        $request = $config->getRequest();
-        $foot = '';
-        if (!$config->isCli() && $showFooter) {
-            $foot .= sprintf('<i>Page:</i> <a href="%s">%s</a><br/>', $request->getUri()->toString(), $request->getUri()->toString());
-            if ($request->getReferer()) {
-                $foot .= sprintf('<i>Referer:</i> <span>%s</span><br/>', $request->getReferer()->toString());
-            }
-            $foot .= sprintf('<i>IP Address:</i> <span>%s</span><br/>', $request->getIp());
-            $foot .= sprintf('<i>User Agent:</i> <span>%s</span>', $request->getUserAgent());
-        }
-
-
-
-        $defaultHtml = sprintf('
-<html>
-<head>
-  <title>Email</title>
-
-<style type="text/css">
-body {
-  font-family: arial,sans-serif;
-  font-size: 80%%;
-  padding: 5px;
-  background-color: #FFF;
-}
-table {
-  font-size: 0.9em;
-}
-th, td {
-  vertical-align: top;
-}
-table {
-
-}
-th {
-  text-align: left;
-}
-td {
-  padding: 4px 5px;
-}
-.content {
-  padding: 0px 0px 0px 20px;
-}
-p {
-  margin: 0px 0px 10px 0px;
-  padding: 0px;
-}
-</style>
-</head>
-<body>
-  <div class="content">
-  %s
-  <p>&#160;</p>
-  </div>
-  <hr />
-  <div class="footer">
-    <p>
-      %s
-    </p>
-  </div>
-</body>
-</html>', $body, $foot);
-
-        return $defaultHtml;
     }
     
 }
