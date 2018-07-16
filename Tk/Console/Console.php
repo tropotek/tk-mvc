@@ -167,6 +167,16 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
+    protected function writeStrongBlue($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    {
+        return $this->write(sprintf('<fg=blue;options=bold>%s</>', $str), $options);
+    }
+
+    /**
+     * @param $str
+     * @param int $options
+     * @return mixed
+     */
     protected function writeStrong($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<options=bold>%s</>', $str), $options);
@@ -180,6 +190,16 @@ abstract class Console extends Command
     protected function writeInfo($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<info>%s</info>', $str), $options);
+    }
+
+    /**
+     * @param $str
+     * @param int $options
+     * @return mixed
+     */
+    protected function writeStrongInfo($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    {
+        return $this->write(sprintf('<fg=green;options=bold>%s</>', $str), $options);
     }
 
     /**
