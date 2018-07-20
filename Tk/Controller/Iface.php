@@ -39,6 +39,14 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     }
 
     /**
+     * @return string
+     */
+    public function getPageTemplatePath()
+    {
+        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public');
+    }
+
+    /**
      * Get a new instance of the page to display the content in.
      *
      * NOTE: This is the default, override to load your own page objects
@@ -48,13 +56,9 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     public function getPage()
     {
         if (!$this->page) {
-            if (method_exists($this->getConfig(), 'createPage')) {
-                // Check config for a create page function
-                $this->page = $this->getConfig()->createPage($this);
-            } else {
-                // Create a default page
-                $this->page = new Page();
-            }
+            // Create a default page
+            $this->page = new Page();
+            $this->page->setController($this);
         }
         return $this->page;
     }
@@ -62,6 +66,7 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     /**
      * @param $page
      * @return $this
+     * @deprecated
      */
     public function setPage($page)
     {

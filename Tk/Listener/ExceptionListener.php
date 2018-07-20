@@ -47,7 +47,6 @@ class ExceptionListener implements Subscriber
         if ($this->controllerClass && class_exists($this->controllerClass)) {
             /** @var \Tk\Controller\Iface $con */
             $con = new $this->controllerClass();
-            $page = $con->getPage();
             if (method_exists($con, 'doDefault')) {
                 $con->doDefault($event->getRequest(), $event->getException(), $this->withTrace);
                 $response = Response::create($con->show());
@@ -61,9 +60,6 @@ class ExceptionListener implements Subscriber
             $event->setResponse($response);
 
     }
-
-
-
 
 
     /**

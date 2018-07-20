@@ -10,20 +10,10 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
 {
 
     /**
-     * The page template var name to place the controller content into
-     * @var string
-     */
-    protected $contentVar = 'content';
-
-    /**
      * @var \Tk\Controller\Iface
+     * @deprecated
      */
     protected $controller = null;
-
-    /**
-     * @var string
-     */
-    protected $pageRole = 'public';
 
     /**
      * @var string
@@ -31,172 +21,45 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     protected $templatePath = '';
 
 
-    /**
-     * Set the page Content
-     *
-     * @param string|\Dom\Template|\Dom\Renderer\RendererInterface|\DOMDocument $content
-     * @return Page
-     * @throws \Dom\Exception
-     * @throws \Tk\Exception
-     * @see \App\Listener\ActionPanelHandler
-     * @deprecated
-     */
-    public function setPageContent($content)
-    {
-        // Allow people to hook into the controller result.
-        $event = new \Tk\Event\Event();
-        $event->set('content', $content);
-        $event->set('controller', $this->getController());
-
-        // TODO: this should not be here, we need to pass it in....
-        \Tk\Config::getInstance()->getEventDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $event);
-
-        if (!$content) return $this;
-        if ($content instanceof \Dom\Template) {
-            $this->getTemplate()->appendTemplate($this->getContentVar(), $content);
-        } else if ($content instanceof \Dom\Renderer\RendererInterface) {
-            $this->getTemplate()->appendTemplate($this->getContentVar(), $content->getTemplate());
-        } else if ($content instanceof \DOMDocument) {
-            $this->getTemplate()->insertDoc($this->getContentVar(), $content);
-        } else if (is_string($content)) {
-            $this->getTemplate()->insertHtml($this->getContentVar(), $content);
-        }
-        return $this;
-    }
-
 
     /**
      * Init the page ????
+     * @deprecated
      */
     public function init() { }
 
     /**
-     * The default page show method
-     *
      * @return \Dom\Template
-     * @throws \Dom\Exception
-     * @throws \Tk\Exception
      */
     public function show()
     {
-        /* @var \Dom\Template $template */
         $template = $this->getTemplate();
-        $this->showControllerContent();
-
-        if ($this->getConfig()->get('site.meta.keywords')) {
-            $template->appendMetaTag('keywords', $this->getConfig()->get('site.meta.keywords'));
-        }
-        if ($this->getConfig()->get('site.meta.description')) {
-            $template->appendMetaTag('description', $this->getConfig()->get('site.meta.description'));
-        }
-
-        if ($this->getConfig()->get('site.global.js')) {
-            $template->appendJs($this->getConfig()->get('site.global.js'));
-        }
-        if ($this->getConfig()->get('site.global.css')) {
-            $template->appendCss($this->getConfig()->get('site.global.css'));
-        }
-
-//        $template->appendMetaTag('tk-author', 'http://www.tropotek.com/', $template->getTitleElement());
-//        $template->appendMetaTag('tk-project', 'tk2uni', $template->getTitleElement());
-//        $template->appendMetaTag('tk-version', '1.0', $template->getTitleElement());
-        
-        if ($this->getConfig()->get('site.title')) {
-            $template->setAttr('siteTitle', 'title', $this->getConfig()->get('site.title'));
-            $template->setAttr('siteName', 'title', $this->getConfig()->get('site.title'));
-            $template->insertText('siteTitle', $this->getConfig()->get('site.title'));
-            $template->setTitleText(trim($template->getTitleText() . ' - ' . $this->getConfig()->get('site.title'), '- '));
-        }
-
-
-
-        // TODO: create a listener for this????
-        $siteUrl = $this->getConfig()->getSiteUrl();
-        $dataUrl = $this->getConfig()->getDataUrl();
-        $templateUrl = $this->getConfig()->getTemplateUrl();
-
-        $js = <<<JS
-var config = {
-  siteUrl : '$siteUrl',
-  dataUrl : '$dataUrl',
-  templateUrl: '$templateUrl',
-  jquery: {
-    dateFormat: 'dd/mm/yy'    
-  },
-  bootstrap: {
-    dateFormat: 'dd/mm/yyyy'    
-  }
-};
-JS;
-        $template->appendJs($js, array('data-jsl-priority' => -1000));
-       
-        // Set page title
-        if ($this->getController() && $this->getController()->getPageTitle()) {
-            $template->setTitleText(trim($this->getController()->getPageTitle() . ' - ' . $template->getTitleText(), '- '));
-            $template->insertText('pageHeading', $this->getController()->getPageTitle());
-            $template->setChoice('pageHeading');
-        }
-
-
-        if ($this->getConfig()->isDebug()) {
-            $template->setTitleText(trim('DEBUG: ' . $template->getTitleText(), '- '));
-            $template->setChoice('debug');
-        }
-        
         return $template;
     }
 
     /**
-     * Set the page Content
+     * Get the Dom\Template var to insert the controller template into
      *
-     * @throws \Dom\Exception
-     * @throws \Tk\Exception
-     * @see \App\Listener\ActionPanelHandler
-     */
-    protected function showControllerContent()
-    {
-        if (!$this->getController()) return;
-        $content = $this->getController()->getTemplate();
-        // Allow people to hook into the controller result.
-
-        if ($this->getConfig()->getEventDispatcher()) {
-            $e = new \Tk\Event\Event();
-            $e->set('content', $content);
-            $e->set('controller', $this->getController());
-            $this->getConfig()->getEventDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
-            $content = $e->get('content');
-        }
-        if (!$content) return;
-        $pageTemplate = $this->getTemplate();
-        if ($content instanceof \Dom\Template) {
-            $pageTemplate->appendTemplate($this->getContentVar(), $content);
-        } else if ($content instanceof \Dom\Renderer\RendererInterface) {
-            $pageTemplate->appendTemplate($this->getContentVar(), $content->getTemplate());
-        } else if ($content instanceof \DOMDocument) {
-            $pageTemplate->insertDoc($this->getContentVar(), $content);
-        } else if (is_string($content)) {
-            $pageTemplate->insertHtml($this->getContentVar(), $content);
-        }
-    }
-
-    /**
      * @return string
      */
     public function getContentVar()
     {
-        return $this->contentVar;
+        return $this->getConfig()->get('template.var.page.content');
     }
 
     /**
      * @param string $contentVar
+     * @return Page
+     * @deprecated
      */
     public function setContentVar($contentVar)
     {
-        $this->contentVar = $contentVar;
+        return $this;
     }
     
     /**
      * @return Iface
+     * @deprecated
      */
     public function getController()
     {
@@ -206,30 +69,12 @@ JS;
     /**
      * @param Iface $controller
      * @return $this
+     * @deprecated
      */
     public function setController($controller)
     {
         $this->controller = $controller;
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPageRole()
-    {
-        return $this->pageRole;
-    }
-
-    /**
-     * This is used to determin what page template could be loaded.
-     * Negates the need for multiple page objects IE: AdminPage, StudentPage, etc...
-     *
-     * @param string $pageRole
-     */
-    public function setPageRole($pageRole)
-    {
-        $this->pageRole = $pageRole;
     }
 
     /**

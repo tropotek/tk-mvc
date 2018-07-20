@@ -44,15 +44,14 @@ class PageHandler implements Subscriber
      */
     public function onController(\Tk\Event\ControllerEvent $event)
     {
-        // Controller created before this call
-        
         /** @var \Tk\Controller\Iface $controller */
         $controller = $event->getController();
         if ($controller instanceof \Tk\Controller\Iface) {
             $this->controller = $controller;
-
-            // Page::init()
-            $controller->getPage()->init();
+            if (!$controller->getPageTitle()) {     // Set a default page Title for the crumbs
+                $controller->setPageTitle($controller->getDefaultTitle());
+            }
+            $controller->getPage()->setTemplatePath($controller->getPageTemplatePath());
 
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
@@ -65,15 +64,13 @@ class PageHandler implements Subscriber
     /**
      * kernel.view
      * @param \Tk\Event\ControllerResultEvent $event
-     * @throws \Dom\Exception
-     * @throws \Tk\Exception
+     * @throws \Exception
      */
     public function onView(\Tk\Event\ControllerResultEvent $event)
     {
         // View called
         $result = $event->getControllerResult();
         if(!$result && $this->getController()) {
-
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
@@ -87,20 +84,57 @@ class PageHandler implements Subscriber
                 $show = 'show'.$regs[1];
 
             $this->getController()->$show();
-            
-            // Page::show()
+
+            // Allow people to hook into the controller result.
+            if ($this->getDispatcher()) {
+                $e = new \Tk\Event\Event();
+                $e->set('controller', $this->getController());
+                $this->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
+            }
+
+            // Page::show() This will also insert the controller template into the page
             $this->getController()->getPage()->show();
-            
+
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
                 $this->getDispatcher()->dispatch(\Tk\PageEvents::PAGE_SHOW, $e);
             }
 
-            // Send the template to the final response handler for processing
             $event->setControllerResult($this->getController()->getPage()->getTemplate());
         }
     }
+
+
+    /**
+     * @param \Tk\Event\Event $event
+     * @throws \Dom\Exception
+     */
+    public function insertControllerContent(\Tk\Event\Event $event)
+    {
+        /** @var \Bs\Controller\Iface $controller */
+        $controller = $event->get('controller');
+        if (!$controller instanceof \Tk\Controller\Iface) return;
+
+        $controllerTemplate = $controller->getTemplate();
+        $pageTemplate = $controller->getPage()->getTemplate();
+        $contentVar = $controller->getPage()->getContentVar();
+        if (!$contentVar)
+            $contentVar = 'content';
+
+        if ($controllerTemplate instanceof \Dom\Template) {
+            $pageTemplate->appendTemplate($contentVar, $controllerTemplate);
+        } else if ($controllerTemplate instanceof \Dom\Renderer\RendererInterface) {
+            $pageTemplate->appendTemplate($contentVar, $controllerTemplate->getTemplate());
+        } else if ($controllerTemplate instanceof \DOMDocument) {
+            $pageTemplate->insertDoc($contentVar, $controllerTemplate);
+        } else if (is_string($controllerTemplate)) {
+            $pageTemplate->insertHtml($contentVar, $controllerTemplate);
+        }
+        $event->set('page.template', $pageTemplate);
+
+    }
+
 
     /**
      * @return null|\Tk\Event\Dispatcher
@@ -126,10 +160,9 @@ class PageHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            //KernelEvents::REQUEST =>  array('onRequest', 0),
             KernelEvents::CONTROLLER =>  array('onController', 10),
-            //\Tk\PageEvents::CONTROLLER_SHOW =>  array('onShow', 0),
-            KernelEvents::VIEW =>  array('onView', 0)
+            KernelEvents::VIEW =>  array('onView', 0),
+            \Tk\PageEvents::PAGE_SHOW => array('insertControllerContent', -10)
         );
     }
 }
