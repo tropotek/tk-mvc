@@ -63,6 +63,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
      */
     public function getController()
     {
+        \Tk\Log::warning('Page::getController() being called');
         return $this->controller;
     }
 
