@@ -59,7 +59,6 @@ abstract class Console extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        vd($this->locFile, $this->getName());
         if (!\Tk\FileLocker::lockFile($this->locFile)) {
             throw new \Tk\Exception('Instance already executing. Aborting.');
         }
