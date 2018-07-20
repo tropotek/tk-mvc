@@ -37,7 +37,6 @@ abstract class Console extends Command
     {
         parent::__construct($name);
         $this->locFile = $this->getConfig()->getTempPath().'/'.md5(__FILE__.$this->getName()).'.lock';
-        vd($this->locFile);
         //$this->locFile = $this->getConfig()->getTempPath().'/'.$this->getName().'.lock';
     }
 
@@ -60,6 +59,7 @@ abstract class Console extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
+        vd($this->locFile, $this->getName());
         if (!\Tk\FileLocker::lockFile($this->locFile)) {
             throw new \Tk\Exception('Instance already executing. Aborting.');
         }
