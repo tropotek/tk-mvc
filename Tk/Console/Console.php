@@ -36,8 +36,8 @@ abstract class Console extends Command
     public function __construct($name = null)
     {
         parent::__construct($name);
-        $this->locFile = $this->getConfig()->getTempPath().'/'.md5(__FILE__.$this->getName()).'.lock';
-        //$this->locFile = $this->getConfig()->getTempPath().'/'.$this->getName().'.lock';
+        //$this->locFile = $this->getConfig()->getTempPath().'/'.md5(__FILE__.$this->getName()).'.lock';
+        $this->locFile = $this->getConfig()->getTempPath().'/'.$this->getName().'.lock';
     }
 
     /**
