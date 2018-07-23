@@ -51,7 +51,7 @@ class PageHandler implements Subscriber
             if (!$controller->getPageTitle()) {     // Set a default page Title for the crumbs
                 $controller->setPageTitle($controller->getDefaultTitle());
             }
-            $controller->getPage()->setTemplatePath($controller->getPageTemplatePath());
+            //$controller->getPage()->setTemplatePath($controller->getPageTemplatePath());
 
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();

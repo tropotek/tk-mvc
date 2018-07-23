@@ -168,7 +168,11 @@ class Resolver
      */
     protected function instantiateController($class)
     {
-        return new $class();
+        /** @var \Tk\Controller\Iface $obj */
+        $obj = new $class();
+        if (!$obj->getPageTitle())
+            $obj->setPageTitle($obj->getDefaultTitle());
+        return $obj;
     }
     
 }
