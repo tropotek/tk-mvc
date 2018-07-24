@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 2.0.64 [2018-07-24]:
+-------------------------------
+  - Upgraded the site to further use the new base and uni libs
+
+
 Ver 2.0.62 [2018-07-23]:
 -------------------------------
 
