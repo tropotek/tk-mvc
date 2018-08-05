@@ -138,7 +138,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeRed($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeRed($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<fg=red>%s</>', $str), $options);
     }
@@ -148,7 +148,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeGrey($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeGrey($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<fg=white>%s</>', $str), $options);
     }
@@ -158,7 +158,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeBlue($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeBlue($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<fg=blue>%s</>', $str), $options);
     }
@@ -168,7 +168,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeStrongBlue($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeStrongBlue($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<fg=blue;options=bold>%s</>', $str), $options);
     }
@@ -178,7 +178,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeStrong($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeStrong($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<options=bold>%s</>', $str), $options);
     }
@@ -188,7 +188,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeInfo($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeInfo($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<info>%s</info>', $str), $options);
     }
@@ -198,7 +198,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeStrongInfo($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeStrongInfo($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<fg=green;options=bold>%s</>', $str), $options);
     }
@@ -208,7 +208,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeComment($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeComment($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<comment>%s</comment>', $str), $options);
     }
@@ -218,7 +218,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeQuestion($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeQuestion($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<question>%s</question>', $str), $options);
     }
@@ -228,7 +228,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function writeError($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function writeError($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         return $this->write(sprintf('<error>%s</error>', $str), $options);
     }
@@ -238,7 +238,7 @@ abstract class Console extends Command
      * @param int $options
      * @return mixed
      */
-    protected function write($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
+    public function write($str = '', $options = OutputInterface::VERBOSITY_NORMAL)
     {
         if ($this->output)
             return $this->output->writeln($str, $options);
