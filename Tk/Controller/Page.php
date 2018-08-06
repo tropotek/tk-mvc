@@ -8,6 +8,10 @@ namespace Tk\Controller;
  */
 class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
+    /**
+     * @var bool
+     */
+    protected $templateLoaded = false;
 
     /**
      * @var \Tk\Controller\Iface
@@ -21,6 +25,13 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     protected $templatePath = '';
 
 
+    /**
+     * @param string $templatePath
+     */
+    public function __construct($templatePath = '')
+    {
+        $this->setTemplatePath($templatePath);
+    }
 
     /**
      * Init the page ????
@@ -101,11 +112,15 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     /**
      * Set the page theme template path
      *
-     * @param $path
+     * @param string $path
      * @return $this
      */
-    public function setTemplatePath($path)
+    protected function setTemplatePath($path)
     {
+        if ($this->isTemplateLoaded()) {
+            \Tk\Log::warning('Template already loaded, path ignored: ' . $path);
+            return $this;
+        }
         if (!is_file($path)) {
             \Tk\Log::warning('Page template not found: ' . $path);
         } else {
@@ -115,12 +130,21 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     }
 
     /**
+     * @return bool
+     */
+    public function isTemplateLoaded()
+    {
+        return $this->templateLoaded;
+    }
+
+    /**
      * DomTemplate magic method example
      *
      * @return \Dom\Template
      */
     public function __makeTemplate()
     {
+        $this->templateLoaded = true;
         if (!$this->getTemplatePath()) {
             // Default template if no template path set
             $html = <<<HTML

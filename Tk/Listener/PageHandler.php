@@ -5,7 +5,7 @@ use Tk\Event\Subscriber;
 use Tk\Kernel\KernelEvents;
 
 /**
- * This object helps cleanup the structure of the controller code
+ * This object manages the Controller/Page Dom\Template rendering
  *
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
@@ -18,10 +18,6 @@ class PageHandler implements Subscriber
      * @var null|\Tk\Controller\Iface
      */
     private $controller = null;
-    /**
-     * @var null|\Tk\Controller\Page
-     */
-    private $page = null;
 
     /**
      * @var null|\Tk\Event\Dispatcher
@@ -51,7 +47,7 @@ class PageHandler implements Subscriber
             if (!$controller->getPageTitle()) {     // Set a default page Title for the crumbs
                 $controller->setPageTitle($controller->getDefaultTitle());
             }
-            $controller->getPage()->setTemplatePath($controller->getPageTemplatePath());
+            //$controller->getPage()->setTemplatePath($controller->getPageTemplatePath());
 
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
@@ -127,9 +123,11 @@ class PageHandler implements Subscriber
         } else if ($controllerTemplate instanceof \Dom\Renderer\RendererInterface) {
             $pageTemplate->appendTemplate($contentVar, $controllerTemplate->getTemplate());
         } else if ($controllerTemplate instanceof \DOMDocument) {
-            $pageTemplate->insertDoc($contentVar, $controllerTemplate);
+            $pageTemplate->appendDoc($contentVar, $controllerTemplate);
+            //$pageTemplate->insertDoc($contentVar, $controllerTemplate);
         } else if (is_string($controllerTemplate)) {
-            $pageTemplate->insertHtml($contentVar, $controllerTemplate);
+            $pageTemplate->appendHtml($contentVar, $controllerTemplate);
+            //$pageTemplate->insertHtml($contentVar, $controllerTemplate);
         }
         $event->set('page.template', $pageTemplate);
 

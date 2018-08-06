@@ -177,10 +177,8 @@ class HttpKernel
     public function terminateWithException(\Exception $exception)
     {
         $request = \Tk\Request::create();
-        //$response = $this->handleException($exception, $this->request);
         $response = $this->handleException($exception, $request);
         $response->send();
-        //$this->terminate($this->request, $response);
         $this->terminate($request, $response);
     }
 

@@ -93,7 +93,7 @@ class ExceptionListener implements Subscriber
 
             $str = str_replace(array("&lt;?php&nbsp;<br />", 'color: #FF8000'), array('', 'color: #666'),
                 highlight_string("<?php \n" . $toString, true));
-            $extra = sprintf('in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
+            $extra = sprintf('<br/>in <em>%s:%s</em>',  $e->getFile(), $e->getLine());
         }
 
         $html = <<<HTML

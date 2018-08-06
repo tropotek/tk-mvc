@@ -1,6 +1,29 @@
 #CHANGELOG#
 
+<<<<<<< HEAD
 Ver 2.0.62 [2018-08-07]:
+=======
+Ver 2.0.70 [2018-08-06]:
+-------------------------------
+Added subject class min,med,max averages and cached them, refresh via cron
+
+
+Ver 2.0.68 [2018-08-03]:
+-------------------------------
+
+
+Ver 2.0.66 [2018-07-30]:
+-------------------------------
+  - Added new cube template and updated action panel
+
+
+Ver 2.0.64 [2018-07-24]:
+-------------------------------
+  - Upgraded the site to further use the new base and uni libs
+
+
+Ver 2.0.62 [2018-07-23]:
+>>>>>>> 607d2004bb6dcc4cc9695a1297c23617126e8907
 -------------------------------
 
 

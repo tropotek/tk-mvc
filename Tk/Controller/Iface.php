@@ -20,9 +20,19 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     protected $pageTitle = '';
 
     /**
+     * @var bool
+     */
+    protected $showTitle = true;
+
+
+
+    /**
      * Iface constructor.
      */
-    public function __construct() { }
+    public function __construct()
+    {
+
+    }
 
     /**
      * @return string
@@ -39,14 +49,6 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     }
 
     /**
-     * @return string
-     */
-    public function getPageTemplatePath()
-    {
-        return $this->getConfig()->getSitePath() . $this->getConfig()->get('template.public');
-    }
-
-    /**
      * Get a new instance of the page to display the content in.
      *
      * NOTE: This is the default, override to load your own page objects
@@ -57,7 +59,7 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     {
         if (!$this->page) {
             // Create a default page
-            $this->page = new Page();
+            $this->page = new Page($this->getConfig()->getSitePath() . $this->getConfig()->get('template.public'));
             $this->page->setController($this);
         }
         return $this->page;
@@ -104,6 +106,23 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         return $this->pageTitle;
     }
 
+    /**
+     * @return bool
+     */
+    public function isShowTitle()
+    {
+        return $this->showTitle;
+    }
+
+    /**
+     * @param bool $showTitle
+     * @return Iface
+     */
+    public function setShowTitle($showTitle)
+    {
+        $this->showTitle = $showTitle;
+        return $this;
+    }
 
     /**
      * Get the global config object.
