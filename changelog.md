@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 2.0.72 [2018-08-20]:
+-------------------------------
+  - Fixed conflict
+
+
 Ver 2.0.70 [2018-08-06]:
 -------------------------------
 Added subject class min,med,max averages and cached them, refresh via cron
