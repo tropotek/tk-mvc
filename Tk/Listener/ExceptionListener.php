@@ -79,7 +79,6 @@ class ExceptionListener implements Subscriber
 
         if ($withTrace) {
             $toString = trim($e->__toString());
-
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
                 if (class_exists('SensioLabs\AnsiConverter\AnsiToHtmlConverter')) {

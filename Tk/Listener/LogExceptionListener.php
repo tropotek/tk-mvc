@@ -69,8 +69,8 @@ class LogExceptionListener implements Subscriber
         if ($this->fullDump) {
             if ($e instanceof \Tk\WarningException) {
                 $this->logger->warning(self::getCallerLine($e) . $e->__toString());
-            } else if ($e instanceof \Tk\NotFoundHttpException) {
-                $this->logger->error(self::getCallerLine($e) . $e->getMessage());
+//            } else if ($e instanceof \Tk\NotFoundHttpException) {
+//                $this->logger->error(self::getCallerLine($e) . $e->getMessage());
             } else {
                 $this->logger->error(self::getCallerLine($e) . $e->__toString());
             }
