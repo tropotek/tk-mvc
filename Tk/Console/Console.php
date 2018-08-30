@@ -12,6 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class Console extends Command
 {
+    const ERROR_CODE_INSTANCE_EXISTS = 1022;
 
     /**
      * @var OutputInterface
@@ -60,7 +61,7 @@ abstract class Console extends Command
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         if (!\Tk\FileLocker::lockFile($this->locFile)) {
-            throw new \Tk\Exception('Instance already executing. Aborting.');
+            throw new Exception('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
         }
     }
 
