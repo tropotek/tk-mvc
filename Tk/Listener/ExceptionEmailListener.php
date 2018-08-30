@@ -78,6 +78,7 @@ class ExceptionEmailListener implements Subscriber
 
         // These errors are not required they can cause email loops
         if ($e instanceof \Tk\NotFoundHttpException) return;
+        // Stop console instance exsists email errors they are not needed
         if ($e instanceof \Tk\Console\Exception && $e->getCode() == \Tk\Console\Console::ERROR_CODE_INSTANCE_EXISTS) return;
 
         $config = \Tk\Config::getInstance();
