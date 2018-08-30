@@ -56,11 +56,28 @@ class ExceptionEmailListener implements Subscriber
      */
     public function onException(\Tk\Event\ExceptionEvent $event)
     {
+        $this->emailException($event->getException());
+    }
+
+    /**
+     *
+     * @param \Symfony\Component\Console\Event\ConsoleErrorEvent $event
+     */
+    public function onConsoleError(\Symfony\Component\Console\Event\ConsoleErrorEvent $event)
+    {
+        $this->emailException($event->getError());
+    }
+
+    /**
+     * @param \Throwable $e
+     */
+    protected function emailException($e)
+    {
         // TODO: log all errors and send a compiled message periodically (IE: daily, weekly, monthly)
         // This would stop mass emails on major system failures and DOS attacks...
 
         // These errors are not required they can cause email loops
-        if ($event->getException() instanceof \Tk\NotFoundHttpException) return;
+        if ($e instanceof \Tk\NotFoundHttpException) return;
 
         $config = \Tk\Config::getInstance();
         try {
@@ -69,10 +86,10 @@ class ExceptionEmailListener implements Subscriber
                     $message = $config->createMessage();
                     $message->setFrom($email);
                     $message->addTo($email);
-                    $subject = $this->siteTitle . ' Error `' . $event->getException()->getMessage() . '`';
+                    $subject = $this->siteTitle . ' Error `' . $e->getMessage() . '`';
                     $message->setSubject($subject);
-                    $message->set('content', ExceptionListener::getExceptionHtml($event->getException(), true));
-                    $message->addHeader('X-Exception', get_class($event->getException()));
+                    $message->set('content', ExceptionListener::getExceptionHtml($e, true));
+                    $message->addHeader('X-Exception', get_class($e));
                     $this->emailGateway->send($message);
                 }
             }
@@ -81,12 +98,14 @@ class ExceptionEmailListener implements Subscriber
     }
 
 
+
     /**
      * @return array
      */
     public static function getSubscribedEvents()
     {
         return array(
+            'console.error' => 'onConsoleError',
             \Tk\Kernel\KernelEvents::EXCEPTION => 'onException'
         );
     }
