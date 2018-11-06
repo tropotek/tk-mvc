@@ -81,6 +81,7 @@ class ExceptionListener implements Subscriber
             $toString = trim($e->__toString());
             if (is_readable($config->get('log.session'))) {
                 $sessionLog = file_get_contents($config->get('log.session'));
+                // Add to composer require: "sensiolabs/ansi-to-html": "~1.0",
                 if (class_exists('SensioLabs\AnsiConverter\AnsiToHtmlConverter')) {
                     $converter = new \SensioLabs\AnsiConverter\AnsiToHtmlConverter();
                     $sessionLog = $converter->convert($sessionLog);
