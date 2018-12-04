@@ -19,18 +19,15 @@ class ExceptionListener implements Subscriber
     protected $withTrace = false;
 
     /**
-     * The controller to instaniate on errors
+     * The controller to instantiate on errors
      * @var string
      */
     protected $controllerClass = '';
 
 
-
-
     /**
-     * ExceptionListener constructor.
-     *
      * @param bool $withTrace
+     * @param string $controllerClass
      */
     public function __construct($withTrace = false, $controllerClass = '')
     {
@@ -44,16 +41,24 @@ class ExceptionListener implements Subscriber
     public function onException(ExceptionEvent $event)
     {
         $response = null;
+        $result = null;
         if ($this->controllerClass && class_exists($this->controllerClass)) {
             /** @var \Tk\Controller\Iface $con */
             $con = new $this->controllerClass();
             if (method_exists($con, 'doDefault')) {
                 $con->doDefault($event->getRequest(), $event->getException(), $this->withTrace);
-                $response = Response::create($con->show());
+                $result = $con->show();
+                if ($result instanceof \Dom\Template && \Tk\Config::getInstance()->get('dom.modifier')) {
+                    /** @var \Dom\Modifier\Modifier $domModifier */
+                    $domModifier = \Tk\Config::getInstance()->get('dom.modifier');
+                    $doc = $result->getDocument();
+                    $domModifier->execute($doc);
+                    $response = new Response($result->toString());
+                }
             }
         } else {
-            $html = self::getExceptionHtml($event->getException(), $this->withTrace);
-            $response = Response::create($html);
+            $result = self::getExceptionHtml($event->getException(), $this->withTrace);
+            $response = Response::create($result);
         }
 
         if ($response)

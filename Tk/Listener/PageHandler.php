@@ -104,7 +104,6 @@ class PageHandler implements Subscriber
 
     /**
      * @param \Tk\Event\Event $event
-     * @throws \Dom\Exception
      */
     public function insertControllerContent(\Tk\Event\Event $event)
     {
