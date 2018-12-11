@@ -107,7 +107,6 @@ class Resolver
     }
 
     /**
-     * 
      * @param Request $request
      * @param $controller
      * @param array $parameters

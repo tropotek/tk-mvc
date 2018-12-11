@@ -14,7 +14,7 @@ class ControllerEvent extends RequestEvent
 {
 
     /**
-     * @var mixed|callable|\Tk\Controller\Iface
+     * @var callable|array
      */
     private $controller = null;
 
@@ -32,18 +32,37 @@ class ControllerEvent extends RequestEvent
         $this->controller = $controller;
         
     }
-    
+
+
+
     /**
      * Returns the current controller.
      *
-     * @return mixed|callable|array
+     * @return callable|array|null
+     * @todo: This now returns the callback only not the Controller object use self::getControllerObject() if thats what you require
      */
     public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @return callable|array|null
+     * @deprecated Use self::getController()
+     */
+    public function getControllerCallback()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * @return callable|array|null
+     */
+    public function getControllerObject()
     {
         if (is_array($this->controller) && isset($this->controller[0])) {
             return $this->controller[0];
         }
-        return $this->controller;
     }
 
     /**
@@ -54,7 +73,6 @@ class ControllerEvent extends RequestEvent
     public function getControllerMethod()
     {
         $controller = $this->controller;
-        
         if ($controller instanceof \Tk\Controller\Iface && $this->getRequest()->getAttribute('_controller') && !is_callable($this->controller)) {
             $controller = explode('::', $this->getRequest()->getAttribute('_controller'));
         }
@@ -68,7 +86,7 @@ class ControllerEvent extends RequestEvent
     /**
      * Sets a new controller.
      *
-     * @param mixed|callable $controller
+     * @param array|callable $controller
      * @throws \LogicException
      */
     public function setController($controller)

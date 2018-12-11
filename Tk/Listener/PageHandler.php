@@ -41,13 +41,14 @@ class PageHandler implements Subscriber
     public function onController(\Tk\Event\ControllerEvent $event)
     {
         /** @var \Tk\Controller\Iface $controller */
-        $controller = $event->getController();
+        $controller = $event->getControllerObject();
         if ($controller instanceof \Tk\Controller\Iface) {
             $this->controller = $controller;
             if (!$controller->getPageTitle()) {     // Set a default page Title for the crumbs
                 $controller->setPageTitle($controller->getDefaultTitle());
             }
-            //$controller->getPage()->setTemplatePath($controller->getPageTemplatePath());
+            // Init the page, so the DomLoader knows the template path.
+            $controller->getPage();
 
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
@@ -79,8 +80,10 @@ class PageHandler implements Subscriber
             if (!empty($regs[1]) && method_exists($this->getController(), 'show'.$regs[1]))
                 $show = 'show'.$regs[1];
 
-            $this->getController()->$show();
-
+            if (method_exists($this->getController(), $show)) {
+                $this->getController()->$show();
+            }
+            
             // Allow people to hook into the controller result.
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
@@ -116,7 +119,6 @@ class PageHandler implements Subscriber
         $contentVar = $controller->getPage()->getContentVar();
         if (!$contentVar)
             $contentVar = 'content';
-
         if ($controllerTemplate instanceof \Dom\Template) {
             $pageTemplate->appendTemplate($contentVar, $controllerTemplate);
         } else if ($controllerTemplate instanceof \Dom\Renderer\RendererInterface) {

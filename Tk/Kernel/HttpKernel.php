@@ -15,8 +15,6 @@ use Tk\Event\FilterResponseEvent;
 use Tk\Controller\Resolver;
 
 /**
- * Class HttpKernel
- *
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
@@ -110,13 +108,15 @@ class HttpKernel
         }
         
         // load controller
-        if (false === $controller = $this->getResolver()->getController($request)) {
-            throw new \Tk\NotFoundHttpException(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getUri()->getRelativePath()));
+        $controller = $this->getResolver()->getController($request);
+        if (false === $controller) {
+            throw new \Tk\NotFoundHttpException(sprintf('Unable to find the controller for "%s". The route is wrongly configured.', $request->getUri()->getRelativePath()));
         }
         $request->setAttribute('controller', $controller);
         $event = new ControllerEvent($controller, $request, $this);
         $this->getDispatcher()->dispatch(KernelEvents::CONTROLLER, $event);
-        
+
+        $controller = $event->getController();
         // controller arguments
         $arguments = $this->getResolver()->getArguments($request, $controller);
         // call controller
@@ -129,12 +129,10 @@ class HttpKernel
             if ($event->hasResponse()) {
                 $response = $event->getResponse();
             }
-            
             if (!$response instanceof Response) {
                 //$msg = sprintf('The controller must return a response (%s given).', $this->varToString($response));
                 $msg = sprintf('The controller must return a response (%s given).', get_class($response));
-
-                // the user may have forgotten to return something
+                // the coder may have forgotten to return something
                 if (null === $response) {
                     $msg .= ' Did you forget to add a return statement somewhere in your controller?';
                 }
