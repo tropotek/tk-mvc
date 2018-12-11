@@ -81,7 +81,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     /**
      * @param Iface $controller
      * @return $this
-     * @deprecated
+     * @deprecated Why ????
      */
     public function setController($controller)
     {
