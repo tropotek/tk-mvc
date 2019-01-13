@@ -90,7 +90,7 @@ class ExceptionEmailListener implements Subscriber
                     $message->addTo($email);
                     $subject = $this->siteTitle . ' Error `' . $e->getMessage() . '`';
                     $message->setSubject($subject);
-                    $message->set('content', ExceptionListener::getExceptionHtml($e, true));
+                    $message->setContent(ExceptionListener::getExceptionHtml($e, true));
                     $message->addHeader('X-Exception', get_class($e));
                     $this->emailGateway->send($message);
                 }
