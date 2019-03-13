@@ -92,6 +92,7 @@ class ExceptionEmailListener implements Subscriber
                     $message->setSubject($subject);
                     $message->setContent(ExceptionListener::getExceptionHtml($e, true));
                     $message->addHeader('X-Exception', get_class($e));
+                    $message->set('sig', '');
                     $this->emailGateway->send($message);
                 }
             }
