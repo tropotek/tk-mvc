@@ -24,9 +24,9 @@
     },
     "require":  {
         "ttek/tk-framework": "~2.0",
-        "symfony/event-dispatcher": "~3.4",
-        "symfony/console": "~3.4",
-        "symfony/translation": "~3.4"
+        "symfony/event-dispatcher": "^4.2",
+        "symfony/console": "^4.2",
+        "symfony/translation": "^4.2"
     },
     "extra":  {
         "branch-alias":  {
