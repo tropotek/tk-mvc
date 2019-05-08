@@ -2,14 +2,10 @@
     "name": "ttek/tk-mvc",
     "type": "library",
     "description": "Model-View-Controller library for the Tk lib",
-    "keywords":  [
-        "tk",
-        "tropotek",
-        "MVC"
-    ],
-    "time": "2018-05-11",
+    "keywords":  ["tk", "tropotek", "MVC"],
+    "time": "2019-04-09",
     "license": "MIT",
-    "version": "2.0.14",
+    "version": "3.0.0",
     "authors":  [
          {
             "name": "Michael Mifsud",
@@ -23,14 +19,11 @@
         }
     },
     "require":  {
-        "ttek/tk-framework": "~2.0",
-        "symfony/event-dispatcher": "~3.4",
-        "symfony/console": "~3.4",
-        "symfony/translation": "~3.4"
+        "ttek/tk-framework": "~3.0"
     },
     "extra":  {
         "branch-alias":  {
-            "dev-master": "2.1.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     }
 }
