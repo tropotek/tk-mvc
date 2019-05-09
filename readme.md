@@ -1,7 +1,6 @@
 # tk-mvc 
 
-__Project:__ tk-mvc  
-__Published:__ 11 May 2016  
+__Project:__ tk-mvc    
 __Web:__ <http://www.domtemplate.com/>  
 __Authors:__ Michael Mifsud <http://www.tropotek.com/>  
   
@@ -25,7 +24,7 @@ composer require ttek/tk-mvc
 Or add the following to your composer.json file:
 
 ```json
-"ttek/tk-mvc": "~2.0"
+"ttek/tk-mvc": "~3.0"
 ```
 
 
