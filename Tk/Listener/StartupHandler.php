@@ -70,7 +70,7 @@ class StartupHandler implements Subscriber
         if (!$this->logger) return;
         $config = \Tk\Config::getInstance();
 
-        $this->out('');
+        //$this->out('');
         $this->out(self::$SCRIPT_START);
         $prj = '';
 
@@ -137,7 +137,7 @@ class StartupHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::REQUEST => array(array('onInit', -255), array('onRequest', -1)),
+            KernelEvents::REQUEST => array(array('onInit', 255), array('onRequest', 32)),
             \Symfony\Component\Console\ConsoleEvents::COMMAND  => 'onCommand'
         );
     }

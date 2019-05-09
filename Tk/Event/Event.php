@@ -7,7 +7,7 @@ namespace Tk\Event;
  * @see http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class Event extends \Symfony\Component\EventDispatcher\Event
+class Event extends \Symfony\Contracts\EventDispatcher\Event
 {
     use \Tk\CollectionTrait;
 
