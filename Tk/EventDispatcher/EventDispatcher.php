@@ -17,17 +17,17 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
     /**
      * {@inheritdoc}
      */
-    public function dispatch($event, $eventName = null)
-    {
-        if ($this->logger)
-            if (is_object($event))
-                $this->logger->debug('Dispatch: [' . get_class($event) . ']');
-            else
-                $this->logger->debug('Dispatch: [' . get_class($eventName) . ']');
-
-        $e = parent::dispatch($event, $eventName);
-        return $e;
-    }
+//    public function dispatch($event, $eventName = null)
+//    {
+//        if ($this->logger)
+//            if (is_object($event))
+//                $this->logger->debug('Dispatch: [' . get_class($event) . ']');
+//            else
+//                $this->logger->debug('Dispatch: [' . get_class($eventName) . ']');
+//
+//        $e = parent::dispatch($event, $eventName);
+//        return $e;
+//    }
 
     protected function callListeners(iterable $listeners, string $eventName, $event)
     {
@@ -37,7 +37,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                 break;
             }
             if ($this->logger)
-                $this->logger->debug('  - Calling: [' . get_class($listener[0]) . ']');
+                $this->logger->debug(' - [' . $eventName . ']  ' . get_class($listener[0]) . ']');
         }
         parent::callListeners($listeners, $eventName, $event);
     }
@@ -52,7 +52,7 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
                 break;
             }
             if ($this->logger)
-                $this->logger->debug('  - Calling: [' . get_class($listener[0]) . ']');
+                $this->logger->debug(' - [' . $eventName . ']  ' . get_class($listener[0]) . ']');
         }
         parent::doDispatch($listeners, $eventName, $event);
     }
