@@ -25,8 +25,7 @@
         "symfony/http-kernel": "^4.2",
         "symfony/event-dispatcher": "^4.2",
         "symfony/console": "^4.2",
-        "symfony/translation": "^4.2",
-        "symfony/dependency-injection": "^4.2"
+        "symfony/translation": "^4.2"
     },
     "extra":  {
         "branch-alias":  {
