@@ -1,11 +1,7 @@
 <?php
 namespace Tk\Listener;
 
-use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
-use Psr\Log\LoggerInterface;
-use Tk\Response;
-use Tk\ResponseJson;
 
 
 /**
@@ -34,9 +30,9 @@ class JsonExceptionListener implements Subscriber
 
     /**
      * 
-     * @param ExceptionEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
      */
-    public function onException(ExceptionEvent $event)
+    public function onException(\Symfony\Component\HttpKernel\Event\ExceptionEvent $event)
     {   
         // TODO: If in debug mode show trace if in Live/Test mode only show message...
         $e = $event->getException();
@@ -63,7 +59,7 @@ class JsonExceptionListener implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            \Tk\Kernel\KernelEvents::EXCEPTION => 'onException'
+            \Symfony\Component\HttpKernel\KernelEvents::EXCEPTION => 'onException'
         );
     }
     

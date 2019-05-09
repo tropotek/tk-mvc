@@ -52,9 +52,9 @@ class ExceptionEmailListener implements Subscriber
 
     /**
      * 
-     * @param \Tk\Event\ExceptionEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
      */
-    public function onException(\Tk\Event\ExceptionEvent $event)
+    public function onException(\Symfony\Component\HttpKernel\Event\ExceptionEvent $event)
     {
         $this->emailException($event->getException());
     }
@@ -109,7 +109,7 @@ class ExceptionEmailListener implements Subscriber
     {
         return array(
             'console.error' => 'onConsoleError',
-            \Tk\Kernel\KernelEvents::EXCEPTION => 'onException'
+            \Symfony\Component\HttpKernel\KernelEvents::EXCEPTION => 'onException'
         );
     }
     

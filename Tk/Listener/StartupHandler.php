@@ -2,10 +2,10 @@
 namespace Tk\Listener;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Tk\Event\Subscriber;
 use Tk\Request;
 use Tk\Session;
-use Tk\Event\GetResponseEvent;
 
 
 /**
@@ -53,7 +53,7 @@ class StartupHandler implements Subscriber
         $this->session = $session;
     }
 
-    public function onInit(\Tk\Event\KernelEvent $event)
+    public function onInit(\Symfony\Component\HttpKernel\Event\RequestEvent $event)
     {
         $this->init();
     }
@@ -81,8 +81,8 @@ class StartupHandler implements Subscriber
         $this->out('- Date: ' . date('Y-m-d H:i:s'));
         if ($this->request) {
             if (!$config->isCli()) {
-                $this->out('- Host: ' . $this->request->getUri()->getScheme() . '://' . $this->request->getUri()->getHost());
-                $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getUri()->toString(false, false));
+                $this->out('- Host: ' . $this->request->getTkUri()->getScheme() . '://' . $this->request->getTkUri()->getHost());
+                $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getTkUri()->toString(false, false));
                 // Doing this live is a security risk
                 if ($config->isDebug() && $this->request->getMethod() == 'POST' && strlen($config->getRequest()->getRawPostData()) <= 255) {
                     $this->logger->debug('- POST Data: ' . $config->getRequest()->getRawPostData());
@@ -107,17 +107,17 @@ class StartupHandler implements Subscriber
      * Set the global institution into the config as a central data access point
      * If no institution is set then we know we are either an admin or public user...
      *
-     * @param GetResponseEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
      */
-    public function onRequest(GetResponseEvent $event)
+    public function onRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $event)
     {
-        $config = \Tk\Config::getInstance();
+        $config = \Bs\Config::getInstance();
         if ($config->getRequest()->getAttribute('_route')) {
             $routeCollection = $config->getRouteCollection();
             if ($routeCollection) {
                 $route = $routeCollection->get($config->getRequest()->getAttribute('_route'));
                 if ($route)
-                    $this->out('- Controller: ' . $route->getController());
+                    $this->out('- Controller: ' . $route->getDefault('_controller'));
             }
         }
 
@@ -137,8 +137,7 @@ class StartupHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            \Tk\Kernel\KernelEvents::INIT  => 'onInit',
-            \Tk\Kernel\KernelEvents::REQUEST => array('onRequest', -1),
+            KernelEvents::REQUEST => array(array('onInit', -255), array('onRequest', -1)),
             \Symfony\Component\Console\ConsoleEvents::COMMAND  => 'onCommand'
         );
     }

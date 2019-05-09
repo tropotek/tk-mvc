@@ -1,10 +1,8 @@
 <?php
 namespace Tk\Listener;
 
-use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Psr\Log\LoggerInterface;
-use Tk\Response;
 
 
 /**
@@ -42,9 +40,9 @@ class LogExceptionListener implements Subscriber
 
     /**
      *
-     * @param ExceptionEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
      */
-    public function onException(ExceptionEvent $event)
+    public function onException(\Symfony\Component\HttpKernel\Event\ExceptionEvent $event)
     {
         if (!$this->logger) return;
         $this->logException($event->getException());
@@ -108,7 +106,7 @@ class LogExceptionListener implements Subscriber
     {
         return array(
             'console.error' => 'onConsoleError',
-            \Tk\Kernel\KernelEvents::EXCEPTION => 'onException'
+            \Symfony\Component\HttpKernel\KernelEvents::EXCEPTION => 'onException'
         );
     }
     

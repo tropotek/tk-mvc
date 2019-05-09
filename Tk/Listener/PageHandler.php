@@ -1,8 +1,9 @@
 <?php
 namespace Tk\Listener;
 
-use Tk\Event\Subscriber;
-use Tk\Kernel\KernelEvents;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This object manages the Controller/Page Dom\Template rendering
@@ -11,7 +12,7 @@ use Tk\Kernel\KernelEvents;
  * @see http://www.tropotek.com/
  * @license Copyright 2015 Michael Mifsud
  */
-class PageHandler implements Subscriber
+class PageHandler implements EventSubscriberInterface
 {
     
     /**
@@ -20,14 +21,14 @@ class PageHandler implements Subscriber
     private $controller = null;
 
     /**
-     * @var null|\Tk\Event\Dispatcher
+     * @var null|EventDispatcherInterface
      */
     private $dispatcher = null;
 
 
     /**
      * constructor.
-     * @param null $dispatcher
+     * @param null|EventDispatcherInterface $dispatcher
      */
     public function __construct($dispatcher = null)
     {
@@ -36,12 +37,13 @@ class PageHandler implements Subscriber
 
     /**
      * kernel.controller
-     * @param \Tk\Event\ControllerEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ControllerEvent $event
      */
-    public function onController(\Tk\Event\ControllerEvent $event)
+    public function onController(\Symfony\Component\HttpKernel\Event\ControllerEvent $event)
     {
         /** @var \Tk\Controller\Iface $controller */
-        $controller = $event->getControllerObject();
+        $controller = current($event->getController());         // TODO: this could cause errors if object or callable function
+
         if ($controller instanceof \Tk\Controller\Iface) {
             $this->controller = $controller;
             if (!$controller->getPageTitle()) {     // Set a default page Title for the crumbs
@@ -49,21 +51,20 @@ class PageHandler implements Subscriber
             }
             // Init the page, so the DomLoader knows the template path.
             $controller->getPage();
-
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::PAGE_INIT, $e);
+                $this->getDispatcher()->dispatch($e,\Tk\PageEvents::PAGE_INIT);
             }
         }
     }
 
     /**
      * kernel.view
-     * @param \Tk\Event\ControllerResultEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
      * @throws \Exception
      */
-    public function onView(\Tk\Event\ControllerResultEvent $event)
+    public function onView(\Symfony\Component\HttpKernel\Event\ViewEvent $event)
     {
         // View called
         $result = $event->getControllerResult();
@@ -71,11 +72,11 @@ class PageHandler implements Subscriber
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_INIT, $e);
+                $this->getDispatcher()->dispatch($e,\Tk\PageEvents::CONTROLLER_INIT);
             }
 
             // Controller::show()
-            preg_match('/::do([A-Z][a-zA-Z0-9_]+)$/', $event->getRequest()->getAttribute('_controller'), $regs);
+            preg_match('/::do([A-Z][a-zA-Z0-9_]+)$/', $event->getRequest()->attributes->get('_controller'), $regs);
             $show = 'show'; 
             if (!empty($regs[1]) && method_exists($this->getController(), 'show'.$regs[1]))
                 $show = 'show'.$regs[1];
@@ -88,7 +89,7 @@ class PageHandler implements Subscriber
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
+                $this->getDispatcher()->dispatch($e, \Tk\PageEvents::CONTROLLER_SHOW);
             }
 
             // Page::show() This will also insert the controller template into the page
@@ -97,7 +98,7 @@ class PageHandler implements Subscriber
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::PAGE_SHOW, $e);
+                $this->getDispatcher()->dispatch($e, \Tk\PageEvents::PAGE_SHOW);
             }
 
             $event->setControllerResult($this->getController()->getPage()->getTemplate());
@@ -136,7 +137,7 @@ class PageHandler implements Subscriber
 
 
     /**
-     * @return null|\Tk\Event\Dispatcher
+     * @return null|EventDispatcherInterface
      */
     public function getDispatcher()
     {
@@ -159,8 +160,8 @@ class PageHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::CONTROLLER =>  array('onController', 10),
-            KernelEvents::VIEW =>  array('onView', 0),
+            \Symfony\Component\HttpKernel\KernelEvents::CONTROLLER =>  array('onController', 10),
+            \Symfony\Component\HttpKernel\KernelEvents::VIEW =>  array('onView', 0),
             \Tk\PageEvents::PAGE_SHOW => array('insertControllerContent', -10)
         );
     }

@@ -1,7 +1,6 @@
 <?php
 namespace Tk\Listener;
 
-use Tk\Event\ExceptionEvent;
 use Tk\Event\Subscriber;
 use Tk\Response;
 
@@ -36,9 +35,9 @@ class ExceptionListener implements Subscriber
     }
 
     /**
-     * @param ExceptionEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
      */
-    public function onException(ExceptionEvent $event)
+    public function onException(\Symfony\Component\HttpKernel\Event\ExceptionEvent $event)
     {
         $response = null;
         $result = null;
@@ -134,7 +133,7 @@ HTML;
     public static function getSubscribedEvents()
     {
         return array(
-            \Tk\Kernel\KernelEvents::EXCEPTION => 'onException'
+            \Symfony\Component\HttpKernel\KernelEvents::EXCEPTION => 'onException'
         );
     }
     

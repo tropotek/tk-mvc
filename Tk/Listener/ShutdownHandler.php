@@ -65,9 +65,9 @@ class ShutdownHandler implements Subscriber
     }
 
     /**
-     * @param \Tk\Event\ResponseEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
      */
-    public function onTerminate(\Tk\Event\ResponseEvent $event)
+    public function onTerminate(\Symfony\Component\HttpKernel\Event\TerminateEvent $event)
     {
         if (!$this->logger) return;
 
@@ -133,7 +133,7 @@ class ShutdownHandler implements Subscriber
      */
     public static function getSubscribedEvents()
     {
-        return array(\Tk\Kernel\KernelEvents::TERMINATE => 'onTerminate');
+        return array(\Symfony\Component\HttpKernel\KernelEvents::TERMINATE => 'onTerminate');
     }
 
 }

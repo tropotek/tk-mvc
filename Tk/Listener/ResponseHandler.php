@@ -2,7 +2,6 @@
 namespace Tk\Listener;
 
 use Tk\Event\Subscriber;
-use Tk\Kernel\KernelEvents;
 use Tk\Response;
 
 
@@ -34,9 +33,9 @@ class ResponseHandler implements Subscriber
      * kernel.view
      * domModify 
      *
-     * @param \Tk\Event\ControllerResultEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
      */
-    public function onDomModify(\Tk\Event\ControllerResultEvent $event)
+    public function onDomModify(\Symfony\Component\HttpKernel\Event\ViewEvent $event)
     {
         if (!$this->domModifier) return;
         
@@ -63,12 +62,11 @@ class ResponseHandler implements Subscriber
      * Once this event is fired and a response is set it will stop propagation, 
      * so other events using this name must be run with a priority > -100
      * 
-     * @param \Tk\Event\ControllerResultEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
      */
-    public function onView(\Tk\Event\ControllerResultEvent $event)
+    public function onView(\Symfony\Component\HttpKernel\Event\ViewEvent $event)
     {
         $result = $event->getControllerResult();
-        
         if ($result instanceof \Dom\Template) {
             $event->setResponse(new Response($result->toString()));
         } else if ($result instanceof \Dom\Renderer\RendererInterface) {
@@ -82,9 +80,9 @@ class ResponseHandler implements Subscriber
      * kernel.response
      * Add any headers to the final response.
      * 
-     * @param \Tk\Event\FilterResponseEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
      */
-    public function onResponse(\Tk\Event\FilterResponseEvent $event)
+    public function onResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $event)
     {
         $response = $event->getResponse();
         
@@ -105,8 +103,8 @@ class ResponseHandler implements Subscriber
     public static function getSubscribedEvents()
     {
         return array(
-            KernelEvents::VIEW => array(array('onDomModify', -80), array('onView', -100)),
-            KernelEvents::RESPONSE => 'onResponse'
+            \Symfony\Component\HttpKernel\KernelEvents::VIEW => array(array('onDomModify', -80), array('onView', -100)),
+            \Symfony\Component\HttpKernel\KernelEvents::RESPONSE => 'onResponse'
         );
     }
 }

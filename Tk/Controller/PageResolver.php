@@ -1,6 +1,9 @@
 <?php
 namespace Tk\Controller;
 
+
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  *
  * @author Michael Mifsud <info@tropotek.com>
@@ -8,15 +11,17 @@ namespace Tk\Controller;
  * @license Copyright 2016 Michael Mifsud
  * @notes Adapted from Symfony
  */
-class PageResolver extends Resolver
+class PageResolver extends \Symfony\Component\HttpKernel\Controller\ControllerResolver
 {
 
     /**
      * @param \Tk\Request $request
      * @return callable|false|object|Iface
      */
-    public function getController(\Tk\Request $request)
+    public function getController(Request $request)
     {
+        //vd($request->attributes->all());
+
         $controller = parent::getController($request);
 
         /** @var Iface $controller */
