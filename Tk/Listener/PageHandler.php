@@ -41,9 +41,7 @@ class PageHandler implements EventSubscriberInterface
      */
     public function onController(\Symfony\Component\HttpKernel\Event\ControllerEvent $event)
     {
-        /** @var \Tk\Controller\Iface $controller */
-        $controller = current($event->getController());         // TODO: this could cause errors if object or callable function
-
+        $controller = \Tk\Event\Event::findControllerObject($event);
         if ($controller instanceof \Tk\Controller\Iface) {
             $this->controller = $controller;
             if (!$controller->getPageTitle()) {     // Set a default page Title for the crumbs
@@ -112,7 +110,7 @@ class PageHandler implements EventSubscriberInterface
     public function insertControllerContent(\Tk\Event\Event $event)
     {
         /** @var \Bs\Controller\Iface $controller */
-        $controller = $event->get('controller');
+        $controller = \Tk\Event\Event::findControllerObject($event);
         if (!$controller instanceof \Tk\Controller\Iface) return;
 
         $controllerTemplate = $controller->getTemplate();
