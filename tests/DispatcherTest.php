@@ -73,7 +73,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('value1', $event->get('param1'));
         }, 3);
         
-        $this->dispatcher->dispatch($this->event, $evName);
+        $this->dispatcher->dispatch($evName, $this->event);
         
         $this->assertEquals('Listener 2', $this->event->get('status'));
 
