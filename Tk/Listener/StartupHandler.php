@@ -53,12 +53,18 @@ class StartupHandler implements Subscriber
         $this->session = $session;
     }
 
-    public function onInit(\Symfony\Component\HttpKernel\Event\RequestEvent $event)
+    /**
+     * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+     */
+    public function onInit($event)
     {
         $this->init();
     }
 
-    public function onCommand(\Symfony\Component\Console\Event\ConsoleCommandEvent $event)
+    /**
+     * @param \Symfony\Component\Console\Event\ConsoleCommandEvent $event
+     */
+    public function onCommand($event)
     {
         $this->init();
     }
