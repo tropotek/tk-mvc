@@ -3,6 +3,7 @@ namespace Tk\Listener;
 
 use Tk\Event\Subscriber;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 
 /**
@@ -54,7 +55,7 @@ class ExceptionEmailListener implements Subscriber
      * 
      * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
      */
-    public function onException(\Symfony\Component\HttpKernel\Event\ExceptionEvent $event)
+    public function onException($event)
     {
         $this->emailException($event->getException());
     }
@@ -109,7 +110,7 @@ class ExceptionEmailListener implements Subscriber
     {
         return array(
             'console.error' => 'onConsoleError',
-            \Symfony\Component\HttpKernel\KernelEvents::EXCEPTION => 'onException'
+            KernelEvents::EXCEPTION => 'onException'
         );
     }
     

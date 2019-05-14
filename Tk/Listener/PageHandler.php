@@ -5,6 +5,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+
 /**
  * This object manages the Controller/Page Dom\Template rendering
  *
@@ -39,7 +40,7 @@ class PageHandler implements EventSubscriberInterface
      * kernel.controller
      * @param \Symfony\Component\HttpKernel\Event\ControllerEvent $event
      */
-    public function onController(\Symfony\Component\HttpKernel\Event\ControllerEvent $event)
+    public function onController($event)
     {
         $controller = \Tk\Event\Event::findControllerObject($event);
         if ($controller instanceof \Tk\Controller\Iface) {
@@ -62,7 +63,7 @@ class PageHandler implements EventSubscriberInterface
      * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
      * @throws \Exception
      */
-    public function onView(\Symfony\Component\HttpKernel\Event\ViewEvent $event)
+    public function onView($event)
     {
         // View called
         $result = $event->getControllerResult();
@@ -107,7 +108,7 @@ class PageHandler implements EventSubscriberInterface
     /**
      * @param \Tk\Event\Event $event
      */
-    public function insertControllerContent(\Tk\Event\Event $event)
+    public function insertControllerContent($event)
     {
         /** @var \Bs\Controller\Iface $controller */
         $controller = \Tk\Event\Event::findControllerObject($event);
@@ -158,8 +159,8 @@ class PageHandler implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            \Symfony\Component\HttpKernel\KernelEvents::CONTROLLER =>  array('onController', 10),
-            \Symfony\Component\HttpKernel\KernelEvents::VIEW =>  array('onView', 0),
+            KernelEvents::CONTROLLER =>  array('onController', 10),
+            KernelEvents::VIEW =>  array('onView', 0),
             \Tk\PageEvents::PAGE_SHOW => array('insertControllerContent', -10)
         );
     }

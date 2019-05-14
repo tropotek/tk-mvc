@@ -35,7 +35,7 @@ class ResponseHandler implements Subscriber
      *
      * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
      */
-    public function onDomModify(\Symfony\Component\HttpKernel\Event\ViewEvent $event)
+    public function onDomModify($event)
     {
         if (!$this->domModifier) return;
         
@@ -64,7 +64,7 @@ class ResponseHandler implements Subscriber
      * 
      * @param \Symfony\Component\HttpKernel\Event\ViewEvent $event
      */
-    public function onView(\Symfony\Component\HttpKernel\Event\ViewEvent $event)
+    public function onView($event)
     {
         $result = $event->getControllerResult();
         if ($result instanceof \Dom\Template) {
@@ -82,7 +82,7 @@ class ResponseHandler implements Subscriber
      * 
      * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
      */
-    public function onResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $event)
+    public function onResponse($event)
     {
         $response = $event->getResponse();
         

@@ -42,7 +42,7 @@ class LogExceptionListener implements Subscriber
      *
      * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
      */
-    public function onException(\Symfony\Component\HttpKernel\Event\ExceptionEvent $event)
+    public function onException($event)
     {
         if (!$this->logger) return;
         $this->logException($event->getException());
@@ -53,7 +53,7 @@ class LogExceptionListener implements Subscriber
      *
      * @param \Symfony\Component\Console\Event\ConsoleErrorEvent $event
      */
-    public function onConsoleError(\Symfony\Component\Console\Event\ConsoleErrorEvent $event)
+    public function onConsoleError($event)
     {
         if (!$this->logger) return;
         $this->logException($event->getError());

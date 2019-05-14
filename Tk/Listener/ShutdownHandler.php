@@ -67,7 +67,7 @@ class ShutdownHandler implements Subscriber
     /**
      * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
      */
-    public function onTerminate(\Symfony\Component\HttpKernel\Event\TerminateEvent $event)
+    public function onTerminate($event)
     {
         if (!$this->logger) return;
 
