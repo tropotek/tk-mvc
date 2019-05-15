@@ -21,11 +21,11 @@
     "require":  {
         "ttek/tk-framework": "~3.0",
 
-        "symfony/routing": "^4.2.*@stable",
-        "symfony/http-kernel": "^4.2.*@stable",
-        "symfony/event-dispatcher": "^4.2.*@stable",
-        "symfony/console": "^4.2.*@stable",
-        "symfony/translation": "^4.2.*@stable"
+        "symfony/routing": "^4.2@stable",
+        "symfony/http-kernel": "^4.2@stable",
+        "symfony/event-dispatcher": "^4.2@stable",
+        "symfony/console": "^4.2@stable",
+        "symfony/translation": "^4.2@stable"
     },
     "extra":  {
         "branch-alias":  {
