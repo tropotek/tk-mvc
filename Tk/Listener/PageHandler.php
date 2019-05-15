@@ -53,7 +53,7 @@ class PageHandler implements EventSubscriberInterface
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(Tk\PageEvents::PAGE_INIT, $e);
+                $this->getDispatcher()->dispatch(\Tk\PageEvents::PAGE_INIT, $e);
             }
         }
     }

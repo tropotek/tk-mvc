@@ -7,14 +7,14 @@ namespace Tk\Event;
  * @see http://www.tropotek.com/
  * @license Copyright 2016 Michael Mifsud
  */
-class Event extends \Symfony\Contracts\EventDispatcher\Event
+class Event extends \Symfony\Component\EventDispatcher\Event
 {
     use \Tk\CollectionTrait;
 
     /**
      * Try to get a \Tk\Controller\Iface object from an event if we can.
      *
-     * @param \Symfony\Contracts\EventDispatcher\Event $event
+     * @param \Symfony\Component\EventDispatcher\Event $event
      * @return null|\Tk\Controller\Iface
      */
     public static function findControllerObject($event)
