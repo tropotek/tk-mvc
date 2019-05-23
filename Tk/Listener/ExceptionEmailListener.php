@@ -1,9 +1,19 @@
 <?php
 namespace Tk\Listener;
 
+use Exception;
+use Symfony\Component\Console\Event\ConsoleErrorEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Throwable;
+use Tk\Config;
+use Tk\Console\Console;
 use Tk\Event\Subscriber;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Tk\Log;
+use Tk\Mail\Gateway;
 
 
 /**
@@ -27,7 +37,7 @@ class ExceptionEmailListener implements Subscriber
     protected $siteTitle = '';
 
     /**
-     * @var \Tk\Mail\Gateway
+     * @var Gateway
      */
     protected $emailGateway = '';
 
@@ -37,14 +47,13 @@ class ExceptionEmailListener implements Subscriber
      *
      * @param $emailGateway
      * @param string|array $email
-     * @param LoggerInterface $logger A LoggerInterface instance
      * @param string $siteTitle
      */
     public function __construct($emailGateway, $email, $siteTitle = '')
     {
         $this->emailGateway = $emailGateway;
         if (!$siteTitle)
-            $siteTitle = \Tk\Config::getInstance()->getSiteHost();
+            $siteTitle = Config::getInstance()->getSiteHost();
         if (!is_array($email)) $email = array($email);
         $this->emailList = $email;
         $this->siteTitle = $siteTitle;
@@ -53,7 +62,7 @@ class ExceptionEmailListener implements Subscriber
 
     /**
      * 
-     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+     * @param ExceptionEvent $event
      */
     public function onException($event)
     {
@@ -62,15 +71,15 @@ class ExceptionEmailListener implements Subscriber
 
     /**
      *
-     * @param \Symfony\Component\Console\Event\ConsoleErrorEvent $event
+     * @param ConsoleErrorEvent $event
      */
-    public function onConsoleError(\Symfony\Component\Console\Event\ConsoleErrorEvent $event)
+    public function onConsoleError(ConsoleErrorEvent $event)
     {
         $this->emailException($event->getError());
     }
 
     /**
-     * @param \Throwable $e
+     * @param Throwable $e
      */
     protected function emailException($e)
     {
@@ -78,11 +87,13 @@ class ExceptionEmailListener implements Subscriber
         // This would stop mass emails on major system failures and DOS attacks...
 
         // These errors are not required they can cause email loops
-        if ($e instanceof \Tk\NotFoundHttpException) return;
-        // Stop console instance exists email errors they are not needed
-        if ($e instanceof \Tk\Console\Exception && $e->getCode() == \Tk\Console\Console::ERROR_CODE_INSTANCE_EXISTS) return;
 
-        $config = \Tk\Config::getInstance();
+        if ($e instanceof \Tk\NotFoundHttpException || $e instanceof ResourceNotFoundException || $e instanceof NotFoundHttpException) return;
+
+        // Stop console instance exists email errors they are not needed
+        if ($e instanceof \Tk\Console\Exception && $e->getCode() == Console::ERROR_CODE_INSTANCE_EXISTS) return;
+
+        $config = Config::getInstance();
         try {
             if (count($this->emailList)) {
                 foreach ($this->emailList as $email) {
@@ -97,7 +108,7 @@ class ExceptionEmailListener implements Subscriber
                     $this->emailGateway->send($message);
                 }
             }
-        } catch (\Exception $ee) { \Tk\Log::warning($ee->__toString()); }
+        } catch (Exception $ee) { Log::warning($ee->__toString()); }
 
     }
 

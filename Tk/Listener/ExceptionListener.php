@@ -1,9 +1,18 @@
 <?php
 namespace Tk\Listener;
 
+use Dom\Modifier\Modifier;
+use Dom\Template;
+use Exception;
+use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Tk\Config;
+use Tk\Controller\Iface;
 use Tk\Event\Subscriber;
 use Tk\Response;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 
 /**
@@ -36,21 +45,28 @@ class ExceptionListener implements Subscriber
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+     * @param ExceptionEvent $event
      */
     public function onException($event)
     {
         $response = null;
         $result = null;
         if ($this->controllerClass && class_exists($this->controllerClass)) {
-            /** @var \Tk\Controller\Iface $con */
+            /** @var Iface $con */
             $con = new $this->controllerClass();
             if (method_exists($con, 'doDefault')) {
                 $con->doDefault($event->getRequest(), $event->getException(), $this->withTrace);
                 $result = $con->show();
-                if ($result instanceof \Dom\Template && \Tk\Config::getInstance()->get('dom.modifier')) {
-                    /** @var \Dom\Modifier\Modifier $domModifier */
-                    $domModifier = \Tk\Config::getInstance()->get('dom.modifier');
+                if ($result instanceof Template && Config::getInstance()->get('dom.modifier')) {
+                    if ($event->getException() instanceof \Tk\NotFoundHttpException || $event->getException() instanceof ResourceNotFoundException || $event->getException() instanceof NotFoundHttpException) {
+                        $result->setChoice('404');
+                        $result->insertText('code', '404');
+                    } else {
+                        $result->setChoice('default');
+                    }
+
+                    /** @var Modifier $domModifier */
+                    $domModifier = Config::getInstance()->get('dom.modifier');
                     $doc = $result->getDocument();
                     $domModifier->execute($doc);
                     $response = new Response($result->toString());
@@ -68,14 +84,14 @@ class ExceptionListener implements Subscriber
 
 
     /**
-     * @param \Exception $e
+     * @param Exception $e
      * @param bool $withTrace
      * @return mixed|string
      */
     public static function getExceptionHtml($e, $withTrace = false)
     {
 
-        $config = \Tk\Config::getInstance();
+        $config = Config::getInstance();
         $class = get_class($e);
         $msg = $e->getMessage();
         $str = '';
@@ -88,7 +104,7 @@ class ExceptionListener implements Subscriber
                 $sessionLog = file_get_contents($config->get('log.session'));
                 // Add to composer require: "sensiolabs/ansi-to-html": "~1.0",
                 if (class_exists('SensioLabs\AnsiConverter\AnsiToHtmlConverter')) {
-                    $converter = new \SensioLabs\AnsiConverter\AnsiToHtmlConverter();
+                    $converter = new AnsiToHtmlConverter();
                     $sessionLog = $converter->convert($sessionLog);
                 }
                 $logHtml = sprintf('<div class="content"><p><b>System Log:</b></p>'.
@@ -122,7 +138,7 @@ $logHtml
 </html>
 HTML;
 
-        $html = str_replace(\Tk\Config::getInstance()->getSitePath(), '', $html);
+        $html = str_replace(Config::getInstance()->getSitePath(), '', $html);
 
         return $html;
     }
