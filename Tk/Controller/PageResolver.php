@@ -15,13 +15,11 @@ class PageResolver extends \Symfony\Component\HttpKernel\Controller\ControllerRe
 {
 
     /**
-     * @param \Tk\Request $request
+     * @param Request $request
      * @return callable|false|object|Iface
      */
     public function getController(Request $request)
     {
-        //vd($request->attributes->all());
-
         $controller = parent::getController($request);
 
         /** @var Iface $controller */
@@ -32,7 +30,7 @@ class PageResolver extends \Symfony\Component\HttpKernel\Controller\ControllerRe
                 $cObj->setPageTitle($cObj->getDefaultTitle());
             }
             //$cObj->setPage($page);                    // * Removed: This causes issues when loading controllers dynamically
-            $request->setAttribute('controller.object', $cObj);
+            $request->attributes->set('controller.object', $cObj);
         }
 
         return $controller;
