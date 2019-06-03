@@ -118,10 +118,10 @@ class StartupHandler implements Subscriber
     public function onRequest($event)
     {
         $config = \Bs\Config::getInstance();
-        if ($config->getRequest()->getAttribute('_route')) {
+        if ($config->getRequest()->attributes->has('_route')) {
             $routeCollection = $config->getRouteCollection();
             if ($routeCollection) {
-                $route = $routeCollection->get($config->getRequest()->getAttribute('_route'));
+                $route = $routeCollection->get($config->getRequest()->attributes->get('_route'));
                 if ($route)
                     $this->out('- Controller: ' . $route->getDefault('_controller'));
             }
