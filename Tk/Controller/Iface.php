@@ -42,7 +42,7 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         /** @var \Tk\Request $request */
         $request = $this->getConfig()->getRequest();
         if ($request) {
-            $routeName = $request->getAttribute('_route');
+            $routeName = $request->attributes->set('_route');
             return ucwords(trim(str_replace('-', ' ', $routeName)));
         }
         return '';
