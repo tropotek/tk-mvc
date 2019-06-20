@@ -15,7 +15,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
 
     /**
      * @var \Tk\Controller\Iface
-     * @deprecated
+     * @deprecated Why ???? Maybe getController() no longer gets called anywhere
      */
     protected $controller = null;
 
@@ -35,7 +35,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
 
     /**
      * Init the page ????
-     * @deprecated
+     * @deprecated Why ???? Maybe getController() no longer gets called anywhere
      */
     public function init() { }
 
@@ -70,7 +70,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     
     /**
      * @return Iface
-     * @deprecated
+     * @deprecated Why ???? Maybe getController() no longer gets called anywhere
      */
     public function getController()
     {
@@ -81,7 +81,7 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     /**
      * @param Iface $controller
      * @return $this
-     * @deprecated Why ????
+     * @deprecated Why ???? Maybe getController() no longer gets called anywhere
      */
     public function setController($controller)
     {
