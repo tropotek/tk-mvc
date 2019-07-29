@@ -146,7 +146,7 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
     /**
      * @return \Tk\Session
      */
-    public function getTrack()
+    public function getDomain()
     {
         return $this->getConfig()->getSession();
     }
