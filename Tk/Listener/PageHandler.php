@@ -119,16 +119,39 @@ class PageHandler implements EventSubscriberInterface
         $contentVar = $controller->getPage()->getContentVar();
         if (!$contentVar)
             $contentVar = 'content';
+
+        $node = $pageTemplate->getVar($contentVar);
+        if (!$node) {
+            \Tk\Log::warning('Not content node var=`'.$contentVar.'` found in page template');
+            return;
+        }
+
+        $mode = 'append';
+        if ($node->hasAttribute('data-insert-mode')) {
+            if ($node->getAttribute('data-insert-mode') == 'prepend') {
+                $mode = 'prepend';
+            }
+            if ($node->getAttribute('data-insert-mode') == 'replace') {
+                $mode = 'replace';
+            }
+            if ($node->getAttribute('data-insert-mode') == 'insert') {
+                $mode = 'insert';
+            }
+        }
+
+
         if ($controllerTemplate instanceof \Dom\Template) {
-            $pageTemplate->appendTemplate($contentVar, $controllerTemplate);
+            $method = $mode.'Template';
+            $pageTemplate->$method($contentVar, $controllerTemplate);
         } else if ($controllerTemplate instanceof \Dom\Renderer\RendererInterface) {
-            $pageTemplate->appendTemplate($contentVar, $controllerTemplate->getTemplate());
+            $method = $mode.'Template';
+            $pageTemplate->$method($contentVar, $controllerTemplate->getTemplate());
         } else if ($controllerTemplate instanceof \DOMDocument) {
-            $pageTemplate->appendDoc($contentVar, $controllerTemplate);
-            //$pageTemplate->insertDoc($contentVar, $controllerTemplate);
+            $method = $mode.'Doc';
+            $pageTemplate->$method($contentVar, $controllerTemplate);
         } else if (is_string($controllerTemplate)) {
-            $pageTemplate->appendHtml($contentVar, $controllerTemplate);
-            //$pageTemplate->insertHtml($contentVar, $controllerTemplate);
+            $method = $mode.'Html';
+            $pageTemplate->$method($contentVar, $controllerTemplate);
         }
         $event->set('page.template', $pageTemplate);
 
