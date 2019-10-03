@@ -27,8 +27,8 @@ class Route extends \Symfony\Component\Routing\Route
         if (!is_array($defaults)) {     // Use this to fix \Tk\Routing\Route params compatability
             $defaults = array_merge(array('_controller' => $defaults), $requirements);
             $requirements = [];
-            //$methods = count($options) ? $options : array('GET','POST','HEAD');
-            $methods = $options;
+            $methods = count($options) ? $options : array('GET','POST','HEAD');
+            // $methods = $options;
             $options = [];
         }
         parent::__construct($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
