@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 3.0.28 [2019-10-04]:
+-------------------------------
+  - Update Tk\Routing\Route constructor to be compatable with sysmfony Route object
+
+
 Ver 3.0.26 [2019-09-24]:
 -------------------------------
   - Added npm and webpack to the public template
