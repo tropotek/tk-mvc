@@ -11,7 +11,7 @@ class PageEvents
 {
 
     /**
-     * Called after the controller Controller/Iface::show() method has been called
+     * Called after the controller Controller/Iface::doDefault() method has been called
      * Use this to modify the controller content.
      *
      * You will need to check what the controller class is to know where you are.
