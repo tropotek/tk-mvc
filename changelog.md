@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 3.0.30 [2019-11-25]:
+-------------------------------
+  - Updated status emails and notices for the new Assessment plugin
+
+
 Ver 3.0.28 [2019-10-04]:
 -------------------------------
   - Update Tk\Routing\Route constructor to be compatable with sysmfony Route object
