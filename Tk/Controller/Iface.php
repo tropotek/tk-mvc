@@ -1,6 +1,8 @@
 <?php
 namespace Tk\Controller;
 
+use Tk\ConfigTrait;
+
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
@@ -8,6 +10,7 @@ namespace Tk\Controller;
  */
 abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
+    use ConfigTrait;
     
     /**
      * @var \Tk\Controller\Page
@@ -125,30 +128,6 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
         return $this;
     }
 
-    /**
-     * Get the global config object.
-     *
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \Tk\Config::getInstance();
-    }
 
-    /**
-     * @return \Tk\Request
-     */
-    public function getRequest()
-    {
-        return $this->getConfig()->getRequest();
-    }
-
-    /**
-     * @return \Tk\Session
-     */
-    public function getDomain()
-    {
-        return $this->getConfig()->getSession();
-    }
 
 }

@@ -1,6 +1,8 @@
 <?php
 namespace Tk\Controller;
 
+use Tk\ConfigTrait;
+
 /**
  * @author Michael Mifsud <info@tropotek.com>
  * @see http://www.tropotek.com/
@@ -8,6 +10,8 @@ namespace Tk\Controller;
  */
 class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterface
 {
+    use ConfigTrait;
+
     /**
      * @var bool
      */
@@ -87,16 +91,6 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     {
         $this->controller = $controller;
         return $this;
-    }
-
-    /**
-     * Get the global config object.
-     *
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \Tk\Config::getInstance();
     }
 
     /**

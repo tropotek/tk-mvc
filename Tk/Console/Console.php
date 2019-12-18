@@ -1,6 +1,7 @@
 <?php
 namespace Tk\Console;
 
+use Tk\ConfigTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class Console extends Command
 {
+    use ConfigTrait;
+
     const ERROR_CODE_INSTANCE_EXISTS = 1022;
 
     /**
@@ -87,14 +90,6 @@ abstract class Console extends Command
     public function getLocFile()
     {
         return $this->locFile;
-    }
-
-    /**
-     * @return \Tk\Config
-     */
-    public function getConfig()
-    {
-        return \Tk\Config::getInstance();
     }
 
     /**
