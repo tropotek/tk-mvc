@@ -79,10 +79,15 @@ class StartupHandler implements Subscriber
         //$this->out('');
         $this->out(self::$SCRIPT_START);
         $prj = '';
-
         if ($config->getSystemProject()) {
-            $prj = ' ['.$config->getSystemProject().']';
+            $prj = sprintf(' [%s]', $config->getSystemProject());
         }
+        $ver = '';
+        if ($config->getVersion()) {
+            $ver = sprintf(' [%s]', $config->getVersion());
+        }
+
+
         $this->out('- Project: ' . $config->getSiteTitle() . $prj);
         $this->out('- Date: ' . date('Y-m-d H:i:s'));
         if ($this->request) {
