@@ -84,11 +84,10 @@ class StartupHandler implements Subscriber
         }
         $ver = '';
         if ($config->getVersion()) {
-            $ver = sprintf(' [%s]', $config->getVersion());
+            $ver = sprintf(' [v%s]', $config->getVersion());
         }
 
-
-        $this->out('- Project: ' . $config->getSiteTitle() . $prj);
+        $this->out('- Project: ' . $config->getSiteTitle() . $prj . $ver);
         $this->out('- Date: ' . date('Y-m-d H:i:s'));
         if ($this->request) {
             if (!$config->isCli()) {
