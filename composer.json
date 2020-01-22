@@ -2,12 +2,8 @@
     "name": "ttek/tk-mvc",
     "type": "library",
     "description": "Model-View-Controller library for the Tk lib",
-    "keywords":  [
-        "tk",
-        "tropotek",
-        "MVC"
-    ],
-    "time": "2020-01-23",
+    "keywords":  ["tk", "tropotek", "MVC"],
+    "time": "2019-04-09",
     "license": "MIT",
     "authors":  [
          {
@@ -23,6 +19,7 @@
     },
     "require":  {
         "ttek/tk-framework": "~3.0",
+
         "symfony/routing": "4.2.*",
         "symfony/http-kernel": "4.2.*",
         "symfony/event-dispatcher": "4.2.*",
