@@ -97,10 +97,10 @@ class StartupHandler implements Subscriber
                 if ($config->isDebug() && $this->request->getMethod() == 'POST' && strlen($config->getRequest()->getRawPostData()) <= 255) {
                     $this->logger->debug('- POST Data: ' . $config->getRequest()->getRawPostData());
                 }
-                $this->out('- Client IP: ' . $this->request->getIp());
+                $this->out('- Client IP: ' . $this->request->getClientIp());
                 $this->out('- User Agent: ' . $this->request->getUserAgent());
             } else {
-                $this->out('- CLI: ' . implode(' ', $this->request->getServerParam('argv')));
+                $this->out('- CLI: ' . implode(' ', $this->request->server->get('argv')));
             }
         }
         if ($this->session) {

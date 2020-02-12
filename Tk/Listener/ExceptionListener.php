@@ -59,10 +59,10 @@ class ExceptionListener implements Subscriber
                 $result = $con->show();
                 if ($result instanceof Template && Config::getInstance()->get('dom.modifier')) {
                     if ($event->getException() instanceof \Tk\NotFoundHttpException || $event->getException() instanceof ResourceNotFoundException || $event->getException() instanceof NotFoundHttpException) {
-                        $result->setChoice('404');
+                        $result->setVisible('404');
                         $result->insertText('code', '404');
                     } else {
-                        $result->setChoice('default');
+                        $result->setVisible('default');
                     }
 
                     /** @var Modifier $domModifier */
