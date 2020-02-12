@@ -1,6 +1,7 @@
 <?php
 namespace Tk\Console;
 
+use Symfony\Component\Console\Command\LockableTrait;
 use Tk\ConfigTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class Console extends Command
 {
+    use LockableTrait;
     use ConfigTrait;
 
     const ERROR_CODE_INSTANCE_EXISTS = 1022;
@@ -40,8 +42,8 @@ abstract class Console extends Command
     public function __construct($name = null)
     {
         parent::__construct($name);
-        //$this->locFile = $this->getConfig()->getTempPath().'/'.md5(__FILE__.$this->getName()).'.lock';
-        $this->locFile = $this->getConfig()->getTempPath().'/'.$this->getName().'.lock';
+//        //$this->locFile = $this->getConfig()->getTempPath().'/'.md5(__FILE__.$this->getName()).'.lock';
+//        $this->locFile = $this->getConfig()->getTempPath().'/'.$this->getName().'.lock';
     }
 
     /**
@@ -49,7 +51,8 @@ abstract class Console extends Command
      */
     public function __destruct()
     {
-        \Tk\FileLocker::unlockFile($this->locFile);
+        //\Tk\FileLocker::unlockFile($this->locFile);
+        $this->release();
     }
 
     /**
@@ -63,9 +66,9 @@ abstract class Console extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        if (!\Tk\FileLocker::lockFile($this->locFile)) {
-            throw new Exception('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
-        }
+//        if (!\Tk\FileLocker::lockFile($this->locFile)) {
+//            throw new Exception('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
+//        }
     }
 
     /**
@@ -75,6 +78,10 @@ abstract class Console extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!$this->lock()) {
+            $output->writeln('The command is already running in another process.');
+            return 0;
+        }
 
         $this->setInput($input);
         $this->setOutput($output);
