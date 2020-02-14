@@ -162,12 +162,9 @@ class EventDispatcher extends \Symfony\Component\EventDispatcher\EventDispatcher
     {
         if ($event instanceof \Symfony\Component\EventDispatcher\Event) {
             $this->doDispatch($listeners, $eventName, $event);
-
             return;
         }
-
         $stoppable = $event instanceof ContractsEvent || $event instanceof StoppableEventInterface;
-
         foreach ($listeners as $listener) {
             if ($stoppable && $event->isPropagationStopped()) {
                 break;
