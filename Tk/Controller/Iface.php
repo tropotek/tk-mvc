@@ -30,15 +30,6 @@ abstract class Iface extends \Dom\Renderer\Renderer implements \Dom\Renderer\Dis
 
 
     /**
-     * Iface constructor.
-     * @deprecated
-     */
-    public function __construct()
-    {
-
-    }
-
-    /**
      * @return string
      */
     public function getDefaultTitle()
