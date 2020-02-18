@@ -71,27 +71,6 @@ class Page extends \Dom\Renderer\Renderer implements \Dom\Renderer\DisplayInterf
     {
         return $this;
     }
-    
-    /**
-     * @return Iface
-     * @deprecated Why ???? Maybe getController() no longer gets called anywhere
-     */
-    public function getController()
-    {
-        \Tk\Log::warning('Page::getController() being called');
-        return $this->controller;
-    }
-
-    /**
-     * @param Iface $controller
-     * @return $this
-     * @deprecated Why ???? Maybe getController() no longer gets called anywhere
-     */
-    public function setController($controller)
-    {
-        $this->controller = $controller;
-        return $this;
-    }
 
     /**
      * Get the page theme template path
