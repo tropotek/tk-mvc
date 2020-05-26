@@ -64,9 +64,9 @@ abstract class Console extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        if (!\Tk\FileLocker::lockFile($this->locFile)) {
-            throw new \Tk\NoticeException('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
-        }
+//        if (!\Tk\FileLocker::lockFile($this->locFile)) {
+//            //throw new \Tk\NoticeException('Instance alqready executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
+//        }
     }
 
     /**
@@ -76,6 +76,10 @@ abstract class Console extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!\Tk\FileLocker::lockFile($this->locFile)) {
+            \Tk\Log::debug('Instance already executing. Aborting.');
+            return 0;
+        }
 
         $this->setInput($input);
         $this->setOutput($output);
