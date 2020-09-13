@@ -1,6 +1,7 @@
 <?php
 namespace Tk\Console;
 
+use Bs\Console\InstanceException;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Tk\ConfigTrait;
 use Symfony\Component\Console\Command\Command;
@@ -65,7 +66,8 @@ abstract class Console extends Command
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         if (!\Tk\FileLocker::lockFile($this->locFile)) {
-            throw new \Tk\NoticeException('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
+            // This keeps sending error emails we need a way to exit without exception???
+            throw new InstanceException('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
         }
     }
 

@@ -3,14 +3,13 @@ namespace Tk\Listener;
 
 use Exception;
 use Symfony\Component\Console\Event\ConsoleErrorEvent;
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Throwable;
 use Tk\Config;
 use Tk\Console\Console;
 use Tk\Event\Subscriber;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Tk\Log;
 use Tk\Mail\Gateway;
@@ -62,7 +61,7 @@ class ExceptionEmailListener implements Subscriber
 
     /**
      * 
-     * @param ExceptionEvent $event
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
      */
     public function onException($event)
     {
@@ -79,21 +78,28 @@ class ExceptionEmailListener implements Subscriber
     }
 
     /**
+     *  TODO: log all errors and send a compiled message periodically (IE: daily, weekly, monthly)
+     *        This would stop mass emails on major system failures and DOS attacks...
      * @param Throwable $e
      */
     protected function emailException($e)
     {
-        // TODO: log all errors and send a compiled message periodically (IE: daily, weekly, monthly)
-        // This would stop mass emails on major system failures and DOS attacks...
+        $config = Config::getInstance();
+
+        // Do not send for cli exceptions
+        if ($config->isCli())
+            return;
 
         // These errors are not required they can cause email loops
-
-        if ($e instanceof \Tk\NotFoundHttpException || $e instanceof ResourceNotFoundException || $e instanceof NotFoundHttpException) return;
+        if ($e instanceof \Tk\NotFoundHttpException ||
+            $e instanceof ResourceNotFoundException ||
+            $e instanceof NotFoundHttpException ||
+            $e instanceof MethodNotAllowedHttpException)
+            return;
 
         // Stop console instance exists email errors they are not needed
         if ($e instanceof \Tk\Console\Exception && $e->getCode() == Console::ERROR_CODE_INSTANCE_EXISTS) return;
 
-        $config = Config::getInstance();
         try {
             if (count($this->emailList)) {
                 foreach ($this->emailList as $email) {
@@ -111,7 +117,6 @@ class ExceptionEmailListener implements Subscriber
         } catch (Exception $ee) { Log::warning($ee->__toString()); }
 
     }
-
 
 
     /**
