@@ -54,5 +54,4 @@ class PageEvents
      */
     const PAGE_SHOW = 'page.show';
 
-
 }
