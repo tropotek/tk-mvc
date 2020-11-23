@@ -1,5 +1,18 @@
 #CHANGELOG#
 
+Ver 3.2.18 [2020-11-23]:
+-------------------------------
+  - Tagging and releasing branch `3.2` with version `3.2.14`.
+  - fixed a few anying error emails and DB bugs
+  - Tagging and releasing branch `3.2` with version `3.2.12`.
+  - Tagging and releasing branch `3.2` with version `3.2.10`.
+  - Tagging and releasing branch `3.2` with version `3.2.8`.
+  - Tagging and releasing branch `3.2` with version `3.2.6`.
+  - Tagging and releasing branch `3.2` with version `3.2.4`.
+  - Tagging and releasing branch `3.2` with version `3.2.2`.
+  - Tagging and releasing branch `3.2` with version `3.2.0`.
+
+
 Ver 3.2.14 [2020-09-14]:
 -------------------------------
   - fixed a few anying error emails and DB bugs
