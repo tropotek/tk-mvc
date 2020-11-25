@@ -42,8 +42,8 @@ abstract class Console extends Command
     public function __construct($name = null)
     {
         parent::__construct($name);
-        $this->locFile = $this->getConfig()->getTempPath().'/'.md5(__DIR__.$this->getName()).'.lock';
-        //$this->locFile = $this->getConfig()->getTempPath().'/'.$this->getName().'.lock';
+        $this->setLocFile($this->getConfig()->getTempPath().'/'.md5(__DIR__.$this->getName()).'.lock');
+        //$this->setLocFile($this->getConfig()->getTempPath().'/'.$this->getName().'.lock');
     }
 
     /**
@@ -51,7 +51,7 @@ abstract class Console extends Command
      */
     public function __destruct()
     {
-        \Tk\FileLocker::unlockFile($this->locFile);
+        \Tk\FileLocker::unlockFile($this->getLocFile());
     }
 
     /**
@@ -59,15 +59,19 @@ abstract class Console extends Command
      *
      * This is mainly useful when a lot of commands extends one main command
      * where some things need to be initialized based on the input arguments and options.
+     *
+     * set the lock file to an empty string to ignore locking instances
+     *
      * @throws \Tk\Exception
      * @throws \Exception
-     * @todo: Maybe we need an option for allowing more than one running instance???
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        if (!\Tk\FileLocker::lockFile($this->locFile)) {
+        if ($this->getLocFile() && !\Tk\FileLocker::lockFile($this->getLocFile())) {
+            \Tk\Log::warning('Instance already executing. Aborting.');
+            exit();
             // This keeps sending error emails we need a way to exit without exception???
-            throw new InstanceException('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
+            //throw new InstanceException('Instance already executing. Aborting.', self::ERROR_CODE_INSTANCE_EXISTS);
         }
     }
 
@@ -78,11 +82,6 @@ abstract class Console extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        if (!\Tk\FileLocker::lockFile($this->locFile)) {
-//            \Tk\Log::debug('Instance already executing. Aborting.');
-//            return 0;
-//        }
-
         $this->setInput($input);
         $this->setOutput($output);
         $this->writeInfo($this->getName());
@@ -104,6 +103,16 @@ abstract class Console extends Command
     public function getLocFile()
     {
         return $this->locFile;
+    }
+
+    /**
+     * @param string $locFile
+     * @return Console
+     */
+    public function setLocFile(string $locFile)
+    {
+        $this->locFile = $locFile;
+        return $this;
     }
 
     /**
