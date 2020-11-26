@@ -62,7 +62,6 @@ abstract class Console extends Command
      *
      * set the lock file to an empty string to ignore locking instances
      *
-     * @throws \Tk\Exception
      * @throws \Exception
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
