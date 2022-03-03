@@ -25,7 +25,7 @@ composer require uom/tk-mvc
 Or add the following to your composer.json file:
 
 ```json
-"uom/tk-mvc": "~3.0"
+"uom/tk-mvc": "~3.4"
 ```
 
 
