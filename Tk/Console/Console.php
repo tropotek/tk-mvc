@@ -39,7 +39,7 @@ abstract class Console extends Command
      * Console constructor.
      * @param null|string $name
      */
-    public function __construct($name = null)
+    public function __construct(string $name = null)
     {
         parent::__construct($name);
         $this->setLocFile($this->getConfig()->getTempPath().'/'.md5(__DIR__.$this->getName()).'.lock');
