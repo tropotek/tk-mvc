@@ -1,5 +1,12 @@
 #CHANGELOG#
 
+Ver 3.4.0 [2022-08-05]:
+-------------------------------
+  - Tagging and releasing branch `3.4` with version `3.4.2`.
+  - Tagging and releasing branch `3.4` with version `3.4.0`.
+  - Tagging and releasing branch `3.2` with version `3.2.28`.
+
+
 Ver 3.4.2 [2022-05-25]:
 -------------------------------
 
