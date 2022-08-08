@@ -19,13 +19,13 @@ Available on Packagist ([uom/tk-mvc](http://packagist.org/packages/uom/tk-mvc))
 and installable via [Composer](http://getcomposer.org/).
 
 ```bash
-composer require uom/tk-mvc
+composer require ttek/tk-mvc
 ```
 
 Or add the following to your composer.json file:
 
 ```json
-"uom/tk-mvc": "~3.4"
+"ttek/tk-mvc": "~3.4"
 ```
 
 
