@@ -15,7 +15,7 @@ A Model-View-Controller lib to support the Tropotek lib V2.
 
 ## Installation
 
-Available on Packagist ([uom/tk-mvc](http://packagist.org/packages/uom/tk-mvc))
+Available on Packagist ([ttek/tk-mvc](http://packagist.org/packages/ttek/tk-mvc))
 and installable via [Composer](http://getcomposer.org/).
 
 ```bash
