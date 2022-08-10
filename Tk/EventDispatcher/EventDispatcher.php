@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\Event as ContractsEvent;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * @author Michael Mifsud <info@tropotek.com>
+ * @author Michael Mifsud <http://www.tropotek.com/>
  * @see http://www.tropotek.com/
  * @license Copyright 2018 Michael Mifsud
  */
