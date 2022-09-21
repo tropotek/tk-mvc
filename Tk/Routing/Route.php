@@ -27,8 +27,7 @@ class Route extends \Symfony\Component\Routing\Route
         if (!is_array($defaults)) {     // Use this to fix \Tk\Routing\Route params compatability
             $defaults = array_merge(array('_controller' => $defaults), $requirements);
             $requirements = [];
-            $methods = count($options) ? $options : array('GET','POST','HEAD');
-            // $methods = $options;
+            $methods = count($options) ? $options : ['GET','POST','HEAD'];
             $options = [];
         }
         parent::__construct($path, $defaults, $requirements, $options, $host, $schemes, $methods, $condition);
@@ -53,12 +52,12 @@ class Route extends \Symfony\Component\Routing\Route
 
     /**
      * @param string $path
-     * @param array|string $defaults  (if sting then use Tk lib compatability untill we change all route calls)
-     * @param array $requirements
-     * @param array $options
-     * @param string|null $host
-     * @param array $schemes
-     * @param array $methods
+     * @param array|string $defaults  (if string then use Tk lib compatability until we change all route calls)
+     * @param array $requirements   []
+     * @param array $options   []
+     * @param string|null $host  ''
+     * @param array $schemes ['http', 'https']
+     * @param array $methods ['GET','POST','HEAD']
      * @param string|null $condition
      * @return \Symfony\Component\Routing\Route
      */
