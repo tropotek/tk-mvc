@@ -94,9 +94,9 @@ class StartupHandler implements Subscriber
                 $this->out('- Host: ' . $this->request->getTkUri()->getScheme() . '://' . $this->request->getTkUri()->getHost());
                 $this->out('- ' . $this->request->getMethod() . ': ' . $this->request->getTkUri()->toString(false, false));
                 // Doing this live is a security risk
-                if ($config->isDebug() && $this->request->getMethod() == 'POST' && strlen($config->getRequest()->getRawPostData()) <= 255) {
-                    $this->logger->debug('- POST Data: ' . $config->getRequest()->getRawPostData());
-                }
+//                if ($config->isDebug() && $this->request->getMethod() == 'POST' && strlen($config->getRequest()->getRawPostData()) <= 255) {
+//                    $this->logger->debug('- POST Data: ' . $config->getRequest()->getRawPostData());
+//                }
                 $this->out('- Client IP: ' . $this->request->getClientIp());
                 $this->out('- User Agent: ' . $this->request->getUserAgent());
             } else {
