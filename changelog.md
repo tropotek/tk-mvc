@@ -1,5 +1,10 @@
 #CHANGELOG#
 
+Ver 3.4.8 [2022-12-04]:
+-------------------------------
+  - Fixed recover password pages
+
+
 Ver 3.4.6 [2022-09-21]:
 -------------------------------
   - Updated mirror command
