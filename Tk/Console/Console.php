@@ -86,6 +86,7 @@ abstract class Console extends Command
         $this->writeInfo($this->getName());
         //$this->writeInfo(ucwords(preg_replace('/([-_]*[A-Z])/', ' $1', $this->getName())));
 
+        return 0;
     }
 
 
