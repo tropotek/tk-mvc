@@ -73,14 +73,14 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('value1', $event->get('param1'));
         }, 3);
         
-        $this->dispatcher->dispatch($evName, $this->event);
+        $this->dispatcher->dispatch($this->event, $evName);
         
         $this->assertEquals('Listener 2', $this->event->get('status'));
 
         $listener = new DummyListener();
         $this->dispatcher->addSubscriber($listener);
         
-        $this->dispatcher->dispatch($evName, $this->event);
+        $this->dispatcher->dispatch($this->event, $evName);
         $this->assertEquals('Listener Dummy', $this->event->get('status'));
         
         // Test delete and exists functions
@@ -97,10 +97,10 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->event = new Event(array('param2' => 'value2'));
         $this->dispatcher->addSubscriber(new DummyListener());
 
-        $this->dispatcher->dispatch('event.kernel.request', $this->event);
+        $this->dispatcher->dispatch($this->event, 'event.kernel.request');
         $this->assertEquals('Listener Dummy', $this->event->get('status'));
         
-        $this->dispatcher->dispatch('event.subscriber', $this->event);
+        $this->dispatcher->dispatch($this->event, 'event.subscriber');
         $this->assertEquals('Listener Dummy1', $this->event->get('dummyListener'));
     }
 }

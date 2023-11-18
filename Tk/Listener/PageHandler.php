@@ -53,7 +53,7 @@ class PageHandler implements EventSubscriberInterface
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::PAGE_INIT, $e);
+                $this->getDispatcher()->dispatch($e, \Tk\PageEvents::PAGE_INIT);
             }
         }
     }
@@ -71,7 +71,7 @@ class PageHandler implements EventSubscriberInterface
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_INIT, $e);
+                $this->getDispatcher()->dispatch($e, \Tk\PageEvents::CONTROLLER_INIT);
             }
 
             // Controller::show()
@@ -88,7 +88,7 @@ class PageHandler implements EventSubscriberInterface
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::CONTROLLER_SHOW, $e);
+                $this->getDispatcher()->dispatch($e, \Tk\PageEvents::CONTROLLER_SHOW);
             }
 
             // Page::show() This will also insert the controller template into the page
@@ -97,7 +97,7 @@ class PageHandler implements EventSubscriberInterface
             if ($this->getDispatcher()) {
                 $e = new \Tk\Event\Event();
                 $e->set('controller', $this->getController());
-                $this->getDispatcher()->dispatch(\Tk\PageEvents::PAGE_SHOW, $e);
+                $this->getDispatcher()->dispatch($e, \Tk\PageEvents::PAGE_SHOW);
             }
 
             $event->setControllerResult($this->getController()->getPage()->getTemplate());
